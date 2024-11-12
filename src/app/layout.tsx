@@ -1,7 +1,18 @@
 import "~/styles/globals.css";
-
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import { cn } from "~/lib/utils";
+import Link from "next/link";
+import { Search, Bell, Menu } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import { Button } from "~/components/ui/button";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "~/components/ui/navigation-menu";
+
+
+
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -9,12 +20,148 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+const MobileNav = () => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild className="md:hidden">
+        <Button variant="ghost" size="icon">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <nav className="flex flex-col space-y-4 mt-6">
+          <Link href="/hackathons" className="text-lg font-medium">
+            Hackathons
+          </Link>
+          <Link href="/projects" className="text-lg font-medium">
+            Projects
+          </Link>
+          <Link href="/blog" className="text-lg font-medium">
+            Blog
+          </Link>
+        </nav>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const Header = () => {
+  return (
+    <header className="border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center">
+              <div className="bg-teal-700 text-white font-bold py-1 px-3 rounded">
+                ENGAGE
+              </div>
+            </Link>
+          </div>
+
+          {/* Mobile Menu */}
+          <MobileNav />
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Product</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-3 p-4 w-[200px]">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href="/features"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
+                            <div className="text-sm font-medium leading-none">Features</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Explore our platform features
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href="/pricing"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
+                            <div className="text-sm font-medium leading-none">Pricing</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              View our pricing plans
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link href="/hackathons" legacyBehavior passHref>
+                    <NavigationMenuLink className="font-medium border-b-2 border-cyan-500">
+                      Hackathons
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link href="/projects" legacyBehavior passHref>
+                    <NavigationMenuLink >
+                      Projects
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link href="/blog" legacyBehavior passHref>
+                    <NavigationMenuLink >
+                      Blog
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </nav>
+
+          {/* Right section */}
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="icon">
+              <Search className="h-5 w-5" />
+            </Button>
+
+            <Link href="/host" className="hidden md:block">
+              <Button variant="outline" size="sm">
+                Host a hackathon
+              </Button>
+            </Link>
+
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+            </Button>
+
+           
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={cn("antialiased", GeistSans.variable)}>
+      <body className="min-h-screen bg-background">
+        <Header />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
