@@ -6,9 +6,14 @@ import Link from "next/link";
 import { Search, Bell, Menu } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "~/components/ui/navigation-menu";
-
-
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "~/components/ui/navigation-menu";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -29,11 +34,11 @@ const MobileNav = () => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <nav className="flex flex-col space-y-4 mt-6">
+        <nav className="mt-6 flex flex-col space-y-4 space-x-4">
           <Link href="/hackathons" className="text-lg font-medium">
             Hackathons
           </Link>
-          <Link href="/projects" className="text-lg font-medium">
+          <Link href="/projects" className="text-lg font-medium ">
             Projects
           </Link>
           <Link href="/blog" className="text-lg font-medium">
@@ -48,12 +53,12 @@ const MobileNav = () => {
 const Header = () => {
   return (
     <header className="border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <div className="bg-teal-700 text-white font-bold py-1 px-3 rounded">
+              <div className="rounded bg-teal-700 px-3 py-1 font-bold text-white">
                 ENGAGE
               </div>
             </Link>
@@ -63,20 +68,22 @@ const Header = () => {
           <MobileNav />
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="hidden items-center space-x-4 md:flex">
             <NavigationMenu>
               <NavigationMenuList>
-                <NavigationMenuItem>
+                {/* <NavigationMenuItem>
                   <NavigationMenuTrigger>Product</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid gap-3 p-4 w-[200px]">
+                    <ul className="grid w-[200px] gap-3 p-4">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link
                             href="/features"
                             className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           >
-                            <div className="text-sm font-medium leading-none">Features</div>
+                            <div className="text-sm font-medium leading-none">
+                              Features
+                            </div>
                             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                               Explore our platform features
                             </p>
@@ -89,7 +96,9 @@ const Header = () => {
                             href="/pricing"
                             className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           >
-                            <div className="text-sm font-medium leading-none">Pricing</div>
+                            <div className="text-sm font-medium leading-none">
+                              Pricing
+                            </div>
                             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                               View our pricing plans
                             </p>
@@ -98,29 +107,25 @@ const Header = () => {
                       </li>
                     </ul>
                   </NavigationMenuContent>
-                </NavigationMenuItem>
+                </NavigationMenuItem> */}
 
                 <NavigationMenuItem>
                   <Link href="/hackathons" legacyBehavior passHref>
-                    <NavigationMenuLink className="font-medium border-b-2 border-cyan-500">
-                      Hackathons
+                    <NavigationMenuLink >
+                      Overview
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
                   <Link href="/projects" legacyBehavior passHref>
-                    <NavigationMenuLink >
-                      Projects
-                    </NavigationMenuLink>
+                    <NavigationMenuLink>Projects</NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
                   <Link href="/blog" legacyBehavior passHref>
-                    <NavigationMenuLink >
-                      Blog
-                    </NavigationMenuLink>
+                    <NavigationMenuLink>Blog</NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
               </NavigationMenuList>
@@ -129,21 +134,20 @@ const Header = () => {
 
           {/* Right section */}
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon">
-              <Search className="h-5 w-5" />
-            </Button>
-
-            <Link href="/host" className="hidden md:block">
+          <Link href="/host" className="hidden md:block">
               <Button variant="outline" size="sm">
-                Host a hackathon
+                Sign Up
               </Button>
             </Link>
 
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-            </Button>
 
-           
+            <Link href="/host" className="hidden md:block">
+              <Button variant="default" size="sm">
+                Login
+              </Button>
+            </Link>
+
+
           </div>
         </div>
       </div>
@@ -151,14 +155,12 @@ const Header = () => {
   );
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<RootLayoutProps>) {
+export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en" className={cn("antialiased", GeistSans.variable)}>
       <body className="min-h-screen bg-background">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           {children}
         </main>
       </body>
