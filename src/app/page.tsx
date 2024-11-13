@@ -3,7 +3,6 @@ import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Trophy, Users, Calendar } from "lucide-react";
 import { cn } from '~/lib/utils';
-import { db } from '~/server/db';
 
 type DifficultyLevel = 'Difficulty Level: Beginner' | 'Difficulty Level: Intermediate' | 'Difficulty Level: Advanced' | 'Difficulty Level: All Levels';
 
@@ -27,11 +26,6 @@ interface ContestCardProps {
 }
 
 const ContestCard: React.FC<ContestCardProps> = async ({ contest }) => {
-
-  const contests = await db.query.contests.findMany();
-
-  console.log(contests);
-
 
   const getBadgeStyle = (type: 'technology' | 'category' | 'sponsor') => {
     switch (type) {

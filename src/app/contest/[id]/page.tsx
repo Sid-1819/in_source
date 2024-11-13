@@ -16,10 +16,9 @@ import { Markdown } from "tiptap-markdown";
 import Highlight from "@tiptap/extension-highlight";
 import { InputRule } from "@tiptap/core";
 import Image from "@tiptap/extension-image";
-import { Badge } from "~/components/ui/badge"
-import { title } from 'process';
 import { Card, CardHeader, CardTitle, CardContent } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
+import { getContestById } from '~/server/queries';
 
 
 const defaultEditorContent = {
@@ -326,7 +325,12 @@ const defaultExtensions = [
 ];
 
 const ContestDetailsPage = () => {
+
     const { id } = useParams();
+    const contestsList = getContestById(Number(id))
+
+    console.log(contestsList);
+
 
     console.log("id: ", id);
 
