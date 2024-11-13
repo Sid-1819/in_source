@@ -3,16 +3,16 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
-import { Search, Bell, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import {
   NavigationMenu,
-  NavigationMenuContent,
+
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
+ 
 } from "~/components/ui/navigation-menu";
 
 interface RootLayoutProps {
@@ -36,13 +36,13 @@ const MobileNav = () => {
       <DialogContent className="sm:max-w-[425px]">
         <nav className="mt-6 flex flex-col space-y-4 space-x-4">
           <Link href="/hackathons" className="text-lg font-medium">
-            Hackathons
+            Home
           </Link>
           <Link href="/projects" className="text-lg font-medium ">
-            Projects
+            Leaderboard
           </Link>
           <Link href="/blog" className="text-lg font-medium">
-            Blog
+            Prizes
           </Link>
         </nav>
       </DialogContent>
@@ -68,62 +68,25 @@ const Header = () => {
           <MobileNav />
 
           {/* Desktop Navigation */}
-          <nav className="hidden items-center space-x-4 md:flex">
+          <nav className="hidden items-center space-x-4 md:flex ">
             <NavigationMenu>
               <NavigationMenuList>
-                {/* <NavigationMenuItem>
-                  <NavigationMenuTrigger>Product</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[200px] gap-3 p-4">
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href="/features"
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            <div className="text-sm font-medium leading-none">
-                              Features
-                            </div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Explore our platform features
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href="/pricing"
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            <div className="text-sm font-medium leading-none">
-                              Pricing
-                            </div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              View our pricing plans
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem> */}
-
-                <NavigationMenuItem>
+           
+                <NavigationMenuItem className="px-2">
                   <Link href="/hackathons" legacyBehavior passHref>
                     <NavigationMenuLink >
-                      Overview
+                      Home
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem>
+                <NavigationMenuItem className="px-2">
                   <Link href="/projects" legacyBehavior passHref>
                     <NavigationMenuLink>Projects</NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem>
+                <NavigationMenuItem className="px-2">
                   <Link href="/blog" legacyBehavior passHref>
                     <NavigationMenuLink>Blog</NavigationMenuLink>
                   </Link>
