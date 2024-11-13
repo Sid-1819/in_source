@@ -28,9 +28,9 @@ interface ContestCardProps {
 
 const ContestCard: React.FC<ContestCardProps> = async ({ contest }) => {
 
-  const posts = await db.query.posts.findMany();
+  const contests = await db.query.contests.findMany();
 
-  console.log(posts);
+  console.log(contests);
 
 
   const getBadgeStyle = (type: 'technology' | 'category' | 'sponsor') => {
