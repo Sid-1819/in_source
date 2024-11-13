@@ -57,9 +57,9 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
       <div className="block md:hidden">
         {/* Image */}
         <div className="w-full h-48 overflow-hidden">
-          <img 
-            src={contest.image || "/api/placeholder/400/200"} 
-            alt={contest.title} 
+          <img
+            src={contest.image || "/api/placeholder/400/200"}
+            alt={contest.title}
             className="w-full h-full object-cover"
           />
         </div>
@@ -69,7 +69,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           <div>
             <div className="flex items-start justify-between mb-2">
               <h3 className="text-lg font-semibold">{contest.title}</h3>
-              <Badge 
+              <Badge
                 variant="secondary"
                 className={cn(
                   "rounded-full px-2 py-1 text-xs font-medium border",
@@ -99,8 +99,8 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
           <div className="flex flex-wrap gap-2">
             {contest.badges.map((badge, index) => (
-              <Badge 
-                key={index} 
+              <Badge
+                key={index + 1}
                 variant="secondary"
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium",
@@ -118,9 +118,9 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
       <div className="hidden md:flex flex-row items-start gap-4 p-4">
         {/* Left image section */}
         <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-          <img 
-            src={contest.image || "/api/placeholder/96/96"} 
-            alt={contest.title} 
+          <img
+            src={contest.image || "/api/placeholder/96/96"}
+            alt={contest.title}
             className="w-full h-full object-cover"
           />
         </div>
@@ -130,7 +130,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           <div>
             <div className="flex items-start justify-between mb-2">
               <h3 className="text-lg font-semibold">{contest.title}</h3>
-              <Badge 
+              <Badge
                 variant="secondary"
                 className={cn(
                   "rounded-full px-2 py-1 text-xs font-medium border",
@@ -160,8 +160,8 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
           <div className="flex flex-wrap gap-2">
             {contest.badges.map((badge, index) => (
-              <Badge 
-                key={index} 
+              <Badge
+                key={index + 1}
                 variant="secondary"
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium",
@@ -216,7 +216,7 @@ const ContestList = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-4 p-4">
       {contests.map((contest, index) => (
-        <ContestCard key={index} contest={contest} />
+        <ContestCard key={index + 1} contest={contest} />
       ))}
     </div>
   );
