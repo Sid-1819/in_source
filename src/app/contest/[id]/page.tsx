@@ -20,7 +20,9 @@ import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { FileText, Info, Users, Trophy } from "lucide-react";
+import WinnersList from "./_components/winners/page";
+import ApplicantsList from "./_components/participants/page";
+import InformationPage from "./_components/information/page";
 
 interface TabContentProps {
     output: string;
@@ -436,7 +438,21 @@ const TabContent: React.FC<TabContentProps> = ({ output }) => {
             </TabsTrigger>
           </TabsList>
           
+          <TabsContent value="description">
           <TabContent output={output} />
+        </TabsContent>
+
+        <TabsContent value="info">
+          <InformationPage/>
+        </TabsContent>
+
+        <TabsContent value="participants">
+          <ApplicantsList/>
+        </TabsContent>
+
+        <TabsContent value="winners">
+          <WinnersList />
+        </TabsContent>
         </Tabs>
       </div>
     );
