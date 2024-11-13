@@ -1,12 +1,16 @@
+"use client"
+
 import React from 'react';
 import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Trophy, Users, Calendar } from "lucide-react";
 import { cn } from '~/lib/utils';
+import { useRouter } from 'next/navigation';
 
 type DifficultyLevel = 'Difficulty Level: Beginner' | 'Difficulty Level: Intermediate' | 'Difficulty Level: Advanced' | 'Difficulty Level: All Levels';
 
 interface Contest {
+  id:number;
   title: string;
   description: string;
   image: string;
@@ -51,8 +55,15 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
     }
   };
 
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/contest/${contest.id}`);
+  }
+
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+    
+    <Card  onClick={handleCardClick} className="overflow-hidden hover:shadow-lg transition-shadow">
       {/* Mobile Layout (stacked layout for smaller screens) */}
       <div className="block md:hidden">
         {/* Image */}
@@ -100,7 +111,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           <div className="flex flex-wrap gap-2">
             {contest.badges.map((badge, index) => (
               <Badge 
-                key={index} 
+                key={index+1} 
                 variant="secondary"
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium",
@@ -161,7 +172,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           <div className="flex flex-wrap gap-2">
             {contest.badges.map((badge, index) => (
               <Badge 
-                key={index} 
+                key={index+1} 
                 variant="secondary"
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium",
@@ -182,6 +193,7 @@ const ContestList = () => {
   const contests: Contest[] = [
     {
       title: "Winter Coding Challenge 2024",
+      id:1,
       description: "Build innovative solutions using cutting-edge technologies",
       image: "/api/placeholder/400/200",
       daysLeft: 29,
@@ -198,6 +210,7 @@ const ContestList = () => {
     },
     {
       title: "Web3 Hackathon",
+      id:2,
       description: "Create decentralized applications for the future",
       image: "/api/placeholder/400/200",
       daysLeft: 15,
