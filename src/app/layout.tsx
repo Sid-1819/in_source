@@ -35,13 +35,13 @@ const MobileNav = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <nav className="mt-6 flex flex-col space-y-4 space-x-4">
-          <Link href="/hackathons" className="text-lg font-medium">
+          <Link href="/" className="text-lg font-medium">
             Home
           </Link>
-          <Link href="/projects" className="text-lg font-medium ">
+          <Link href="/leaderboard" className="text-lg font-medium ">
             Leaderboard
           </Link>
-          <Link href="/blog" className="text-lg font-medium">
+          <Link href="/prizes" className="text-lg font-medium">
             Prizes
           </Link>
         </nav>
@@ -73,7 +73,7 @@ const Header = () => {
               <NavigationMenuList>
            
                 <NavigationMenuItem className="px-2">
-                  <Link href="/hackathons" legacyBehavior passHref>
+                  <Link href="/" legacyBehavior passHref>
                     <NavigationMenuLink >
                       Home
                     </NavigationMenuLink>
@@ -81,14 +81,14 @@ const Header = () => {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem className="px-2">
-                  <Link href="/projects" legacyBehavior passHref>
-                    <NavigationMenuLink>Projects</NavigationMenuLink>
+                  <Link href="/leaderboard" legacyBehavior passHref>
+                    <NavigationMenuLink>Leaderboard</NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem className="px-2">
-                  <Link href="/blog" legacyBehavior passHref>
-                    <NavigationMenuLink>Blog</NavigationMenuLink>
+                  <Link href="/prizes" legacyBehavior passHref>
+                    <NavigationMenuLink>Prizes</NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
               </NavigationMenuList>
