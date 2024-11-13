@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Card,
@@ -7,7 +6,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { Trophy, Medal, Gift, Laptop, Headphones, Watch, Monitor } from "lucide-react";
+import { Trophy, Medal, Gift } from "lucide-react";
 
 interface Prize {
   rank: number;
@@ -41,8 +40,41 @@ const getRankBadge = (rank: number) => {
         </div>
       );
     default:
-      return <span className="font-medium text-gray-500">#{rank}</span>;
+      return (
+        <div className="flex items-center gap-1">
+          <Medal className="h-5 w-5 text-blue-500" fill="currentColor" />
+          <span className="font-bold text-blue-500">{rank}th</span>
+        </div>
+      );
   }
+};
+
+const PrizeCard: React.FC<{ prize: Prize }> = ({ prize }) => {
+  return (
+    <Card className="hover:shadow-md transition-shadow my-4 flex flex-row">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          {getRankBadge(prize.rank)}
+          {/* <Gift className="h-5 w-5 text-purple-500" /> */}
+        </div>
+      </CardHeader>
+      <CardContent>
+        {prize.awards.map((award, index) => (
+          <div key={index} className=" py-4">
+            <Badge
+              variant="secondary"
+              className="w-fit text-sm"
+            >
+              {award.item}
+            </Badge>
+            <p className="text-sm text-muted-foreground">
+              {award.description}
+            </p>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
 };
 
 const PrizesList = () => {
@@ -50,7 +82,7 @@ const PrizesList = () => {
     {
       rank: 1,
       awards: [
-        { 
+        {
           item: "MacBook Pro M2",
           description: "14-inch, 16GB RAM, 512GB SSD"
         }
@@ -62,8 +94,7 @@ const PrizesList = () => {
         {
           item: "iPad Pro",
           description: "12.9-inch, 256GB with Apple Pencil"
-        },
-      
+        }
       ]
     },
     {
@@ -97,54 +128,16 @@ const PrizesList = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold flex items-center gap-2">
-            <Gift className="h-6 w-6 text-purple-500" />
-            Contest Prizes
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {/* Table Headers */}
-          <div className="grid grid-cols-[auto_1fr] items-center px-4 py-2 border-b">
-            <div className="w-[60px] font-medium">Rank</div>
-            <div className="font-medium pl-4">Awards</div>
-          </div>
-
-          {/* Prize Rows */}
-          <div className="divide-y">
-            {prizes.map((prize) => (
-              <div
-                key={prize.rank}
-                className="grid grid-cols-[auto_1fr] items-start px-4 py-3 hover:bg-accent/50 transition-colors"
-              >
-                <div className="w-[60px] pt-1">
-                  {getRankBadge(prize.rank)}
-                </div>
-
-                <div className="pl-4 space-y-2">
-                  {prize.awards.map((award, index) => (
-                    <div 
-                      key={index} 
-                      className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2"
-                    >
-                      <Badge
-                        variant="secondary"
-                        className="w-fit text-sm"
-                      >
-                        {award.item}
-                      </Badge>
-                      <span className="text-sm text-muted-foreground">
-                        {award.description}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-2 mb-6">
+        <Gift className="h-6 w-6 text-purple-500" />
+        <h1 className="text-2xl font-bold">Contest Prizes</h1>
+      </div>
+      
+      <div className="flex-col gap-4">
+        {prizes.map((prize) => (
+          <PrizeCard key={prize.rank} prize={prize} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -58,9 +58,11 @@ const Header = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <div className="rounded bg-teal-700 px-3 py-1 font-bold text-white">
-                ENGAGE
-              </div>
+          <img
+            className="h-12 w-12"
+            src="/logo.svg"
+            alt="Logo"
+          />
             </Link>
           </div>
 
