@@ -346,50 +346,48 @@ const ContestDetailsPage = () => {
             {/* Header Card */}
             <Card className="w-full max-w-3xl mx-auto my-8">
                 <CardHeader>
-                    <CardTitle className="text-xl">Google Chrome Built-in AI Challenge</CardTitle>
+                    <CardTitle className="text-xl mb-2">Google Chrome Built-in AI Challenge</CardTitle>
+                    <p className="text-base text-muted-foreground">
+                        Develop a web application or Chrome Extension that uses Chrome built-in AI APIs
+                    </p>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center">
-                                <span className="text-base font-medium">Who can participate</span>
-                                <span className="text-base text-right">- Above legal age of majority in country of residence</span>
+                    <div className="flex flex-col">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-base font-medium">Who can participate</span>
+                                    <span className="text-base text-right">- Above legal age of majority in country of residence</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-base font-medium">Deadline</span>
+                                    <span className="text-base">4 Dec 2024 @ 1:15pm</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-base font-medium">Participation</span>
+                                    <span className="text-base">5,227 participants</span>
+                                </div>
                             </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-base font-medium">Deadline</span>
-                                <span className="text-base">4 Dec 2024 @ 1:15pm</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-base font-medium">Participation</span>
-                                <span className="text-base">5,227 participants</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-base font-medium">Tags</span>
-                                <div className="flex space-x-2">
-                                    <span className="px-2 py-1 bg-gray-200 rounded-full text-xs font-medium">
-                                        Machine Learning/AI
-                                    </span>
-                                    <span className="px-2 py-1 bg-gray-200 rounded-full text-xs font-medium">
-                                        Web
-                                    </span>
-                                    <span className="px-2 py-1 bg-gray-200 rounded-full text-xs font-medium">
-                                        Beginner Friendly
-                                    </span>
+                            <div className="space-y-4 text-right">
+                                <div className="flex flex-col space-y-2">
+                                    <span className="text-base font-medium">Prizes & Awards</span>
+                                    <span className="text-base">$650.00</span>
+                                    <span className="text-base">15 Exp points</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="space-y-4">
-                            <div className="flex-col">
-                                <span className="text-base font-medium">Prizes & Awards</span>
-                                <span className="text-base">$65,000 in prizes</span>
+                        <div className="flex justify-between items-center mt-8 pt-4 border-t">
+                            <div className="flex space-x-2">
+                                <span className="px-2 py-1 bg-gray-200 rounded-full text-xs font-medium">
+                                    Machine Learning/AI
+                                </span>
+                                <span className="px-2 py-1 bg-gray-200 rounded-full text-xs font-medium">
+                                    Web
+                                </span>
+                                <span className="px-2 py-1 bg-gray-200 rounded-full text-xs font-medium">
+                                    Beginner Friendly
+                                </span>
                             </div>
-                            <div className="flex justify-end">
-                                <Button variant="default" onClick={() => window.open('/join-hackathon')}>
-                                    Join hackathon
-                                </Button>
-                            </div>
-                        </div>
-                        <div className="flex justify-end">
                             <Button variant="default" onClick={() => window.open('/join-hackathon')}>
                                 Join hackathon
                             </Button>
@@ -398,10 +396,11 @@ const ContestDetailsPage = () => {
                 </CardContent>
             </Card>
 
+
             {/* Description */}
-            <div className="w-full flex flex-col items-center">
-                <h3 className="text-xl font-medium mb-4">Description</h3>
-                <div className="prose w-full max-w-3xl leading-relaxed" dangerouslySetInnerHTML={{ __html: output }}></div>
+            <div className="w-full max-w-3xl mx-auto">
+                <h2 className="text-xl font-medium mb-4">Description</h2>
+                <div className="prose w-full leading-relaxed" dangerouslySetInnerHTML={{ __html: output }}></div>
             </div>
         </>
     );
