@@ -111,7 +111,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           <div className="flex flex-wrap gap-2">
             {contest.badges.map((badge, index) => (
               <Badge 
-                key={index} 
+                key={index+1} 
                 variant="secondary"
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium",
@@ -172,7 +172,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           <div className="flex flex-wrap gap-2">
             {contest.badges.map((badge, index) => (
               <Badge 
-                key={index} 
+                key={index+1} 
                 variant="secondary"
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium",
