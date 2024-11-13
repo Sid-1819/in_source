@@ -3,6 +3,7 @@ import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Trophy, Users, Calendar } from "lucide-react";
 import { cn } from '~/lib/utils';
+
 type DifficultyLevel = 'Difficulty Level: Beginner' | 'Difficulty Level: Intermediate' | 'Difficulty Level: Advanced' | 'Difficulty Level: All Levels';
 
 interface Contest {
@@ -41,11 +42,8 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
   const getDifficultyStyle = (difficulty: DifficultyLevel) => {
     switch (difficulty) {
       case 'Difficulty Level: Beginner':
-        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
       case 'Difficulty Level: Intermediate':
-        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
       case 'Difficulty Level: Advanced':
-        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
       case 'Difficulty Level: All Levels':
         return 'bg-indigo-100 text-indigo-800 border-indigo-200';
       default:
@@ -55,8 +53,8 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      {/* Mobile Layout (image on top) */}
-      <div className="md:hidden">
+      {/* Mobile Layout (stacked layout for smaller screens) */}
+      <div className="block md:hidden">
         {/* Image */}
         <div className="w-full h-48 overflow-hidden">
           <img 
@@ -65,16 +63,16 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
             className="w-full h-full object-cover"
           />
         </div>
-        
+
         {/* Content */}
         <div className="p-4 space-y-3">
           <div>
             <div className="flex items-start justify-between mb-2">
-              <h3 className="text-xl font-semibold">{contest.title}</h3>
+              <h3 className="text-lg font-semibold">{contest.title}</h3>
               <Badge 
                 variant="secondary"
                 className={cn(
-                  "rounded-full px-3 py-1 text-xs font-medium border",
+                  "rounded-full px-2 py-1 text-xs font-medium border",
                   getDifficultyStyle(contest.difficulty)
                 )}
               >
@@ -116,7 +114,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
         </div>
       </div>
 
-      {/* Desktop Layout (image on left) */}
+      {/* Desktop Layout (side-by-side layout for larger screens) */}
       <div className="hidden md:flex flex-row items-start gap-4 p-4">
         {/* Left image section */}
         <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
@@ -128,53 +126,51 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
         </div>
 
         {/* Content section */}
-        <div className="flex-1">
-          <div className="flex flex-col space-y-3">
-            <div>
-              <div className="flex items-start justify-between mb-2">
-                <h3 className="text-xl font-semibold">{contest.title}</h3>
-                <Badge 
-                  variant="secondary"
-                  className={cn(
-                    "rounded-full px-3 py-1 text-xs font-medium border",
-                    getDifficultyStyle(contest.difficulty)
-                  )}
-                >
-                  {contest.difficulty}
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-600">{contest.description}</p>
+        <div className="flex-1 space-y-3">
+          <div>
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="text-lg font-semibold">{contest.title}</h3>
+              <Badge 
+                variant="secondary"
+                className={cn(
+                  "rounded-full px-2 py-1 text-xs font-medium border",
+                  getDifficultyStyle(contest.difficulty)
+                )}
+              >
+                {contest.difficulty}
+              </Badge>
             </div>
+            <p className="text-sm text-gray-600">{contest.description}</p>
+          </div>
 
-            <div className="flex items-center gap-6 text-sm text-gray-600">
-              <div className="flex items-center gap-1">
-                <Trophy className="w-4 h-4" />
-                <span>${contest.prize.toLocaleString()} in prizes</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Users className="w-4 h-4" />
-                <span>{contest.participants.toLocaleString()} participants</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                <span>{contest.dates}</span>
-              </div>
+          <div className="flex items-center gap-6 text-sm text-gray-600">
+            <div className="flex items-center gap-1">
+              <Trophy className="w-4 h-4" />
+              <span>${contest.prize.toLocaleString()} in prizes</span>
             </div>
+            <div className="flex items-center gap-1">
+              <Users className="w-4 h-4" />
+              <span>{contest.participants.toLocaleString()} participants</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Calendar className="w-4 h-4" />
+              <span>{contest.dates}</span>
+            </div>
+          </div>
 
-            <div className="flex flex-wrap gap-2">
-              {contest.badges.map((badge, index) => (
-                <Badge 
-                  key={index} 
-                  variant="secondary"
-                  className={cn(
-                    "rounded-full px-3 py-1 text-xs font-medium",
-                    getBadgeStyle(badge.type)
-                  )}
-                >
-                  {badge.label}
-                </Badge>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {contest.badges.map((badge, index) => (
+              <Badge 
+                key={index} 
+                variant="secondary"
+                className={cn(
+                  "rounded-full px-3 py-1 text-xs font-medium",
+                  getBadgeStyle(badge.type)
+                )}
+              >
+                {badge.label}
+              </Badge>
+            ))}
           </div>
         </div>
       </div>
