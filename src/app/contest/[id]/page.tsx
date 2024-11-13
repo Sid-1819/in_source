@@ -27,7 +27,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 
 
-export const defaultEditorContent = {
+const defaultEditorContent = {
     type: "doc",
     content: [
         {
@@ -219,7 +219,7 @@ const UpdatedImage = Image.extend({
     },
 });
 
-export const defaultExtensions = [
+const defaultExtensions = [
     StarterKit.configure({
         bulletList: {
             HTMLAttributes: {
@@ -272,7 +272,7 @@ export const defaultExtensions = [
 
                         const { tr } = state;
                         const start = range.from;
-                        let end = range.to;
+                        const end = range.to;
 
                         tr.insert(start - 1, this.type.create(attributes)).delete(
                             tr.mapping.map(start),
