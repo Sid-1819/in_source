@@ -1,6 +1,4 @@
-'use client'
 
-import { useParams } from 'next/navigation'
 import { generateHTML } from "@tiptap/html";
 import React, { useMemo } from "react";
 import StarterKit from "@tiptap/starter-kit";
@@ -19,7 +17,6 @@ import Image from "@tiptap/extension-image";
 import { Card, CardHeader, CardTitle, CardContent } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { getContestById } from '~/server/queries';
-
 
 const defaultEditorContent = {
     type: "doc",
@@ -326,13 +323,13 @@ const defaultExtensions = [
 
 const ContestDetailsPage = () => {
 
-    const { id } = useParams();
-    const contestsList = getContestById(Number(id))
+    // const { id } = useParams();
+    const contestsList = getContestById(Number(1));
 
-    console.log(contestsList);
+    console.log("constest", contestsList);
 
 
-    console.log("id: ", id);
+    // console.log("id: ", id);
 
     const json = defaultEditorContent;
 
@@ -387,7 +384,8 @@ const ContestDetailsPage = () => {
                                     Beginner Friendly
                                 </span>
                             </div>
-                            <Button variant="default" onClick={() => window.open('/join-hackathon')}>
+                            {/* <Button variant="default" onClick={() => window.open('/join-hackathon')}> */}
+                            <Button variant="default">
                                 Join hackathon
                             </Button>
                         </div>
