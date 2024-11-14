@@ -70,11 +70,8 @@ const Header = () => {
                 alt="Logo"
               />
             </Link>
-            <Link href="/create" className="hidden md:block">
-              <Button variant="default" size="sm">
-                Create Contest
-              </Button>
-            </Link>
+            <h1>CMackathon</h1>
+
           </div>
 
           {/* Mobile Menu */}
@@ -148,6 +145,11 @@ const Header = () => {
 
           {/* Right section */}
           <div className="flex items-center space-x-2">
+            <Link href="/create" className="hidden md:block">
+              <Button variant="default" size="sm">
+                Create Contest
+              </Button>
+            </Link>
             <Link href="/host" className="hidden md:block">
               <Button variant="outline" size="sm">
                 Sign Up

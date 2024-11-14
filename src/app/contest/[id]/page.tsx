@@ -336,6 +336,7 @@ const TabContent: React.FC<TabContentProps> = ({ output }) => {
         <div className="mx-auto w-full">
             {/* Description Tab Content */}
             <TabsContent value="description">
+
                 <div
                     className="prose w-full leading-relaxed"
                     dangerouslySetInnerHTML={{ __html: output }}

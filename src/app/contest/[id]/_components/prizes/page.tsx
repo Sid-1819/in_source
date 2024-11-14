@@ -50,10 +50,7 @@ const PrizesPage = () => {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4">
-      <div className="mb-6 flex items-center gap-3">
-        <Trophy className="h-8 w-8 text-yellow-500" />
-        <h1 className="text-3xl font-bold">Prizes</h1>
-      </div>
+      
 
       {winners.map((winner, index) => (
         <Card key={index+1} className="transition-shadow hover:shadow-lg">

@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 
 interface Participant {
   id: string;
@@ -15,6 +16,7 @@ interface Participant {
   username: string;
   avatar: string;
   contestsWon: number;
+  qualifiedSubmissions: number;
   expPoints: number;
 }
 
@@ -54,6 +56,7 @@ const LeaderboardList = () => {
       username: "sarahj",
       avatar: "/api/placeholder/32/32",
       contestsWon: 5,
+      qualifiedSubmissions: 8,
       expPoints: 15000,
     },
     {
@@ -62,6 +65,7 @@ const LeaderboardList = () => {
       username: "mikechen",
       avatar: "/api/placeholder/32/32",
       contestsWon: 4,
+      qualifiedSubmissions: 8,
       expPoints: 12000,
     },
     {
@@ -70,6 +74,7 @@ const LeaderboardList = () => {
       username: "emilyrod",
       avatar: "/api/placeholder/32/32",
       contestsWon: 3,
+      qualifiedSubmissions: 8,
       expPoints: 10000,
     },
     {
@@ -78,6 +83,7 @@ const LeaderboardList = () => {
       username: "davidk",
       avatar: "/api/placeholder/32/32",
       contestsWon: 2,
+      qualifiedSubmissions: 8,
       expPoints: 8000,
     },
     {
@@ -86,6 +92,7 @@ const LeaderboardList = () => {
       username: "lisaw",
       avatar: "/api/placeholder/32/32",
       contestsWon: 2,
+      qualifiedSubmissions: 8,
       expPoints: 7500,
     },
   ];
@@ -99,53 +106,62 @@ const LeaderboardList = () => {
         <CardHeader>
           <CardTitle className="text-2xl font-bold flex items-center gap-2">
             <Trophy className="h-6 w-6 text-yellow-500" />
-            Leaderboard
+            Leaderboard (Dec&apos;24 - Dec&apos;25)
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Table Headers */}
-          <div className="grid grid-cols-[auto_1fr_auto_auto] items-center px-4 py-2 border-b">
-            <div className="w-[60px] font-medium">Rank</div>
-            <div className="font-medium">Participants</div>
-            <div className="text-right font-medium px-4 hidden md:block">Wins</div>
-            <div className="text-right font-medium w-[100px]">XP Points</div>
-          </div>
-
-          {/* Participant Rows */}
-          <div className="divide-y">
-            {sortedParticipants.map((participant, index) => (
-              <div
-                key={participant.id}
-                className="grid grid-cols-[auto_1fr_auto_auto] items-center px-4 py-3 hover:bg-accent/50 transition-colors"
-              >
-                <div className="w-[60px]">
-                  {getRankBadge(index + 1)}
-                </div>
-                
-                <div className="flex items-center gap-3 min-w-0">
-                  <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarImage src={participant.avatar} />
-                    <AvatarFallback>{participant.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="truncate">
-                    <div className="font-medium text-sm truncate">
-                      {participant.name}
+        <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[60px]">Rank</TableHead>
+                <TableHead>Participant</TableHead>
+                <TableHead className="text-right hidden md:table-cell">Wins</TableHead>
+                <TableHead className="text-right hidden md:table-cell">Submissions</TableHead>
+                <TableHead className="text-right">XP Points</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sortedParticipants.map((participant, index) => (
+                <TableRow 
+                  key={participant.id}
+                  className="hover:bg-accent/50 transition-colors"
+                >
+                  <TableCell className="w-[60px]">
+                    {getRankBadge(index + 1)}
+                  </TableCell>
+                  
+                  <TableCell>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="truncate">
+                        <div className="font-medium text-sm">
+                          {participant.name}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-
-                <div className="hidden md:block px-4">
-                  <Badge variant="outline" className="font-medium">
-                    {participant.contestsWon}
-                  </Badge>
-                </div>
-
-                <div className="font-medium text-right w-[100px]">
-                  {participant.expPoints.toLocaleString()}
-                </div>
-              </div>
-            ))}
-          </div>
+                  </TableCell>
+                  
+                  <TableCell className="text-right hidden md:table-cell">
+                    <Badge variant="outline" className="font-medium">
+                      {participant.contestsWon}
+                    </Badge>
+                  </TableCell>
+                  
+                  <TableCell className="text-right hidden md:table-cell">
+                    <Badge 
+                      variant="outline" 
+                      className="font-medium bg-blue-50 text-blue-700 hover:bg-blue-100"
+                    >
+                      {participant.qualifiedSubmissions}
+                    </Badge>
+                  </TableCell>
+                  
+                  <TableCell className="text-right font-medium">
+                    {participant.expPoints.toLocaleString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

@@ -72,10 +72,7 @@ const WinnersList = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4">
-      <div className="flex items-center gap-3 mb-6">
-        <Trophy className="w-8 h-8 text-yellow-500" />
-        <h1 className="text-3xl font-bold">Winners</h1>
-      </div>
+
 
       {winners.map((winner, index) => (
         <Card key={index + 1} className="hover:shadow-lg transition-shadow">
