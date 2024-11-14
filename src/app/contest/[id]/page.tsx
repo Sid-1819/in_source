@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import WinnersList from "./_components/winners/page";
 import ApplicantsList from "./_components/participants/page";
 import InformationPage from "./_components/information/page";
+import PrizesPage from "./_components/prizes/page";
 
 interface TabContentProps {
     output: string;
@@ -419,10 +420,14 @@ const TabContent: React.FC<TabContentProps> = ({ output }) => {
     return (
       <div className="mx-auto w-full max-w-3xl">
         <Tabs defaultValue="description" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="description" className="flex items-center gap-2">
               {/* <FileText className="h-4 w-4" /> */}
               <span className="hidden md:inline">Description</span>
+            </TabsTrigger>
+            <TabsTrigger value="prizes" className="flex items-center gap-2">
+              {/* <FileText className="h-4 w-4" /> */}
+              <span className="hidden md:inline">Prizes</span>
             </TabsTrigger>
             <TabsTrigger value="info" className="flex items-center gap-2">
               {/* <Info className="h-4 w-4" /> */}
@@ -440,6 +445,10 @@ const TabContent: React.FC<TabContentProps> = ({ output }) => {
           
           <TabsContent value="description">
           <TabContent output={output} />
+        </TabsContent>
+
+        <TabsContent value="prizes">
+          <PrizesPage/>
         </TabsContent>
 
         <TabsContent value="info">

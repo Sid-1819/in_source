@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Trophy, Medal, Gift } from "lucide-react";
@@ -130,7 +129,7 @@ const PrizesList = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex items-center gap-2 mb-6">
         <Gift className="h-6 w-6 text-purple-500" />
-        <h1 className="text-2xl font-bold">Contest Prizes</h1>
+        <h1 className="text-2xl font-bold">Season Prizes</h1>
       </div>
       
       <div className="flex-col gap-4">
