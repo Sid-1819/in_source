@@ -135,7 +135,7 @@ const PrizesList = () => {
     <div className="mx-auto max-w-4xl p-4">
       <div className="mb-6 flex items-center gap-2">
         <Gift className="h-6 w-6 text-purple-500" />
-        <h1 className="text-2xl font-bold">Season Prizes (Dec'24 - Dec'25)</h1>
+        <h1 className="text-2xl font-bold">Season Prizes (Dec&apos;24 - Dec&apos;25)</h1>
       </div>
 
       <div className="flex-col gap-4">
