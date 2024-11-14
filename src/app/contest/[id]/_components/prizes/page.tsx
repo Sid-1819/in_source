@@ -6,7 +6,7 @@ import { Trophy, Medal, Gift, Star, Award } from "lucide-react";
 interface Prizes {
   name: string;
   experiencePoints: number;
-  cashPrize: number;
+
   swags: string[];
 }
 
@@ -15,21 +15,21 @@ const PrizesPage = () => {
     {
       name: "1st Prize",
       experiencePoints: 15000,
-      cashPrize: 10000,
+
 
       swags: ["Premium Hoodie", "Mechanical Keyboard", "Dev Pack"],
     },
     {
       name: "2nd Prize",
-      experiencePoints: 12000,
-      cashPrize: 5000,
+      experiencePoints: 10000,
+ 
 
       swags: ["Hoodie", "Tech Pack"],
     },
     {
       name: "3rd Prize",
-      experiencePoints: 11000,
-      cashPrize: 3000,
+      experiencePoints: 5000,
+    
 
       swags: ["T-Shirt", "Notebook", "Sticker Pack"],
     },
@@ -76,12 +76,12 @@ const PrizesPage = () => {
                     <span>{winner.experiencePoints.toLocaleString()} XP</span>
                   </div>
                   <div className="flex items-center gap-1 text-green-600">
-                    <Trophy className="h-4 w-4" />
-                    <span>${winner.cashPrize.toLocaleString()}</span>
+               
+          
                   </div>
                   <div className="flex items-center gap-1 text-blue-600">
                     <Gift className="h-4 w-4" />
-                    <span>{winner.swags.join(", ")}</span>
+                    <span>Swag Bags</span>
                   </div>
                 </div>
               </div>

@@ -328,45 +328,63 @@ const ContestDetailsPage = () => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-base font-medium">
-                    Who can participate
-                  </span>
-                  <span className="text-right text-base">
-                    - Above legal age of majority in country of residence
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-base font-medium">Deadline</span>
-                  <span className="text-base">4 Dec 2024 @ 1:15pm</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-base font-medium">Participation</span>
-                  <span className="text-base">5,227 participants</span>
-                </div>
-              </div>
-              <div className="space-y-4 text-right">
-                <div className="flex flex-col space-y-2">
-                  <span className="text-base font-medium">Prizes & Awards</span>
-                  <span className="text-base">$650.00</span>
-                  <span className="text-base">15 Exp points</span>
-                </div>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="space-y-6">
+        {/* Participation Info */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Who can participate
+            </h3>
+            <p className="text-base font-medium">
+              CMSS employees only
+            </p>
+          </div>
+        </div>
+
+        {/* Deadline Info */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Deadline
+            </h3>
+            <p className="text-base font-medium">
+              4 Dec 2024 @ 1:15pm
+            </p>
+          </div>
+        </div>
+
+        {/* Participants Info */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Participation
+            </h3>
+            <p className="text-base font-medium">
+              5,227 participants
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Button */}
+      <div className="flex items-start justify-end">
+        <Button
+          variant="default"
+          onClick={() => window.open("/join-hackathon")}
+          className="w-full md:w-auto"
+        >
+          Join hackathon
+        </Button>
+      </div>
+    </div>
             <div className="mt-8 flex items-center justify-between border-t pt-4">
               <div className="flex space-x-2">
                 <Badge variant="default">Machine Learning/AI</Badge>
                 <Badge variant="default">Web</Badge>
                 <Badge variant="default">Beginner Friendly</Badge>
               </div>
-              <Button
-                variant="default"
-                onClick={() => window.open("/join-hackathon")}
-              >
-                Join hackathon
-              </Button>
+             
             </div>
           </div>
         </CardContent>
