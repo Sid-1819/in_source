@@ -1,4 +1,6 @@
 "use client"
+import "@uploadthing/react/styles.css";
+
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
@@ -60,11 +62,18 @@ const Header = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex flex-rowm items-center space-x-4">
             <Link href="/" className="flex items-center">
-              <div className="rounded bg-teal-700 px-3 py-1 font-bold text-white">
-                ENGAGE
-              </div>
+              <img
+                className="h-12 w-12"
+                src="/logo.svg"
+                alt="Logo"
+              />
+            </Link>
+            <Link href="/create" className="hidden md:block">
+              <Button variant="default" size="sm">
+                Create Contest
+              </Button>
             </Link>
           </div>
 
@@ -72,27 +81,65 @@ const Header = () => {
           <MobileNav />
 
           {/* Desktop Navigation */}
-          <nav className="hidden items-center space-x-4 md:flex ">
+          <nav className="hidden items-center space-x-8 md:flex ">
             <NavigationMenu>
               <NavigationMenuList>
-
-                <NavigationMenuItem className="px-2">
-                  <Link href="/hackathons" legacyBehavior passHref>
-                    <NavigationMenuLink >
+                <NavigationMenuItem className="px-8">
+                  <Link href="/" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={cn(
+                        "font-medium transition-colors hover:text-primary",
+                        pathname === "/"
+                          ? "text-primary border-b-2 border-primary"
+                          : "text-muted-foreground"
+                      )}
+                    >
                       Home
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem className="px-2">
-                  <Link href="/projects" legacyBehavior passHref>
-                    <NavigationMenuLink>Projects</NavigationMenuLink>
+                <NavigationMenuItem className="px-8">
+                  <Link href="/leaderboard" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={cn(
+                        "font-medium transition-colors hover:text-primary",
+                        pathname === "/leaderboard"
+                          ? "text-primary border-b-2 border-primary"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      Leaderboard
+                    </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem className="px-2">
-                  <Link href="/blog" legacyBehavior passHref>
-                    <NavigationMenuLink>Blog</NavigationMenuLink>
+                <NavigationMenuItem className="px-8">
+                  <Link href="/prizes" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={cn(
+                        "font-medium transition-colors hover:text-primary",
+                        pathname === "/prizes"
+                          ? "text-primary border-b-2 border-primary"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      Season Prizes
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem className="px-8">
+                  <Link href="/rules" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={cn(
+                        "font-medium transition-colors hover:text-primary",
+                        pathname === "/rules"
+                          ? "text-primary border-b-2 border-primary"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      Rules
+                    </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
               </NavigationMenuList>
