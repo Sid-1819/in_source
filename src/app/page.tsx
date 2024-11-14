@@ -7,7 +7,7 @@ import { Trophy, Users, Calendar } from "lucide-react";
 import { cn } from '~/lib/utils';
 import { useRouter } from 'next/navigation';
 
-type DifficultyLevel = 'Difficulty Level: Beginner' | 'Difficulty Level: Intermediate' | 'Difficulty Level: Advanced' | 'Difficulty Level: All Levels';
+type DifficultyLevel = 'Complexity: Easy' | 'Complexity: Medium' | 'Complexity: Hard' | 'Complexity: Pro';
 
 interface Contest {
   id:number;
@@ -30,25 +30,14 @@ interface ContestCardProps {
 }
 
 const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
-  const getBadgeStyle = (type: 'technology' | 'category' | 'sponsor') => {
-    switch (type) {
-      case 'technology':
-        return 'bg-blue-100 text-blue-800 hover:bg-blue-200';
-      case 'category':
-        return 'bg-purple-100 text-purple-800 hover:bg-purple-200';
-      case 'sponsor':
-        return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  
 
   const getDifficultyStyle = (difficulty: DifficultyLevel) => {
     switch (difficulty) {
-      case 'Difficulty Level: Beginner':
-      case 'Difficulty Level: Intermediate':
-      case 'Difficulty Level: Advanced':
-      case 'Difficulty Level: All Levels':
+      case 'Complexity: Easy':
+      case 'Complexity: Medium':
+      case 'Complexity: Hard':
+      case 'Complexity: Pro':
         return 'bg-indigo-100 text-indigo-800 border-indigo-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -115,7 +104,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                 variant="secondary"
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium",
-                  getBadgeStyle(badge.type)
+                 
                 )}
               >
                 {badge.label}
@@ -151,10 +140,10 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                 {contest.difficulty}
               </Badge>
             </div>
-            <p className="text-sm text-gray-600">{contest.description}</p>
+            <p className="text-sm text-secondary">{contest.description}</p>
           </div>
 
-          <div className="flex items-center gap-6 text-sm text-gray-600">
+          <div className="flex items-center gap-6 text-sm text-secondary">
             <div className="flex items-center gap-1">
               <Trophy className="w-4 h-4" />
               <span>${contest.prize.toLocaleString()} in prizes</span>
@@ -176,7 +165,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                 variant="secondary"
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium",
-                  getBadgeStyle(badge.type)
+                
                 )}
               >
                 {badge.label}
@@ -200,7 +189,7 @@ const ContestList = () => {
       prize: 170000,
       participants: 2007,
       dates: "Oct 15 - Dec 10, 2024",
-      difficulty: 'Difficulty Level: Intermediate',
+      difficulty: 'Complexity: Medium',
       badges: [
         { type: 'technology', label: 'DevOps' },
         { type: 'technology', label: 'Machine Learning/AI' },
@@ -217,7 +206,7 @@ const ContestList = () => {
       prize: 50000,
       participants: 1500,
       dates: "Nov 1 - Dec 15, 2024",
-      difficulty: 'Difficulty Level: Advanced',
+      difficulty: 'Complexity: Hard',
       badges: [
         { type: 'technology', label: 'Blockchain' },
         { type: 'technology', label: 'Smart Contracts' },
@@ -229,7 +218,7 @@ const ContestList = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-4 p-4">
       {contests.map((contest, index) => (
-        <ContestCard key={index} contest={contest} />
+        <ContestCard key={index+1} contest={contest} />
       ))}
     </div>
   );

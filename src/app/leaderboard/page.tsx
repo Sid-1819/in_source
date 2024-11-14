@@ -99,7 +99,7 @@ const LeaderboardList = () => {
         <CardHeader>
           <CardTitle className="text-2xl font-bold flex items-center gap-2">
             <Trophy className="h-6 w-6 text-yellow-500" />
-            Leaderboard
+            Leaderboard (Dec&apos;24 - Dec&apos;25)
           </CardTitle>
         </CardHeader>
         <CardContent>
