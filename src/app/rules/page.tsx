@@ -1,17 +1,18 @@
 import React from 'react'
-import  Markdown  from 'react-markdown'
-
+import ReactMarkdown from 'react-markdown'
+// import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 const RulesPage = () => {
 
-    const rules = `**1. Dates and Timing**
-
+    const rules = `
+**1. Dates and Timing**
 The timings and dates mentioned for each Contest remain the same. Any submissions or willingness to enter or submit after the due dates will not be entertained.
 
-**2. Eligibility**
 
-- The Contest IS open to:
-  - All active CMSS (Cyber Managers Software Services Pvt. Ltd.) employees only.
-  - For the eligibility of season prizes, you need to be on active payroll of CMSS at the time of Season closure
+**2. Eligibility**
+The Contest IS open to:
+- All active CMSS (Cyber Managers Software Services Pvt. Ltd.) employees only.
+ For the eligibility of season prizes, you need to be on active payroll of CMSS at the time of Season closure
   - You must apply from CMSS or CMSSL email address only
 - You further warrant that your actions do not violate the company's or client policies and procedures.
 
@@ -120,7 +121,7 @@ By entering, all Entrants (including, in the case of a Team, all participating m
   return (
     <>
     <h1><strong>Rules</strong></h1>
-    <Markdown>{rules}</Markdown>
+    <ReactMarkdown>{rules}</ReactMarkdown>
     </>
   )
 }
