@@ -32,6 +32,7 @@ export const contests = createTable(
     title: varchar("title", { length: 255 }).notNull(),
     subTitle: varchar("sub_title", { length: 255 }).notNull(),
     description: text("description"),
+    tags: varchar("tags", { length: 225 }),
     bannerUrl: varchar("banner_url", { length: 255 }),
     status: char("status", { length: 1 }).default('a'),
     createdAt: timestamp("created_at", { withTimezone: true })

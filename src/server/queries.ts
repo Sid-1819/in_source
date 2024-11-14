@@ -13,3 +13,10 @@ export async function getContestById(contestId: number) {
     return contestsById;
 
 }
+
+export async function getContestList(status: string) {
+
+    const contestsList = await db.select().from(contests).where(eq(contests.status, status));
+    console.log("contestList", contestsList)
+    return contestsList;
+}
