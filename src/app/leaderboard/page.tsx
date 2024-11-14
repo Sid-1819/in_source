@@ -131,9 +131,6 @@ const LeaderboardList = () => {
                     <div className="font-medium text-sm truncate">
                       {participant.name}
                     </div>
-                    <div className="text-xs text-muted-foreground truncate">
-                      @{participant.username}
-                    </div>
                   </div>
                 </div>
 
