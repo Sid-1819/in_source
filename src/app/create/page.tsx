@@ -163,7 +163,7 @@ const CreateContestForm = () => {
                             // Do something with the response
                             console.log("Files: ", res);
                           }}
-                          onUploadError={(error: Error) => {}}
+                          onUploadError={(error: Error) =>{console.log("Error: ", error)}}
                         />
                       </Label>
                     </div>
