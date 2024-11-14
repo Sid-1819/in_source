@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -18,8 +18,9 @@ import { Textarea } from "~/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { ImagePlus, Loader2 } from "lucide-react";
 import Image from "next/image";
+import { UploadButton } from "~/utils/uploadthing";
+import { Badge } from "~/components/ui/badge";
 
 const formSchema = z.object({
   title: z.string().min(5, {
@@ -32,6 +33,10 @@ const formSchema = z.object({
     message: "Description must be at least 50 characters.",
   }),
   banner: z.string().optional(),
+  badges: z.string(), // For the comma-separated badges input
+  expPoints: z.number().nullable(),
+  cashPrize: z.number().nullable(),
+  swagCount: z.number().nullable(),
 });
 
 const CreateContestForm = () => {
@@ -45,9 +50,13 @@ const CreateContestForm = () => {
       subtitle: "",
       description: "",
       banner: "",
+      badges: "",
+      expPoints: null,
+      cashPrize: null,
+      swagCount: null,
+
     },
   });
-
 
   const uploadImageToStorage = async (file: File): Promise<string> => {
     // Simulate upload time
@@ -66,7 +75,7 @@ const CreateContestForm = () => {
         setBannerPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
-      
+
       // Upload the file to storage
       try {
         const uploadedUrl = await uploadImageToStorage(file);
@@ -86,9 +95,11 @@ const CreateContestForm = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <Card className="max-w-3xl mx-auto">
+      <Card className="mx-auto max-w-3xl">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Create New Contest</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            Create New Contest
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -144,20 +155,20 @@ const CreateContestForm = () => {
                       />
                       <Label
                         htmlFor="banner-upload"
-                        className="cursor-pointer flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                        className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
                       >
-                        <Button type="button" variant="outline">
-                          {isUploading ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <ImagePlus className="h-4 w-4" />
-                          )}
-                          <span className="ml-2">Upload Banner</span>
-                        </Button>
+                        <UploadButton
+                          endpoint="imageUploader"
+                          onClientUploadComplete={(res) => {
+                            // Do something with the response
+                            console.log("Files: ", res);
+                          }}
+                          onUploadError={(error: Error) => {}}
+                        />
                       </Label>
                     </div>
                     {bannerPreview && (
-                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border">
+                      <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
                         <Image
                           src={bannerPreview}
                           alt="Banner preview"
@@ -168,7 +179,9 @@ const CreateContestForm = () => {
                     )}
                   </div>
                 </FormControl>
-                <FormDescription>Upload a 1200x630px banner image.</FormDescription>
+                <FormDescription>
+                  Upload a 1200x630px banner image.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
 
@@ -187,13 +200,145 @@ const CreateContestForm = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      Provide detailed information about your contest, including rules,
-                      requirements, and judging criteria.
+                      Provide detailed information about your contest, including
+                      rules, requirements, and judging criteria.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="badges"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Badges</FormLabel>
+                    <FormControl>
+                      <div className="space-y-4">
+                        <Input
+                          placeholder="Enter badges separated by commas (e.g., React, TypeScript, Web)"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            // Update badges preview
+                            const badgeValues = e.target.value
+                              .split(",")
+                              .map((badge) => badge.trim())
+                              .filter((badge) => badge !== "");
+                          }}
+                        />
+                        <div className="flex flex-wrap gap-2">
+                          {field.value
+                            .split(",")
+                            .map((badge) => badge.trim())
+                            .filter((badge) => badge !== "")
+                            .map((badge, index) => (
+                              <Badge key={index + 1} variant="secondary">
+                                {badge}
+                              </Badge>
+                            ))}
+                        </div>
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      Add relevant tags for your contest (e.g., technologies,
+                      categories)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Rewards Section */}
+              <div className="space-y-6">
+      <h3 className="text-lg font-medium">Rewards</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Experience Points */}
+        <FormField
+          control={form.control}
+          name="expPoints"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Experience Points</FormLabel>
+              <FormControl>
+                <div className="flex items-center">
+                  <Input
+                    type="number"
+                    placeholder="Enter XP points"
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      field.onChange(value === '' ? null : Number(value));
+                    }}
+                    className="pr-12"
+                  />
+                  <span className="ml-[-40px] text-sm text-muted-foreground">
+                    XP
+                  </span>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Cash Prize */}
+        <FormField
+          control={form.control}
+          name="cashPrize"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Cash Prize</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                    $
+                  </span>
+                  <Input
+                    type="number"
+                    placeholder="Enter amount"
+                    {...field}
+                    value={field.value 
+                        ?? ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      field.onChange(value === '' ? null : Number(value));
+                    }}
+                    className="pl-7"
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Swag Count */}
+        <FormField
+          control={form.control}
+          name="swagCount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Number of Swags</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="Enter swag count"
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === '' ? null : Number(value));
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    </div>
 
               <div className="flex justify-end gap-4">
                 <Button variant="outline" type="button">
