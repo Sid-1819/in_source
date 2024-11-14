@@ -324,7 +324,7 @@ const defaultExtensions = [
 const ContestDetailsPage = () => {
 
     // const { id } = useParams();
-    const contestsList = getContestById(Number(1));
+    const contestsList = `api/contents/1`
 
     console.log("constest", contestsList);
 
