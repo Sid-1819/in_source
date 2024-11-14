@@ -80,10 +80,10 @@ const Header = () => {
           <MobileNav />
 
           {/* Desktop Navigation */}
-          <nav className="hidden items-center space-x-4 md:flex ">
+          <nav className="hidden items-center space-x-8 md:flex ">
           <NavigationMenu>
       <NavigationMenuList>
-        <NavigationMenuItem className="px-2">
+        <NavigationMenuItem className="px-8">
           <Link href="/" legacyBehavior passHref>
             <NavigationMenuLink
               className={cn(
@@ -98,7 +98,7 @@ const Header = () => {
           </Link>
         </NavigationMenuItem>
 
-        <NavigationMenuItem className="px-2">
+        <NavigationMenuItem className="px-8">
           <Link href="/leaderboard" legacyBehavior passHref>
             <NavigationMenuLink
               className={cn(
@@ -113,7 +113,7 @@ const Header = () => {
           </Link>
         </NavigationMenuItem>
 
-        <NavigationMenuItem className="px-2">
+        <NavigationMenuItem className="px-8">
           <Link href="/prizes" legacyBehavior passHref>
             <NavigationMenuLink
               className={cn(
@@ -123,7 +123,21 @@ const Header = () => {
                   : "text-muted-foreground"
               )}
             >
-              Prizes
+              Season Prizes
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem className="px-8">
+          <Link href="/rules" legacyBehavior passHref>
+            <NavigationMenuLink
+              className={cn(
+                "font-medium transition-colors hover:text-primary",
+                pathname === "/rules" 
+                  ? "text-primary border-b-2 border-primary" 
+                  : "text-muted-foreground"
+              )}
+            >
+              Rules
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
