@@ -25,9 +25,6 @@ import ApplicantsList from "./_components/participants/page";
 import InformationPage from "./_components/information/page";
 import PrizesPage from "./_components/prizes/page";
 
-interface TabContentProps {
-    output: string;
-  }
 const defaultEditorContent = {
   type: "doc",
   content: [
@@ -49,159 +46,7 @@ const defaultEditorContent = {
           text: "Welcome to the Novel Contest, an exciting opportunity for aspiring writers to showcase their literary talents. This contest invites you to submit your original novel manuscripts, where the winner will have the chance to work with our team of editors and see their work published. Get ready to embark on a thrilling journey of creativity, imagination, and literary excellence.",
         },
       ],
-    },
-    {
-      type: "heading",
-      attrs: { level: 3 },
-      content: [{ type: "text", text: "Introducing Novel" }],
-    },
-    {
-      type: "paragraph",
-      content: [
-        {
-          type: "text",
-          marks: [
-            {
-              type: "link",
-              attrs: {
-                href: "https://github.com/steven-tey/novel",
-                target: "_blank",
-                class:
-                  "text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer",
-              },
-            },
-          ],
-          text: "Novel",
-        },
-        {
-          type: "text",
-          text: " is a Notion-style WYSIWYG editor with AI-powered autocompletion. Built with ",
-        },
-        {
-          type: "text",
-          marks: [
-            {
-              type: "link",
-              attrs: {
-                href: "https://tiptap.dev/",
-                target: "_blank",
-                class:
-                  "text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer",
-              },
-            },
-          ],
-          text: "Tiptap",
-        },
-        { type: "text", text: " + " },
-        {
-          type: "text",
-          marks: [
-            {
-              type: "link",
-              attrs: {
-                href: "https://sdk.vercel.ai/docs",
-                target: "_blank",
-                class:
-                  "text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer",
-              },
-            },
-          ],
-          text: "Vercel AI SDK",
-        },
-        { type: "text", text: "." },
-      ],
-    },
-    {
-      type: "heading",
-      attrs: { level: 3 },
-      content: [{ type: "text", text: "Installation" }],
-    },
-    {
-      type: "codeBlock",
-      attrs: { language: null },
-      content: [{ type: "text", text: "npm i novel" }],
-    },
-    {
-      type: "heading",
-      attrs: { level: 3 },
-      content: [{ type: "text", text: "Usage" }],
-    },
-    {
-      type: "codeBlock",
-      attrs: { language: null },
-      content: [
-        {
-          type: "text",
-          text: 'import { Editor } from "novel";\n\nexport default function App() {\n  return (\n     <Editor />\n  )\n}',
-        },
-      ],
-    },
-    {
-      type: "heading",
-      attrs: { level: 3 },
-      content: [{ type: "text", text: "Features" }],
-    },
-    {
-      type: "orderedList",
-      attrs: { tight: true, start: 1 },
-      content: [
-        {
-          type: "listItem",
-          content: [
-            {
-              type: "paragraph",
-              content: [{ type: "text", text: "Slash menu & bubble menu" }],
-            },
-          ],
-        },
-        {
-          type: "listItem",
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                { type: "text", text: "AI autocomplete (type " },
-                { type: "text", marks: [{ type: "code" }], text: "++" },
-                {
-                  type: "text",
-                  text: " to activate, or select from slash menu)",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: "listItem",
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: "Image uploads (drag & drop / copy & paste, or select from slash menu) ",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      type: "image",
-      attrs: {
-        src: "https://public.blob.vercel-storage.com/pJrjXbdONOnAeZAZ/banner-2wQk82qTwyVgvlhTW21GIkWgqPGD2C.png",
-        alt: "banner.png",
-        title: "banner.png",
-        width: null,
-        height: null,
-      },
-    },
-    { type: "horizontalRule" },
-    {
-      type: "heading",
-      attrs: { level: 3 },
-      content: [{ type: "text", text: "Learn more" }],
-    },
+    }
   ],
 };
 
@@ -261,7 +106,6 @@ const defaultExtensions = [
     },
     gapcursor: false,
   }),
-  // patch to fix horizontal rule bug: https://github.com/ueberdosis/tiptap/pull/3859#issuecomment-1536799740
   HorizontalRule.extend({
     addInputRules() {
       return [
@@ -269,11 +113,9 @@ const defaultExtensions = [
           find: /^(?:---|—-|___\s|\*\*\*\s)$/,
           handler: ({ state, range }) => {
             const attributes = {};
-
             const { tr } = state;
             const start = range.from;
             const end = range.to;
-
             tr.insert(start - 1, this.type.create(attributes)).delete(
               tr.mapping.map(start),
               tr.mapping.map(end),
@@ -330,142 +172,136 @@ const defaultExtensions = [
   }),
 ];
 
+interface TabContentProps {
+  output: string;
+}
+
 const TabContent: React.FC<TabContentProps> = ({ output }) => {
-    return (
-      <div className="mx-auto w-full">
-        {/* Description Tab Content */}
-        <TabsContent value="description">
-      
-          <div
-            className="prose w-full leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: output }}
-          />
-        </TabsContent>
-  
-        {/* Info Tab Content */}
-        <TabsContent value="info">
-          <h2 className="mb-4 text-xl font-medium">Contest Information</h2>
-          <div className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-medium mb-2">Important Dates</h3>
-                  <ul className="space-y-2">
-                    <li className="flex justify-between">
-                      <span className="text-muted-foreground">Registration Opens:</span>
-                      <span>Oct 15, 2024</span>
-                    </li>
-                    <li className="flex justify-between">
-                      <span className="text-muted-foreground">Submission Deadline:</span>
-                      <span>Dec 10, 2024</span>
-                    </li>
-                    <li className="flex justify-between">
-                      <span className="text-muted-foreground">Winners Announced:</span>
-                      <span>Dec 20, 2024</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Rules</h3>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                    <li>Must be original work</li>
-                    <li>Individual or team participation allowed</li>
-                    <li>Follow submission guidelines</li>
-                    <li>Adhere to code of conduct</li>
-                  </ul>
-                </div>
+  return (
+    <div className="mx-auto w-full">
+      <TabsContent value="description">
+        <div
+          className="prose w-full leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: output }}
+        />
+      </TabsContent>
+
+      <TabsContent value="info">
+        <h2 className="mb-4 text-xl font-medium">Contest Information</h2>
+        <div className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium mb-2">Important Dates</h3>
+                <ul className="space-y-2">
+                  <li className="flex justify-between">
+                    <span className="text-muted-foreground">Registration Opens:</span>
+                    <span>Oct 15, 2024</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-muted-foreground">Submission Deadline:</span>
+                    <span>Dec 10, 2024</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-muted-foreground">Winners Announced:</span>
+                    <span>Dec 20, 2024</span>
+                  </li>
+                </ul>
               </div>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-medium mb-2">Resources</h3>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                    <li>API Documentation</li>
-                    <li>Starter Templates</li>
-                    <li>Tutorial Videos</li>
-                    <li>Support Forums</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Contact</h3>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li>Discord Community Channel</li>
-                    <li>Email Support</li>
-                  </ul>
-                </div>
+              <div>
+                <h3 className="font-medium mb-2">Rules</h3>
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                  <li>Must be original work</li>
+                  <li>Individual or team participation allowed</li>
+                  <li>Follow submission guidelines</li>
+                  <li>Adhere to code of conduct</li>
+                </ul>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium mb-2">Resources</h3>
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                  <li>API Documentation</li>
+                  <li>Starter Templates</li>
+                  <li>Tutorial Videos</li>
+                  <li>Support Forums</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">Contact</h3>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li>Discord Community Channel</li>
+                  <li>Email Support</li>
+                </ul>
               </div>
             </div>
           </div>
-        </TabsContent>
-  
-        {/* Participants Tab Content */}
-        <TabsContent value="participants">
-          <h2 className="mb-4 text-xl font-medium">Participants</h2>
-          <div className="text-muted-foreground">
-            Participants list will be displayed here...
-          </div>
-        </TabsContent>
-  
-        {/* Winners Tab Content */}
-        <TabsContent value="winners">
-          <h2 className="mb-4 text-xl font-medium">Winners</h2>
-          <div className="text-muted-foreground">
-            Winners will be announced after the contest...
-          </div>
-        </TabsContent>
-      </div>
-    );
-  };
-  
-  const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
-    return (
-      <div className="mx-auto w-full max-w-3xl">
-        <Tabs defaultValue="description" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-8">
-            <TabsTrigger value="description" className="flex items-center gap-2">
-              {/* <FileText className="h-4 w-4" /> */}
-              <span className="hidden md:inline">Description</span>
-            </TabsTrigger>
-            <TabsTrigger value="prizes" className="flex items-center gap-2">
-              {/* <FileText className="h-4 w-4" /> */}
-              <span className="hidden md:inline">Prizes</span>
-            </TabsTrigger>
-            <TabsTrigger value="info" className="flex items-center gap-2">
-              {/* <Info className="h-4 w-4" /> */}
-              <span className="hidden md:inline">Info</span>
-            </TabsTrigger>
-            <TabsTrigger value="participants" className="flex items-center gap-2">
-              {/* <Users className="h-4 w-4" /> */}
-              <span className="hidden md:inline">Participants</span>
-            </TabsTrigger>
-            <TabsTrigger value="winners" className="flex items-center gap-2">
-              {/* <Trophy className="h-4 w-4" /> */}
-              <span className="hidden md:inline">Winners</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="description">
+        </div>
+      </TabsContent>
+
+      <TabsContent value="participants">
+        <h2 className="mb-4 text-xl font-medium">Participants</h2>
+        <div className="text-muted-foreground">
+          Participants list will be displayed here...
+        </div>
+      </TabsContent>
+
+      <TabsContent value="winners">
+        <h2 className="mb-4 text-xl font-medium">Winners</h2>
+        <div className="text-muted-foreground">
+          Winners will be announced after the contest...
+        </div>
+      </TabsContent>
+    </div>
+  );
+};
+
+const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
+  return (
+    <div className="mx-auto w-full max-w-3xl">
+      <Tabs defaultValue="description" className="w-full">
+        <TabsList className="grid w-full grid-cols-5 mb-8">
+          <TabsTrigger value="description" className="flex items-center gap-2">
+            <span className="inline">Description</span>
+          </TabsTrigger>
+          <TabsTrigger value="prizes" className="flex items-center gap-2">
+            <span className="inline">Prizes</span>
+          </TabsTrigger>
+          <TabsTrigger value="info" className="flex items-center gap-2">
+            <span className="inline">Info</span>
+          </TabsTrigger>
+          <TabsTrigger value="participants" className="flex items-center gap-2">
+            <span className="inline">Participants</span>
+          </TabsTrigger>
+          <TabsTrigger value="winners" className="flex items-center gap-2">
+            <span className="inline">Winners</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="description">
           <TabContent output={output} />
         </TabsContent>
 
         <TabsContent value="prizes">
-          <PrizesPage/>
+          <PrizesPage />
         </TabsContent>
 
         <TabsContent value="info">
-          <InformationPage/>
+          <InformationPage />
         </TabsContent>
 
         <TabsContent value="participants">
-          <ApplicantsList/>
+          <ApplicantsList />
         </TabsContent>
 
         <TabsContent value="winners">
           <WinnersList />
         </TabsContent>
-        </Tabs>
-      </div>
-    );
-  };
+      </Tabs>
+    </div>
+  );
+};
 
 const ContestDetailsPage = () => {
   const { id } = useParams();
@@ -480,7 +316,6 @@ const ContestDetailsPage = () => {
 
   return (
     <>
-      {/* Header Card */}
       <Card className="mx-auto my-8 w-full max-w-3xl">
         <CardHeader>
           <CardTitle className="mb-2 text-xl">
@@ -522,15 +357,9 @@ const ContestDetailsPage = () => {
             </div>
             <div className="mt-8 flex items-center justify-between border-t pt-4">
               <div className="flex space-x-2">
-                <Badge variant="default">
-                  Machine Learning/AI
-                </Badge>
-                <Badge variant="default">
-                  Web
-                  </Badge>
-                <Badge variant="default">
-                  Beginner Friendly
-                  </Badge>
+                <Badge variant="default">Machine Learning/AI</Badge>
+                <Badge variant="default">Web</Badge>
+                <Badge variant="default">Beginner Friendly</Badge>
               </div>
               <Button
                 variant="default"
@@ -543,10 +372,8 @@ const ContestDetailsPage = () => {
         </CardContent>
       </Card>
 
-      {/* Description */}
       <div className="mx-auto w-full max-w-3xl">
-      
-           <HackathonTabs output={output} />
+        <HackathonTabs output={output} />
       </div>
     </>
   );
