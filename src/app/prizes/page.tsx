@@ -44,16 +44,16 @@ const getRankBadge = (rank: number) => {
 
 const PrizeCard: React.FC<{ prize: Prize }> = ({ prize }) => {
   return (
-    <Card className="my-4 flex flex-row transition-shadow hover:shadow-md">
-      <CardHeader>
+    <Card className="my-4 flex flex-row shadow-none hover:shadow-md">
+      <CardHeader className="p-4">
         <div className="flex items-center justify-between">
           {getRankBadge(prize.rank)}
 
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className=" ml-8 p-2 font-semibold">
         {prize.awards.map((award, index) => (
-          <div key={index + 1} className="py-4 text-lg mt-2">
+          <div key={index + 1} className=" text-lg mt-2">
             {award.item}
           </div>
         ))}
@@ -131,7 +131,7 @@ const PrizesList = () => {
   ];
 
   return (
-    <div className="mx-auto max-w-4xl p-4">
+    <div className="mx-auto max-w-4xl ">
       <div className="mb-6 flex items-center gap-2">
         <Gift className="h-6 w-6 text-purple-500" />
         <h1 className="text-2xl font-bold">Season Prizes (Dec&apos;24 - Dec&apos;25)</h1>
