@@ -46,10 +46,7 @@ const ApplicantsList = () => {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4">
-      <div className="mb-6 flex items-center gap-3">
-        <UsersRound className="h-8 w-8 text-black" />
-        <h1 className="text-3xl font-bold">Participants</h1>
-      </div>
+     
 
       {applicants.map((applicant, index) => (
         <Card key={index + 1} className="transition-shadow hover:shadow-lg">
