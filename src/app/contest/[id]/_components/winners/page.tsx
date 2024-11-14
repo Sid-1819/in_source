@@ -5,12 +5,12 @@ import {
 } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
-import { Trophy, Star, Gift} from "lucide-react";
+import { Trophy, Star, Gift } from "lucide-react";
 
 
 interface Winner {
   name: string;
- 
+
   profileImage: string;
   experiencePoints: number;
   swags: string[];
@@ -44,13 +44,13 @@ const WinnersList = () => {
     },
     
   ];
-  
+
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4">
-     
+
 
       {winners.map((winner, index) => (
-        <Card key={index+1} className="hover:shadow-lg transition-shadow">
+        <Card key={index + 1} className="hover:shadow-lg transition-shadow">
           <CardHeader>
             <div className="flex items-start gap-4">
               {/* Profile */}
@@ -65,7 +65,7 @@ const WinnersList = () => {
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-semibold text-lg">{winner.name}</h3>
-                  
+
                   </div>
                   <p className="text-muted-foreground">{winner.projectTitle}</p>
                 </div>

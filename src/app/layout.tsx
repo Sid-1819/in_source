@@ -4,6 +4,7 @@ import "@uploadthing/react/styles.css";
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "~/lib/utils";
+import { ClerkProvider } from '@clerk/nextjs'
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
@@ -59,6 +60,7 @@ const Header = () => {
                 src="/logo.svg"
                 alt="Logo"
               />
+            
             </Link>
             <h1>CMackathon</h1>
           </div>
@@ -154,17 +156,19 @@ const Header = () => {
       </div>
     </header>
   );
-};
+}
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en" className={cn("antialiased", GeistSans.variable)}>
-      <body className="min-h-screen bg-background">
-        <Header />
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          {children}
-        </main>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={cn("antialiased", GeistSans.variable)}>
+        <body className="min-h-screen bg-background">
+          <Header />
+          <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            {children}
+          </main>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
