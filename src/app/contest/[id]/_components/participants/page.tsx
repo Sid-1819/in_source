@@ -48,7 +48,7 @@ const ApplicantsList = () => {
     <div className="mx-auto max-w-3xl space-y-4 p-4">
       <div className="mb-6 flex items-center gap-3">
         <UsersRound className="h-8 w-8 text-black" />
-        <h1 className="text-3xl font-bold">Applicants</h1>
+        <h1 className="text-3xl font-bold">Participants</h1>
       </div>
 
       {applicants.map((applicant, index) => (
