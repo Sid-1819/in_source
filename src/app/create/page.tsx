@@ -163,7 +163,7 @@ const CreateContestForm = () => {
                             // Do something with the response
                             console.log("Files: ", res);
                           }}
-                          onUploadError={(error: Error) =>{console.log("Error: ", error)}}
+                          onUploadError={(error: Error) => { console.log("Error: ", error) }}
                         />
                       </Label>
                     </div>
@@ -251,94 +251,94 @@ const CreateContestForm = () => {
 
               {/* Rewards Section */}
               <div className="space-y-6">
-      <h3 className="text-lg font-medium">Rewards</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Experience Points */}
-        <FormField
-          control={form.control}
-          name="expPoints"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Experience Points</FormLabel>
-              <FormControl>
-                <div className="flex items-center">
-                  <Input
-                    type="number"
-                    placeholder="Enter XP points"
-                    {...field}
-                    value={field.value ?? ''}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      field.onChange(value === '' ? null : Number(value));
-                    }}
-                    className="pr-12"
+                <h3 className="text-lg font-medium">Rewards</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Experience Points */}
+                  <FormField
+                    control={form.control}
+                    name="expPoints"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Experience Points</FormLabel>
+                        <FormControl>
+                          <div className="flex items-center">
+                            <Input
+                              type="number"
+                              placeholder="Enter XP points"
+                              {...field}
+                              value={field.value ?? ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(value === '' ? null : Number(value));
+                              }}
+                              className="pr-12"
+                            />
+                            <span className="ml-[-40px] text-sm text-muted-foreground">
+                              XP
+                            </span>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                  <span className="ml-[-40px] text-sm text-muted-foreground">
-                    XP
-                  </span>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        {/* Cash Prize */}
-        <FormField
-          control={form.control}
-          name="cashPrize"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cash Prize</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                    $
-                  </span>
-                  <Input
-                    type="number"
-                    placeholder="Enter amount"
-                    {...field}
-                    value={field.value 
-                        ?? ''}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      field.onChange(value === '' ? null : Number(value));
-                    }}
-                    className="pl-7"
+                  {/* Cash Prize */}
+                  <FormField
+                    control={form.control}
+                    name="cashPrize"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Cash Prize</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                              $
+                            </span>
+                            <Input
+                              type="number"
+                              placeholder="Enter amount"
+                              {...field}
+                              value={field.value
+                                ?? ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(value === '' ? null : Number(value));
+                              }}
+                              className="pl-7"
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Swag Count */}
+                  <FormField
+                    control={form.control}
+                    name="swagCount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Number of Swags</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="Enter swag count"
+                            {...field}
+                            value={field.value ?? ''}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              field.onChange(value === '' ? null : Number(value));
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Swag Count */}
-        <FormField
-          control={form.control}
-          name="swagCount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Number of Swags</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Enter swag count"
-                  {...field}
-                  value={field.value ?? ''}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value === '' ? null : Number(value));
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-    </div>
+              </div>
 
               <div className="flex justify-end gap-4">
                 <Button variant="outline" type="button">

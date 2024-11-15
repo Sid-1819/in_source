@@ -7,22 +7,23 @@ import { Trophy, Users, Calendar } from "lucide-react";
 import { cn } from '~/lib/utils';
 // import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getContestList } from '~/server/queries';
+import { getContestList, getContestOnHome } from '~/server/queries';
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 
 
 export type Contest = {
-  contestId: number;
+  contest_id: number;
   title: string;
-  subTitle: string;
-  description: string | null;
+  sub_title: string;
   tags: string;
-  participantCount: string | null;
-  prizes: string | null;
-  bannerUrl: string | null;
-  startDate: string;
-  difficultyLevel: string | null;
-  endDate: string;
+  participants: number | null;
+  cash_awards: number | null;
+  swag_awards: number | null;
+  points_awards: number | null;
+  banner_url: string | null;
+  difficulty_level: string | null;
+  end_date: string;
 };
 
 interface Prizes {
@@ -40,24 +41,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
   const tagArray = contest.tags?.split(',').map(tag => tag.trim());
 
-  // const getDifficultyStyle = (difficulty: DifficultyLevel) => {
-  //   switch (difficulty) {
-  //     case 'Complexity: Easy':
-  //     case 'Complexity: Medium':
-  //     case 'Complexity: Hard':
-  //     case 'Complexity: Pro':
-  //       return 'bg-indigo-100 text-indigo-800 border-indigo-200';
-  //     default:
-  //       return 'bg-gray-100 text-gray-800 border-gray-200';
-  //   }
-  // };
-
-  // const router = useRouter();
-
-  // const handleCardClick = () => {
-  //   router.push(`/contest/${contest.id}`);
-  // }
-
   return (
 
     <Link href={`/contest/1`}>
@@ -67,7 +50,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           {/* Image */}
           <div className="w-full h-48 overflow-hidden">
             <img
-              src={contest.bannerUrl ?? ""}
+              src={contest.banner_url ?? ""}
               alt={contest.title}
               className="w-full h-full object-cover"
             />
@@ -85,24 +68,24 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
                   )}
                 >
-                   {contest.difficultyLevel}
+                  {contest.difficulty_level}
                 </Badge>
               </div>
-              <p className="text-sm text-gray-600">{contest.subTitle}</p>
+              <p className="text-sm text-gray-600">{contest.sub_title}</p>
             </div>
 
             <div className="flex flex-col space-y-2 text-sm text-gray-600">
               <div className="flex items-center gap-1">
                 <Trophy className="w-4 h-4" />
-                <span>{(contest.prizes??'NA').replaceAll('S','SWAG').replaceAll('P','XP-Points').replaceAll('C-0,','').replaceAll('C','$')} in prizes</span>
+                <span>{contest.cash_awards} in prizes</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>{contest.participantCount} participants</span>
+                <span>{contest.participants} participants</span>
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>4th Jan, 2025</span>
+                <span>{contest.end_date}</span>
               </div>
             </div>
 
@@ -111,7 +94,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                 <Badge
                   key={index + 1}
                   variant="outline"
-                 
+
                 >
                   {badge}
                 </Badge>
@@ -125,7 +108,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           {/* Left image section */}
           <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
             <img
-              src={contest.bannerUrl ?? "/api/placeholder/96/96"}
+              src={contest.banner_url ?? "/api/placeholder/96/96"}
               alt={contest.title}
               className="w-full h-full object-cover"
             />
@@ -140,27 +123,31 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                   variant="outline"
                   className={cn(
                     "rounded-full px-2 py-1 text-xs font-medium border",
-                  
+
                   )}
                 >
-                {contest.difficultyLevel}
+                  {contest.difficulty_level}
                 </Badge>
               </div>
-              <p className="text-sm text-secondary">{contest.subTitle}</p>
+              <p className="text-sm text-secondary">{contest.sub_title}</p>
             </div>
 
             <div className="flex items-center gap-6 text-sm text-secondary">
               <div className="flex items-center gap-1">
-                <Trophy className="w-4 h-4" />
-                <span>{(contest.prizes??'NA').replaceAll('S','SWAG').replaceAll('P','XP-Points').replaceAll('C-0,','').replaceAll('C','$')} in prizes</span>
+                {contest.cash_awards ??
+                  <>
+                    <Trophy className="w-4 h-4 ml-2" />
+                    <span>{contest.cash_awards} in prizes</span>
+                  </>
+                }
               </div>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>{contest.participantCount} participants</span>
+                <span>{contest.participants} participants</span>
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>4th Jan, 2025</span>
+                <span>{contest.end_date}</span>
               </div>
             </div>
 
@@ -189,53 +176,31 @@ const ContestList = async () => {
 
   const contests = await getContestList('a');
 
-  console.log(contests);
+  const log = await getContestOnHome('a');
 
-  // const contests: Contest[] = [
-  //   {
-  //     title: "Winter Coding Challenge 2024",
-  //     id: 1,
-  //     description: "Build innovative solutions using cutting-edge technologies",
-  //     image: "/api/placeholder/400/200",
-  //     daysLeft: 29,
-  //     prize: 170000,
-  //     participants: 2007,
-  //     dates: "Oct 15 - Dec 10, 2024",
-  //     difficulty: 'Complexity: Medium',
-  //     badges: [
-  //       { type: 'technology', label: 'DevOps' },
-  //       { type: 'technology', label: 'Machine Learning/AI' },
-  //       { type: 'category', label: 'Productivity' },
-  //       { type: 'sponsor', label: 'En-gage' }
-  //     ]
-  //   },
-  //   {
-  //     title: "Web3 Hackathon",
-  //     id: 2,
-  //     description: "Create decentralized applications for the future",
-  //     image: "/api/placeholder/400/200",
-  //     daysLeft: 15,
-  //     prize: 50000,
-  //     participants: 1500,
-  //     dates: "Nov 1 - Dec 15, 2024",
-  //     difficulty: 'Complexity: Hard',
-  //     badges: [
-  //       { type: 'technology', label: 'Blockchain' },
-  //       { type: 'technology', label: 'Smart Contracts' },
-  //       { type: 'category', label: 'DeFi' }
-  //     ]
-  //   }
-  // ];
 
   return (
-    <div className="mx-auto max-w-4xl space-y-4 p-4">
-      {contests.map((contest, index) => (
-        <ContestCard key={index + 1} contest={{
-          ...contest,
-          tags: contest.tags ?? '',
-        }} />
-      ))}
-    </div>
+    <>
+      <SignedOut>
+        <div className="h-full w-full text-center text-2xl">
+          Please sign in above
+        </div>
+      </SignedOut>
+      <SignedIn>
+        <div className="mx-auto max-w-4xl space-y-4 p-4">
+          {log.map((contest, index) => (
+            <ContestCard key={index + 1} contest={{
+              ...contest,
+              tags: contest.tags,
+              cash_awards: contest.cash_awards ?? 0,
+              points_awards: contest.points_awards ?? 0,
+              swag_awards: contest.swag_awards ?? 0,
+              participants: contest.participants ?? 0
+            }} />
+          ))}
+        </div>
+      </SignedIn>
+    </>
   );
 };
 

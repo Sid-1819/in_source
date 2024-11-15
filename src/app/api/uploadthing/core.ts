@@ -15,7 +15,7 @@ export const ourFileRouter = {
       const user = auth(req);
 
       // If you throw, the user will not be able to upload
-  
+
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: user.id };
