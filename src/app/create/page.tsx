@@ -14,13 +14,13 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Textarea } from "~/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Image from "next/image";
 import { UploadButton } from "~/utils/uploadthing";
 import { Badge } from "~/components/ui/badge";
+import Editor from "~/components/editor";
 
 const formSchema = z.object({
   title: z.string().min(5, {
@@ -39,16 +39,19 @@ const formSchema = z.object({
   swagCount: z.number().nullable(),
 });
 
+const defaultValue = { "type": "doc", "content": [{ "type": "paragraph" }] }
+
 const CreateContestForm = () => {
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [content, setContent] = useState<string>('')
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       subtitle: "",
-      description: "",
+      description: content,
       banner: "",
       badges: "",
       expPoints: null,
@@ -89,9 +92,13 @@ const CreateContestForm = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("clicked");
+
     console.log(values);
     // Handle form submission
   }
+
+  console.log("description: ", content);
 
   return (
     <div className="container mx-auto py-10">
@@ -193,10 +200,9 @@ const CreateContestForm = () => {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea
+                      <Editor initialValue={defaultValue}
+                        onChange={setContent}
                         placeholder="Enter contest description..."
-                        className="min-h-[200px] resize-y"
-                        {...field}
                       />
                     </FormControl>
                     <FormDescription>
@@ -344,7 +350,7 @@ const CreateContestForm = () => {
                 <Button variant="outline" type="button">
                   Cancel
                 </Button>
-                <Button type="submit">Create Contest</Button>
+                <Button type="submit" onClick={() => { console.log("cileicekjflasf") }}>Create Contest</Button>
               </div>
             </form>
           </Form>

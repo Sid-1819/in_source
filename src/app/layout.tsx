@@ -4,7 +4,7 @@ import "@uploadthing/react/styles.css";
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "~/lib/utils";
-import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
@@ -48,6 +48,14 @@ const MobileNav = () => {
 
 const Header = () => {
   const pathname = usePathname();
+  const { user } = useUser();
+
+  console.log("user: ", user);
+
+  const isAdmin = user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY";
+
+  console.log("isAdmin: ", isAdmin);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -137,9 +145,11 @@ const Header = () => {
           {/* Right section */}
           <div className="flex items-center space-x-2">
             <Link href="/create" className="block">
-              <Button variant="default" size="sm">
-                Create Contest
-              </Button>
+              {isAdmin && (
+                <Button variant="default" size="sm">
+                  Create Contest
+                </Button>
+              )}
             </Link>
 
             <div className="block mt-2">
