@@ -1,8 +1,10 @@
+"use client"
+
 import React from 'react'
-import ReactMarkdown from 'react-markdown'
-// import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+
+import MarkdownEditor from '@uiw/react-markdown-editor';
 const RulesPage = () => {
+  document.documentElement.setAttribute('data-color-mode', 'light')
 
     const rules = `
 **1. Dates and Timing**
@@ -121,7 +123,7 @@ By entering, all Entrants (including, in the case of a Team, all participating m
   return (
     <>
     <h1><strong>Rules</strong></h1>
-    <ReactMarkdown>{rules}</ReactMarkdown>
+    <MarkdownEditor.Markdown source={rules} />
     </>
   )
 }
