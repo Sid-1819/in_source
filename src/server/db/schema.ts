@@ -37,6 +37,7 @@ export const contests = createTable(
     prizes: varchar("prizes", { length: 225 }),
     bannerUrl: varchar("banner_url", { length: 255 }),
     status: char("status", { length: 1 }).default('a'),
+    difficultyLevel: varchar("difficulty_level", { length:255}),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

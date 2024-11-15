@@ -1,6 +1,6 @@
 // "use client"
 
-import React from 'react';
+import React from "react";
 import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Trophy, Users, Calendar } from "lucide-react";
@@ -9,7 +9,7 @@ import { cn } from '~/lib/utils';
 import Link from 'next/link';
 import { getContestList } from '~/server/queries';
 
-type DifficultyLevel = 'Complexity: Easy' | 'Complexity: Medium' | 'Complexity: Hard' | 'Complexity: Pro';
+
 
 export type Contest = {
   contestId: number;
@@ -21,6 +21,7 @@ export type Contest = {
   prizes: string | null;
   bannerUrl: string | null;
   startDate: string;
+  difficultyLevel: string | null;
   endDate: string;
 };
 
@@ -39,17 +40,17 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
   const tagArray = contest.tags?.split(',').map(tag => tag.trim());
 
-  const getDifficultyStyle = (difficulty: DifficultyLevel) => {
-    switch (difficulty) {
-      case 'Complexity: Easy':
-      case 'Complexity: Medium':
-      case 'Complexity: Hard':
-      case 'Complexity: Pro':
-        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
+  // const getDifficultyStyle = (difficulty: DifficultyLevel) => {
+  //   switch (difficulty) {
+  //     case 'Complexity: Easy':
+  //     case 'Complexity: Medium':
+  //     case 'Complexity: Hard':
+  //     case 'Complexity: Pro':
+  //       return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+  //     default:
+  //       return 'bg-gray-100 text-gray-800 border-gray-200';
+  //   }
+  // };
 
   // const router = useRouter();
 
@@ -60,7 +61,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
   return (
 
     <Link href={`/contest/1`}>
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+      <Card className="overflow-hidden hover:shadow-lg transition-shadow mb-4">
         {/* Mobile Layout (stacked layout for smaller screens) */}
         <div className="block md:hidden">
           {/* Image */}
@@ -76,15 +77,15 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           <div className="p-4 space-y-3">
             <div>
               <div className="flex items-start justify-between mb-2">
-                <h3 className="text-lg font-semibold">{contest.title}</h3>
+                <h3 className="text-lg text-primary font-semibold">{contest.title}</h3>
                 <Badge
-                  variant="secondary"
+                  variant="outline"
                   className={cn(
                     "rounded-full px-2 py-1 text-xs font-medium border",
 
                   )}
                 >
-                  Medium
+                   {contest.difficultyLevel}
                 </Badge>
               </div>
               <p className="text-sm text-gray-600">{contest.subTitle}</p>
@@ -93,11 +94,11 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
             <div className="flex flex-col space-y-2 text-sm text-gray-600">
               <div className="flex items-center gap-1">
                 <Trophy className="w-4 h-4" />
-                <span>$500 in prizes</span>
+                <span>{(contest.prizes??'NA').replaceAll('S','SWAG').replaceAll('P','XP-Points').replaceAll('C-0,','').replaceAll('C','$')} in prizes</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>1,423 participants</span>
+                <span>{contest.participantCount} participants</span>
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
@@ -109,11 +110,8 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               {tagArray?.map((badge, index) => (
                 <Badge
                   key={index + 1}
-                  variant="secondary"
-                  className={cn(
-                    "rounded-full px-3 py-1 text-xs font-medium",
-
-                  )}
+                  variant="outline"
+                 
                 >
                   {badge}
                 </Badge>
@@ -139,13 +137,13 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               <div className="flex items-start justify-between mb-2">
                 <h3 className="text-lg font-semibold">{contest.title}</h3>
                 <Badge
-                  variant="secondary"
+                  variant="outline"
                   className={cn(
                     "rounded-full px-2 py-1 text-xs font-medium border",
-                    getDifficultyStyle('Complexity: Medium')
+                  
                   )}
                 >
-                  {'Medium'}
+                {contest.difficultyLevel}
                 </Badge>
               </div>
               <p className="text-sm text-secondary">{contest.subTitle}</p>
@@ -154,11 +152,11 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
             <div className="flex items-center gap-6 text-sm text-secondary">
               <div className="flex items-center gap-1">
                 <Trophy className="w-4 h-4" />
-                <span>$500 in prizes</span>
+                <span>{(contest.prizes??'NA').replaceAll('S','SWAG').replaceAll('P','XP-Points').replaceAll('C-0,','').replaceAll('C','$')} in prizes</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>1,423 participants</span>
+                <span>{contest.participantCount} participants</span>
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
@@ -170,7 +168,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               {tagArray?.map((badge, index) => (
                 <Badge
                   key={index + 1}
-                  variant="secondary"
+                  variant="outline"
                   className={cn(
                     "rounded-full px-3 py-1 text-xs font-medium",
 
@@ -230,7 +228,7 @@ const ContestList = async () => {
   // ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4 p-4">
+    <div className="mx-auto max-w-4xl space-y-4 p-4">
       {contests.map((contest, index) => (
         <ContestCard key={index + 1} contest={{
           ...contest,

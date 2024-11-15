@@ -13,7 +13,6 @@ interface Winner {
 
   profileImage: string;
   experiencePoints: number;
-  cashPrize: number;
   swags: string[];
   projectTitle: string;
 }
@@ -24,50 +23,26 @@ const WinnersList = () => {
       name: "Sarah Johnson",
       profileImage: "/api/placeholder/96/96",
       experiencePoints: 15000,
-      cashPrize: 10000,
-      projectTitle: "AI-Powered Code Review Assistant",
+  
+      projectTitle: "Google Chrome Built-in AI Challenge",
       swags: ["Premium Hoodie", "Mechanical Keyboard", "Dev Pack"]
     },
     {
       name: "Michael Chen",
       profileImage: "/api/placeholder/96/96",
-      experiencePoints: 12000,
-      cashPrize: 5000,
-      projectTitle: "Smart Home Automation System",
+      experiencePoints: 10000,
+
+      projectTitle: "Google Chrome Built-in AI Challenge",
       swags: ["Hoodie", "Tech Pack"]
     },
     {
       name: "Emily Davis",
       profileImage: "/api/placeholder/96/96",
-      experiencePoints: 11000,
-      cashPrize: 3000,
-      projectTitle: "Blockchain-Based Voting System",
+      experiencePoints: 5000,
+      projectTitle: "Google Chrome Built-in AI Challenge",
       swags: ["T-Shirt", "Notebook", "Sticker Pack"]
     },
-    {
-      name: "James Lee",
-      profileImage: "/api/placeholder/96/96",
-      experiencePoints: 14000,
-      cashPrize: 7500,
-      projectTitle: "Health Monitoring Wearable Device",
-      swags: ["Premium Hoodie", "Water Bottle", "Fitness Tracker"]
-    },
-    {
-      name: "Sophia Patel",
-      profileImage: "/api/placeholder/96/96",
-      experiencePoints: 13000,
-      cashPrize: 6000,
-      projectTitle: "Real-Time Language Translator",
-      swags: ["Cap", "Phone Stand", "Tech Pack"]
-    },
-    {
-      name: "David Kim",
-      profileImage: "/api/placeholder/96/96",
-      experiencePoints: 16000,
-      cashPrize: 12000,
-      projectTitle: "Augmented Reality Shopping App",
-      swags: ["Premium Jacket", "Bluetooth Speaker", "Gift Card"]
-    }
+    
   ];
 
   return (
@@ -102,12 +77,11 @@ const WinnersList = () => {
                     <span>{winner.experiencePoints.toLocaleString()} XP</span>
                   </div>
                   <div className="flex items-center gap-1 text-green-600">
-                    <Trophy className="w-4 h-4" />
-                    <span>${winner.cashPrize.toLocaleString()}</span>
+                 
                   </div>
                   <div className="flex items-center gap-1 text-blue-600">
                     <Gift className="w-4 h-4" />
-                    <span>{winner.swags.join(", ")}</span>
+                    <span>Swag Bags</span>
                   </div>
                 </div>
               </div>

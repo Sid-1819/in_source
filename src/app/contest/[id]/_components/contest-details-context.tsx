@@ -13,6 +13,7 @@ import { Markdown } from "tiptap-markdown";
 import Highlight from "@tiptap/extension-highlight";
 import { InputRule, JSONContent } from "@tiptap/core";
 import Image from "@tiptap/extension-image";
+import { FileText, Info, Users, Trophy } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
@@ -32,7 +33,6 @@ const TabContent: React.FC<TabContentProps> = ({ output }) => {
         <div className="mx-auto w-full">
             {/* Description Tab Content */}
             <TabsContent value="description">
-
                 <div
                     className="prose w-full leading-relaxed"
                     dangerouslySetInnerHTML={{ __html: output }}
@@ -169,7 +169,6 @@ const defaultExtensions = [
         },
         gapcursor: false,
     }),
-    // patch to fix horizontal rule bug: https://github.com/ueberdosis/tiptap/pull/3859#issuecomment-1536799740
     HorizontalRule.extend({
         addInputRules() {
             return [
@@ -244,24 +243,24 @@ const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
             <Tabs defaultValue="description" className="w-full">
                 <TabsList className="grid w-full grid-cols-5 mb-8">
                     <TabsTrigger value="description" className="flex items-center gap-2">
-                        {/* <FileText className="h-4 w-4" /> */}
-                        <span className="hidden md:inline">Description</span>
+                        <FileText className="h-4 w-4" />
+                        <span className="text-xs sm:text-sm">Description</span>
                     </TabsTrigger>
                     <TabsTrigger value="prizes" className="flex items-center gap-2">
-                        {/* <FileText className="h-4 w-4" /> */}
-                        <span className="hidden md:inline">Prizes</span>
+                        <Trophy className="h-4 w-4" />
+                        <span className="text-xs sm:text-sm">Prizes</span>
                     </TabsTrigger>
                     <TabsTrigger value="info" className="flex items-center gap-2">
-                        {/* <Info className="h-4 w-4" /> */}
-                        <span className="hidden md:inline">Info</span>
+                        <Info className="h-4 w-4" />
+                        <span className="text-xs sm:text-sm">Info</span>
                     </TabsTrigger>
                     <TabsTrigger value="participants" className="flex items-center gap-2">
-                        {/* <Users className="h-4 w-4" /> */}
-                        <span className="hidden md:inline">Participants</span>
+                        <Users className="h-4 w-4" />
+                        <span className="text-xs sm:text-sm">Participants</span>
                     </TabsTrigger>
                     <TabsTrigger value="winners" className="flex items-center gap-2">
-                        {/* <Trophy className="h-4 w-4" /> */}
-                        <span className="hidden md:inline">Winners</span>
+                        <Trophy className="h-4 w-4" />
+                        <span className="text-xs sm:text-sm">Winners</span>
                     </TabsTrigger>
                 </TabsList>
 
@@ -290,11 +289,10 @@ const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
 };
 
 export default async function ContestDetailsContent(props: { id: string }) {
-
     const contestId = parseInt(props.id ?? '0');
     const contestById = await getContestById(contestId);
     console.log(contestById);
-
+    const tagArray = contestById[0]?.tags?.split(',').map(tag => tag.trim());
     const json = contestById[0]?.description ?? "";
     const output = json ? generateHTML(JSON.parse(json) as JSONContent, defaultExtensions) : '';
 
@@ -340,20 +338,18 @@ export default async function ContestDetailsContent(props: { id: string }) {
                             </div>
                         </div>
                         <div className="mt-8 flex items-center justify-between border-t pt-4">
-                            <div className="flex space-x-2">
-                                <Badge variant="default">
-                                    Machine Learning/AI
-                                </Badge>
-                                <Badge variant="default">
-                                    Web
-                                </Badge>
-                                <Badge variant="default">
-                                    Beginner Friendly
-                                </Badge>
+                            <div className="flex-1 space-x-2">
+                                {tagArray?.map((badge, index) => (
+                                    <Badge
+                                        key={index + 1}
+                                        variant="outline"
+                                    >
+                                        {badge}
+                                    </Badge>
+                                ))}
                             </div>
                             <Button
                                 variant="default"
-                            // onClick={() => window.open("/join-hackathon")}
                             >
                                 Join hackathon
                             </Button>
@@ -364,11 +360,8 @@ export default async function ContestDetailsContent(props: { id: string }) {
 
             {/* Description */}
             <div className="mx-auto w-full max-w-3xl">
-
                 <HackathonTabs output={output} />
             </div>
         </>
     );
-
-
 }
