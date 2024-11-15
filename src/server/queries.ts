@@ -9,7 +9,6 @@ export async function getContestById(contestId: number) {
     // if (!user.userId) throw new Error("Unauthorized");
 
     const contestsById = await db.select().from(contests).where(eq(contests.contestId, contestId));
-    console.log("constss", contestId)
     return contestsById;
 
 }
@@ -17,6 +16,5 @@ export async function getContestById(contestId: number) {
 export async function getContestList(status: string) {
 
     const contestsList = await db.select().from(contests).where(eq(contests.status, status));
-    console.log("contestList", contestsList)
     return contestsList;
 }

@@ -4,7 +4,7 @@ import "@uploadthing/react/styles.css";
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "~/lib/utils";
-import { ClerkProvider } from '@clerk/nextjs'
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
@@ -60,7 +60,7 @@ const Header = () => {
                 src="/logo.svg"
                 alt="Logo"
               />
-            
+
             </Link>
             <h1>CMackathon</h1>
           </div>
@@ -77,8 +77,8 @@ const Header = () => {
                     <NavigationMenuLink
                       className={cn(
                         "font-medium transition-colors hover:text-primary",
-                        pathname === "/" 
-                          ? "text-primary border-b-2 border-primary" 
+                        pathname === "/"
+                          ? "text-primary border-b-2 border-primary"
                           : "text-muted-foreground"
                       )}
                     >
@@ -92,8 +92,8 @@ const Header = () => {
                     <NavigationMenuLink
                       className={cn(
                         "font-medium transition-colors hover:text-primary",
-                        pathname === "/leaderboard" 
-                          ? "text-primary border-b-2 border-primary" 
+                        pathname === "/leaderboard"
+                          ? "text-primary border-b-2 border-primary"
                           : "text-muted-foreground"
                       )}
                     >
@@ -107,8 +107,8 @@ const Header = () => {
                     <NavigationMenuLink
                       className={cn(
                         "font-medium transition-colors hover:text-primary",
-                        pathname === "/prizes" 
-                          ? "text-primary border-b-2 border-primary" 
+                        pathname === "/prizes"
+                          ? "text-primary border-b-2 border-primary"
                           : "text-muted-foreground"
                       )}
                     >
@@ -121,8 +121,8 @@ const Header = () => {
                     <NavigationMenuLink
                       className={cn(
                         "font-medium transition-colors hover:text-primary",
-                        pathname === "/rules" 
-                          ? "text-primary border-b-2 border-primary" 
+                        pathname === "/rules"
+                          ? "text-primary border-b-2 border-primary"
                           : "text-muted-foreground"
                       )}
                     >
@@ -141,7 +141,17 @@ const Header = () => {
                 Create Contest
               </Button>
             </Link>
-            <Link href="/host" className="block">
+
+            <div className="block mt-2">
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
+
+            {/* <Link href="/host" className="block">
               <Button variant="outline" size="sm">
                 Sign Up
               </Button>
@@ -150,7 +160,7 @@ const Header = () => {
               <Button variant="default" size="sm">
                 Login
               </Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
