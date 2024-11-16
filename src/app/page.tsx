@@ -3,7 +3,7 @@
 import React from "react";
 import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { Star, Trophy, Users, Calendar } from "lucide-react";
+import { Gift, Star, Trophy, Users, Calendar } from "lucide-react";
 import { cn } from '~/lib/utils';
 // import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -41,8 +41,6 @@ interface ContestCardProps {
 const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
   const tagArray = contest.tags?.split(',').map(tag => tag.trim());
-
-  console.log("start date: ", contest.start_date);
 
   return (
 
@@ -115,7 +113,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
           {/* Left image section */}
           <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
             <img
-              src={contest.banner_url ?? "/api/placeholder/96/96"}
+              src={contest.banner_url ?? "https://pjrjxbdononaezaz.public.blob.vercel-storage.com/observability-Zf3z3IeD5DROt3mwL0CvIU97r1otHM.png"}
               alt={contest.title}
               className="w-full h-full object-cover"
             />
@@ -196,7 +194,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
 const ContestList = async () => {
   const contestList = await getContestOnHome('a');
-  console.log("contest: ", contestList);
 
   return (
     <>

@@ -6,7 +6,6 @@ import { UsersRound, Calendar } from "lucide-react";
 
 interface Applicant {
   name: string;
-  profileImage: string;
   experiencePoints: number;
 }
 
@@ -14,39 +13,33 @@ const ApplicantsList = () => {
   const applicants: Applicant[] = [
     {
       name: "Sarah Johnson",
-      profileImage: "/api/placeholder/96/96",
       experiencePoints: 15000,
     },
     {
       name: "Michael Chen",
-      profileImage: "/api/placeholder/96/96",
       experiencePoints: 12000,
     },
     {
       name: "Emily Davis",
-      profileImage: "/api/placeholder/96/96",
       experiencePoints: 11000,
     },
     {
       name: "James Lee",
-      profileImage: "/api/placeholder/96/96",
       experiencePoints: 14000,
     },
     {
       name: "Sophia Patel",
-      profileImage: "/api/placeholder/96/96",
       experiencePoints: 13000,
     },
     {
       name: "David Kim",
-      profileImage: "/api/placeholder/96/96",
       experiencePoints: 16000,
     },
   ];
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4">
-     
+
 
       {applicants.map((applicant, index) => (
         <Card key={index + 1} className="transition-shadow hover:shadow-lg">
@@ -55,7 +48,7 @@ const ApplicantsList = () => {
               {/* Profile */}
               <Avatar className="h-20 w-20">
                 <AvatarImage
-                  src={applicant.profileImage}
+                  // src={applicant.profileImage}
                   alt={applicant.name}
                 />
                 <AvatarFallback className="text-xl">

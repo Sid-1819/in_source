@@ -289,9 +289,10 @@ const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
 };
 
 export default async function ContestDetailsContent(props: { id: string }) {
+
     const contestId = parseInt(props.id ?? '0');
     const contestById = await getContestById(contestId);
-    console.log(contestById);
+
     const tagArray = contestById[0]?.tags?.split(',').map(tag => tag.trim());
     const json = contestById[0]?.description ?? "";
     const output = json ? generateHTML(JSON.parse(json) as JSONContent, defaultExtensions) : '';

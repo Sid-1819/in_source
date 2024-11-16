@@ -92,13 +92,9 @@ const CreateContestForm = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("clicked");
-
-    console.log(values);
+    // console.log(values);
     // Handle form submission
   }
-
-  console.log("description: ", content);
 
   return (
     <div className="container mx-auto py-10">
@@ -168,9 +164,11 @@ const CreateContestForm = () => {
                           endpoint="imageUploader"
                           onClientUploadComplete={(res) => {
                             // Do something with the response
-                            console.log("Files: ", res);
+                            // console.log("Files: ", res);
                           }}
-                          onUploadError={(error: Error) => { console.log("Error: ", error) }}
+                          onUploadError={(error: Error) => {
+                            // console.log("Error: ", error) 
+                          }}
                         />
                       </Label>
                     </div>
@@ -350,7 +348,9 @@ const CreateContestForm = () => {
                 <Button variant="outline" type="button">
                   Cancel
                 </Button>
-                <Button type="submit" onClick={() => { console.log("cileicekjflasf") }}>Create Contest</Button>
+                <Button type="submit" onClick={() => {
+                  // console.log("cileicekjflasf")
+                }}>Create Contest</Button>
               </div>
             </form>
           </Form>

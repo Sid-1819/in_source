@@ -34,7 +34,6 @@ const WinnersList = async () => {
 
   let constestwinner: Winner[] = await getContestWinners(1);
   constestwinner = modifyUsernames(constestwinner);
-  console.log("winners: ", constestwinner);
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4">
