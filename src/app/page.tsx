@@ -3,11 +3,11 @@
 import React from "react";
 import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { Trophy, Users, Calendar } from "lucide-react";
+import { Star, Trophy, Users, Calendar } from "lucide-react";
 import { cn } from '~/lib/utils';
 // import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getContestList, getContestOnHome } from '~/server/queries';
+import { getContestOnHome } from '~/server/queries';
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 
@@ -18,11 +18,12 @@ export type Contest = {
   sub_title: string;
   tags: string;
   participants: number | null;
-  cash_awards: number | null;
-  swag_awards: number | null;
-  points_awards: number | null;
+  cash_awards?: number;
+  swag_awards?: number;
+  points_awards?: number;
   banner_url: string | null;
   difficulty_level: string | null;
+  start_date: string;
   end_date: string;
 };
 
@@ -40,6 +41,8 @@ interface ContestCardProps {
 const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
   const tagArray = contest.tags?.split(',').map(tag => tag.trim());
+
+  console.log("start date: ", contest.start_date);
 
   return (
 
@@ -65,7 +68,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                   variant="outline"
                   className={cn(
                     "rounded-full px-2 py-1 text-xs font-medium border",
-
                   )}
                 >
                   {contest.difficulty_level}
@@ -75,7 +77,13 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
             </div>
 
             <div className="flex flex-col space-y-2 text-sm text-gray-600">
+
               <div className="flex items-center gap-1">
+
+                <Trophy className="w-4 h-4" />
+                <span>{contest.cash_awards} in prizes</span>
+                <Trophy className="w-4 h-4" />
+                <span>{contest.cash_awards} in prizes</span>
                 <Trophy className="w-4 h-4" />
                 <span>{contest.cash_awards} in prizes</span>
               </div>
@@ -85,7 +93,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{contest.end_date}</span>
+                <span>{contest.start_date}</span>
               </div>
             </div>
 
@@ -94,7 +102,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                 <Badge
                   key={index + 1}
                   variant="outline"
-
                 >
                   {badge}
                 </Badge>
@@ -134,12 +141,28 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
             <div className="flex items-center gap-6 text-sm text-secondary">
               <div className="flex items-center gap-1">
-                {contest.cash_awards ??
+
+                {contest.cash_awards &&
                   <>
-                    <Trophy className="w-4 h-4 ml-2" />
-                    <span>{contest.cash_awards} in prizes</span>
+                    <Trophy className="w-4 h-4" />
+                    <span> ${contest.cash_awards} </span>
                   </>
                 }
+                {contest.points_awards &&
+                  <>
+                    <Star className="w-4 h-4" />
+                    <span>{contest.points_awards} </span>
+                  </>
+                }
+
+                {contest.swag_awards &&
+                  <>
+                    <Gift className="w-4 h-4" />
+                    <span>{contest.swag_awards} </span>
+                  </>
+                }
+                <span>in prizes</span>
+
               </div>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
@@ -147,7 +170,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{contest.end_date}</span>
+                <span>{contest.start_date}</span>
               </div>
             </div>
 
@@ -158,7 +181,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                   variant="outline"
                   className={cn(
                     "rounded-full px-3 py-1 text-xs font-medium",
-
                   )}
                 >
                   {badge}
@@ -173,11 +195,8 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 };
 
 const ContestList = async () => {
-
-  const contests = await getContestList('a');
-
-  const log = await getContestOnHome('a');
-
+  const contestList = await getContestOnHome('a');
+  console.log("contest: ", contestList);
 
   return (
     <>
@@ -188,14 +207,14 @@ const ContestList = async () => {
       </SignedOut>
       <SignedIn>
         <div className="mx-auto max-w-4xl space-y-4 p-4">
-          {log.map((contest, index) => (
+          {contestList.map((contest, index) => (
             <ContestCard key={index + 1} contest={{
               ...contest,
               tags: contest.tags,
-              cash_awards: contest.cash_awards ?? 0,
-              points_awards: contest.points_awards ?? 0,
-              swag_awards: contest.swag_awards ?? 0,
-              participants: contest.participants ?? 0
+              cash_awards: contest.cash_awards,
+              points_awards: contest.points_awards,
+              swag_awards: contest.swag_awards,
+              participants: contest.participants ?? 0,
             }} />
           ))}
         </div>

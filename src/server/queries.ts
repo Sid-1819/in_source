@@ -9,11 +9,12 @@ export type Contest = {
     sub_title: string;
     tags: string;
     participants: number | null;
-    cash_awards: number | null;
-    swag_awards: number | null;
-    points_awards: number | null;
+    cash_awards?: number;
+    swag_awards?: number;
+    points_awards?: number;
     banner_url: string | null;
     difficulty_level: string | null;
+    start_date: string;
     end_date: string;
 };
 
@@ -53,7 +54,7 @@ export async function getContestList(status: string) {
 
 export async function getContestOnHome(status: string): Promise<Contest[]> {
     const contestList = await db.execute(sql`
-        SELECT contest_id, title, sub_title, end_date, difficulty_level, banner_url, tags, 
+        SELECT contest_id, title, sub_title, start_date, end_date, difficulty_level, banner_url, tags, 
 
         (SELECT count(1) FROM "public"."in-source_participant" p WHERE p.contest_id=c.contest_id) participants, 
 
