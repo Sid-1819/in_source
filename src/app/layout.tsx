@@ -68,110 +68,102 @@ const Header = () => {
                 src="/logo.svg"
                 alt="Logo"
               />
-
             </Link>
             <h1>CMackathon</h1>
           </div>
 
-          {/* Mobile Menu */}
-          <MobileNav />
+          <SignedIn>
+            {/* Mobile Menu */}
+            <MobileNav />
 
-          {/* Desktop Navigation */}
-          <div className=" md:block flex-1 px-8">
-            <NavigationMenu className="mx-auto">
-              <NavigationMenuList>
-                <NavigationMenuItem className="px-8">
-                  <Link href="/" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        "font-medium transition-colors hover:text-primary",
-                        pathname === "/"
-                          ? "text-primary border-b-2 border-primary"
-                          : "text-muted-foreground"
-                      )}
-                    >
-                      Home
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
+            {/* Desktop Navigation */}
+            <div className="md:block flex-1 px-8">
+              <NavigationMenu className="mx-auto">
+                <NavigationMenuList>
+                  <NavigationMenuItem className="px-8">
+                    <Link href="/" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          "font-medium transition-colors hover:text-primary",
+                          pathname === "/"
+                            ? "text-primary border-b-2 border-primary"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        Home
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
 
-                <NavigationMenuItem className="px-8">
-                  <Link href="/leaderboard" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        "font-medium transition-colors hover:text-primary",
-                        pathname === "/leaderboard"
-                          ? "text-primary border-b-2 border-primary"
-                          : "text-muted-foreground"
-                      )}
-                    >
-                      Leaderboard
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
+                  <NavigationMenuItem className="px-8">
+                    <Link href="/leaderboard" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          "font-medium transition-colors hover:text-primary",
+                          pathname === "/leaderboard"
+                            ? "text-primary border-b-2 border-primary"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        Leaderboard
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
 
-                <NavigationMenuItem className="px-8">
-                  <Link href="/prizes" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        "font-medium transition-colors hover:text-primary",
-                        pathname === "/prizes"
-                          ? "text-primary border-b-2 border-primary"
-                          : "text-muted-foreground"
-                      )}
-                    >
-                      Season Prizes
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem className="px-8">
-                  <Link href="/rules" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        "font-medium transition-colors hover:text-primary",
-                        pathname === "/rules"
-                          ? "text-primary border-b-2 border-primary"
-                          : "text-muted-foreground"
-                      )}
-                    >
-                      Rules
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
-
-          {/* Right section */}
-          <div className="flex items-center space-x-2">
-            <Link href="/create" className="block">
-              {isAdmin && (
-                <Button variant="default" size="sm">
-                  Create Contest
-                </Button>
-              )}
-            </Link>
-
-            <div className="block mt-2">
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
+                  <NavigationMenuItem className="px-8">
+                    <Link href="/prizes" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          "font-medium transition-colors hover:text-primary",
+                          pathname === "/prizes"
+                            ? "text-primary border-b-2 border-primary"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        Season Prizes
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem className="px-8">
+                    <Link href="/rules" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          "font-medium transition-colors hover:text-primary",
+                          pathname === "/rules"
+                            ? "text-primary border-b-2 border-primary"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        Rules
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
 
-            {/* <Link href="/host" className="block">
-              <Button variant="outline" size="sm">
-                Sign Up
-              </Button>
-            </Link>
-            <Link href="/host" className="block">
-              <Button variant="default" size="sm">
-                Login
-              </Button>
-            </Link> */}
-          </div>
+            {/* Right section */}
+            <div className="flex items-center space-x-2">
+              <Link href="/create" className="block">
+                {isAdmin && (
+                  <Button variant="default" size="sm">
+                    Create Contest
+                  </Button>
+                )}
+              </Link>
+              <UserButton />
+            </div>
+          </SignedIn>
+
+          <SignedOut>
+            <div className="flex items-center">
+              {/* <SignInButton>
+                <Button variant="default" size="sm">
+                  Sign In
+                </Button>
+              </SignInButton> */}
+            </div>
+          </SignedOut>
         </div>
       </div>
     </header>

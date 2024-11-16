@@ -349,13 +349,13 @@ export default async function ContestDetailsContent(props: { id: string }) {
                   <div className="text-base">4 Dec 2024 @ 1:15pm</div>
                 </div>
               </div>
-              <div className="space-y-4 justify-items-end">
+              <div className="space-y-4 ">
                 <div className="flex flex-col">
-                  <span className="text-base font-medium">Participation</span>
-                  <span className="text-base">5,227 participants</span>
+                  <span className="text-right font-medium ">Participation</span>
+                  <span className="text-right">5,227 participants</span>
                
                 </div>
-                <div className="flex-col ">
+                <div className="flex-col justify-self-end">
                   <Button variant="default">Join Hackathon</Button>
                
                 </div>
