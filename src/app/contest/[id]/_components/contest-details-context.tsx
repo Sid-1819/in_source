@@ -12,8 +12,7 @@ import TaskList from "@tiptap/extension-task-list";
 import { Markdown } from "tiptap-markdown";
 import Highlight from "@tiptap/extension-highlight";
 import { InputRule, JSONContent } from "@tiptap/core";
-import Image from "@tiptap/extension-image";
-import { FileText, Info, Users, Trophy } from "lucide-react";
+import { Image as TiptapImage } from "@tiptap/extension-image"; // Alias the TipTap Image importimport { FileText, Info, Users, Trophy } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
@@ -23,6 +22,8 @@ import InformationPage from "./information/page";
 import PrizesPage from "./prizes/page";
 import { getContestById } from "~/server/queries";
 import ApplicantsList from "./participants/page";
+import Image from 'next/image';
+import { FileText, Info, Trophy, Users } from "lucide-react";
 
 interface TabContentProps {
   output: string;
@@ -119,7 +120,7 @@ const TabContent: React.FC<TabContentProps> = ({ output }) => {
   );
 };
 
-const UpdatedImage = Image.extend({
+const UpdatedImage = TiptapImage.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
@@ -244,6 +245,7 @@ const defaultExtensions = [
 ];
 
 const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
+    
   return (
     <div className="mx-auto w-full max-w-3xl">
       <Tabs defaultValue="description" className="w-full">
@@ -295,14 +297,27 @@ const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
 };
 
 export default async function ContestDetailsContent(props: { id: string }) {
+    const filterOutImages = (content: JSONContent): JSONContent => {
+        if (!content) return content;
+      
+        // Filter out image nodes from content array
+        if (Array.isArray(content.content)) {
+          content.content = content.content.filter(node => node.type !== 'image');
+          // Recursively filter nested content
+          content.content = content.content.map(node => filterOutImages(node));
+        }
+        
+        return content;
+      };
   const contestId = parseInt(props.id ?? "0");
   const contestById = await getContestById(contestId);
   console.log(contestById);
   const tagArray = contestById[0]?.tags?.split(",").map((tag) => tag.trim());
   const json = contestById[0]?.description ?? "";
-  const output = json
-    ? generateHTML(JSON.parse(json) as JSONContent, defaultExtensions)
-    : "";
+  const parsedJson = json ? JSON.parse(json) as JSONContent : "";
+  const filteredJson = filterOutImages(parsedJson);
+  const output = json ? generateHTML(filteredJson, defaultExtensions) : "";
+
 
   return (
     <>
@@ -314,6 +329,7 @@ export default async function ContestDetailsContent(props: { id: string }) {
           </CardTitle>
           <p className="text-base text-muted-foreground">
             {contestById[0]?.subTitle}
+            
           </p>
         </CardHeader>
         <CardContent>
@@ -345,7 +361,7 @@ export default async function ContestDetailsContent(props: { id: string }) {
                 </div>
               </div>
             </div>
-            <div className="mt-8 flex items-center justify-between border-t pt-4">
+            <div className="mt-8 flex-col space-y-8 items-center justify-between border-t pt-4">
               <div className="flex-1 space-x-2">
                 {tagArray?.map((badge, index) => (
                   <Badge key={index + 1} variant="outline">
@@ -353,6 +369,12 @@ export default async function ContestDetailsContent(props: { id: string }) {
                   </Badge>
                 ))}
               </div>
+           <Image
+           src={contestById[0]?.bannerUrl}
+           alt={contestById[0]?.title}
+           width={800}
+           height={200}/>
+     
           
             </div>
           </div>
