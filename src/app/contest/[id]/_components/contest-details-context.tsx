@@ -314,9 +314,9 @@ export default async function ContestDetailsContent(props: { id: string }) {
   console.log(contestById);
   const tagArray = contestById[0]?.tags?.split(",").map((tag) => tag.trim());
   const json = contestById[0]?.description ?? "";
-  const parsedJson = json ? JSON.parse(json) as JSONContent : "";
-  const filteredJson = filterOutImages(parsedJson);
-  const output = json ? generateHTML(filteredJson, defaultExtensions) : "";
+  const parsedJson = json ? JSON.parse(json) as JSONContent  : null
+  const filteredJson = parsedJson ? filterOutImages(parsedJson) : null;
+  const output = filteredJson ? generateHTML(filteredJson, defaultExtensions) : "";
 
 
   return (
@@ -370,8 +370,10 @@ export default async function ContestDetailsContent(props: { id: string }) {
                 ))}
               </div>
            <Image
-           src={contestById[0]?.bannerUrl}
-           alt={contestById[0]?.title}
+           src={contestById[0]?.bannerUrl ?? 
+            ""
+           }
+           alt={contestById[0]?.title ?? ""}
            width={800}
            height={200}/>
      

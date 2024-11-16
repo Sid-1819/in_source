@@ -1,10 +1,12 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import MarkdownEditor from '@uiw/react-markdown-editor';
 const RulesPage = () => {
-  document.documentElement.setAttribute('data-color-mode', 'light')
+  useEffect(() => {
+    document.documentElement.setAttribute('data-color-mode', 'light');
+  }, []);
 
     const rules = `
 **1. Dates and Timing**
