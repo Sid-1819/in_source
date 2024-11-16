@@ -22,7 +22,6 @@ import {
   suggestionItems
 } from '~/components/editor/slash-command'
 import EditorMenu from '~/components/editor/editor-menu'
-import { uploadFn } from '~/components/editor/image-upload'
 import { defaultExtensions } from '~/components/editor/extensions'
 import { TextButtons } from '~/components/editor/selectors/text-buttons'
 import { LinkSelector } from '~/components/editor/selectors/link-selector'
@@ -30,9 +29,9 @@ import { NodeSelector } from '~/components/editor/selectors/node-selector'
 import { MathSelector } from '~/components/editor/selectors/math-selector'
 import { ColorSelector } from '~/components/editor/selectors/color-selector'
 
-import { Separator } from '~/components/ui/separator'
+import highlightElement from 'highlight.js';
 
-const hljs = require('highlight.js')
+import { Separator } from '~/components/ui/separator'
 
 const extensions = [
   ...defaultExtensions,
@@ -67,9 +66,9 @@ export default function Editor({ initialValue, onChange, placeholder }: EditorPr
   const highlightCodeblocks = (content: string) => {
     const doc = new DOMParser().parseFromString(content, 'text/html')
     doc.querySelectorAll('pre code').forEach(el => {
-      // @ts-ignore
+      // @ts-expect-error: highlightElement is not typed by the library
       // https://highlightjs.readthedocs.io/en/latest/api.html?highlight=highlightElement#highlightelement
-      hljs.highlightElement(el)
+      highlightElement(el)
     })
     return new XMLSerializer().serializeToString(doc)
   }
@@ -86,10 +85,6 @@ export default function Editor({ initialValue, onChange, placeholder }: EditorPr
             handleDOMEvents: {
               keydown: (_view, event) => handleCommandNavigation(event)
             },
-            handlePaste: (view, event) =>
-              handleImagePaste(view, event, uploadFn),
-            handleDrop: (view, event, _slice, moved) =>
-              handleImageDrop(view, event, moved, uploadFn),
             attributes: {
               class:
                 'prose dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full'

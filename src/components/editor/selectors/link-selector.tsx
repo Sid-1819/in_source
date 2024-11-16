@@ -15,6 +15,7 @@ export function isValidUrl(url: string) {
     return false
   }
 }
+
 export function getUrlFromString(str: string) {
   if (isValidUrl(str)) return str
   try {
@@ -25,9 +26,16 @@ export function getUrlFromString(str: string) {
     return null
   }
 }
+
 interface LinkSelectorProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+}
+
+interface LinkAttributes {
+  href: string
+  target?: string
+  rel?: string
 }
 
 export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
@@ -38,7 +46,10 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
   useEffect(() => {
     inputRef.current?.focus()
   })
+
   if (!editor) return null
+
+  const linkAttributes = editor.getAttributes('link') as LinkAttributes
 
   return (
     <Popover modal={true} open={open} onOpenChange={onOpenChange}>
@@ -77,9 +88,9 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
             type='text'
             placeholder='Paste a link'
             className='flex-1 bg-background p-1 text-sm outline-none'
-            defaultValue={editor.getAttributes('link').href || ''}
+            defaultValue={linkAttributes.href || ''}
           />
-          {editor.getAttributes('link').href ? (
+          {linkAttributes.href ? (
             <Button
               size='icon'
               variant='outline'
