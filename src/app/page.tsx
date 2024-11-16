@@ -1,16 +1,13 @@
-// "use client"
 
 import React from "react";
 import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Trophy, Users, Calendar } from "lucide-react";
 import { cn } from '~/lib/utils';
-// import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getContestList, getContestOnHome } from '~/server/queries';
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-
-
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 
 export type Contest = {
   contest_id: number;
@@ -24,6 +21,7 @@ export type Contest = {
   banner_url: string | null;
   difficulty_level: string | null;
   end_date: string;
+  start_date:string;
 };
 
 interface Prizes {
@@ -38,11 +36,9 @@ interface ContestCardProps {
 }
 
 const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
-
   const tagArray = contest.tags?.split(',').map(tag => tag.trim());
 
   return (
-
     <Link href={`/contest/1`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow mb-4">
         {/* Mobile Layout (stacked layout for smaller screens) */}
@@ -65,7 +61,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                   variant="outline"
                   className={cn(
                     "rounded-full px-2 py-1 text-xs font-medium border",
-
                   )}
                 >
                   {contest.difficulty_level}
@@ -85,7 +80,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{contest.end_date}</span>
+                <span>Starts: {new Date(contest.start_date).toLocaleDateString()}</span>
               </div>
             </div>
 
@@ -94,7 +89,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                 <Badge
                   key={index + 1}
                   variant="outline"
-
                 >
                   {badge}
                 </Badge>
@@ -123,7 +117,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                   variant="outline"
                   className={cn(
                     "rounded-full px-2 py-1 text-xs font-medium border",
-
                   )}
                 >
                   {contest.difficulty_level}
@@ -147,7 +140,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{contest.end_date}</span>
+                <span>Starts: {new Date(contest.start_date).toLocaleDateString()}</span>
               </div>
             </div>
 
@@ -158,7 +151,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                   variant="outline"
                   className={cn(
                     "rounded-full px-3 py-1 text-xs font-medium",
-
                   )}
                 >
                   {badge}
@@ -173,11 +165,23 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 };
 
 const ContestList = async () => {
+  const contests = await getContestOnHome('a');
+  const currentDate = new Date();
 
-  const contests = await getContestList('a');
+  // Filter contests based on dates
+  const upcomingContests = contests.filter(contest => 
+    new Date(contest.start_date) > currentDate
+  );
 
-  const log = await getContestOnHome('a');
+  const ongoingContests = contests.filter(contest => {
+    const startDate = new Date(contest.start_date);
+    const endDate = new Date(contest.end_date);
+    return startDate <= currentDate && currentDate <= endDate;
+  });
 
+  const endedContests = contests.filter(contest => 
+    new Date(contest.end_date) < currentDate
+  );
 
   return (
     <>
@@ -188,16 +192,72 @@ const ContestList = async () => {
       </SignedOut>
       <SignedIn>
         <div className="mx-auto max-w-4xl space-y-4 p-4">
-          {log.map((contest, index) => (
-            <ContestCard key={index + 1} contest={{
-              ...contest,
-              tags: contest.tags,
-              cash_awards: contest.cash_awards ?? 0,
-              points_awards: contest.points_awards ?? 0,
-              swag_awards: contest.swag_awards ?? 0,
-              participants: contest.participants ?? 0
-            }} />
-          ))}
+          <div className="mb-8">
+            <Tabs defaultValue="upcoming" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="upcoming">
+                  Upcoming ({upcomingContests.length})
+                </TabsTrigger>
+                <TabsTrigger value="ongoing">
+                  Ongoing ({ongoingContests.length})
+                </TabsTrigger>
+                <TabsTrigger value="ended">
+                  Ended ({endedContests.length})
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="upcoming" className="mt-4">
+                {upcomingContests.length === 0 ? (
+                  <div className="text-center text-gray-500">No upcoming contests</div>
+                ) : (
+                  upcomingContests.map((contest, index) => (
+                    <ContestCard key={index + 1} contest={{
+                      ...contest,
+                      tags: contest.tags,
+                      cash_awards: contest.cash_awards ?? 0,
+                      points_awards: contest.points_awards ?? 0,
+                      swag_awards: contest.swag_awards ?? 0,
+                      participants: contest.participants ?? 0
+                    }} />
+                  ))
+                )}
+              </TabsContent>
+
+              <TabsContent value="ongoing" className="mt-4">
+                {ongoingContests.length === 0 ? (
+                  <div className="text-center text-gray-500">No ongoing contests</div>
+                ) : (
+                  ongoingContests.map((contest, index) => (
+                    <ContestCard key={index + 1} contest={{
+                      ...contest,
+                      tags: contest.tags,
+                      cash_awards: contest.cash_awards ?? 0,
+                      points_awards: contest.points_awards ?? 0,
+                      swag_awards: contest.swag_awards ?? 0,
+                      participants: contest.participants ?? 0
+                    }} />
+                  ))
+                )}
+              </TabsContent>
+
+              <TabsContent value="ended" className="mt-4">
+                {endedContests.length === 0 ? (
+                  <div className="text-center text-gray-500">No ended contests</div>
+                ) : (
+                  endedContests.map((contest, index) => (
+                    <ContestCard key={index + 1} contest={{
+                      ...contest,
+                      tags: contest.tags,
+                      cash_awards: contest.cash_awards ?? 0,
+                      points_awards: contest.points_awards ?? 0,
+                      swag_awards: contest.swag_awards ?? 0,
+                      participants: contest.participants ?? 0
+                    }} />
+                  ))
+                )}
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
       </SignedIn>
     </>
