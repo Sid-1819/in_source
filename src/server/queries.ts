@@ -23,6 +23,17 @@ interface Winner {
     swag_prize: number;
 }
 
+interface Season {
+    season_name: string;
+}
+
+interface Participant {
+    username: string;
+    exp_points: number,
+    no_of_wins: number,
+    total_submissions: number
+}
+
 export async function getContestById(contestId: number) {
 
     // const user = auth();
@@ -87,3 +98,33 @@ export async function getContestWinners(contestId: number) {
     return contestWinners.rows as unknown as Winner[];
 
 };
+
+export async function getLeaderBoardList(season_id: number) {
+
+    const leaderboardData = await db.execute(sql`
+        SELECT 
+        u.username,
+        lb.exp_points,
+        lb.no_of_wins,
+        lb.submission_count AS total_submissions
+        FROM 
+        "in-source_user" u
+        INNER JOIN "in-source_leaderboard" lb ON u.user_id = lb.user_id
+        INNER JOIN "in-source_season" s ON lb.season_id = s.season_id
+        WHERE 
+        lb.season_id = ${season_id}
+        ORDER BY 
+        lb.exp_points DESC;
+    `);
+
+    return leaderboardData.rows as unknown as Participant[];
+}
+
+export async function getSeasonNameById(season_id: number) {
+
+    const seasonName = await db.execute(sql`
+        SELECT s.season_name FROM "in-source_season" s WHERE s.season_id = ${season_id};
+    `);
+
+    return seasonName.rows as unknown as Season[];
+}
