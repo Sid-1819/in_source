@@ -4,6 +4,7 @@ import "@uploadthing/react/styles.css";
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "~/lib/utils";
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
@@ -47,6 +48,14 @@ const MobileNav = () => {
 
 const Header = () => {
   const pathname = usePathname();
+  const { user } = useUser();
+
+  console.log("user: ", user);
+
+  const isAdmin = user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY";
+
+  console.log("isAdmin: ", isAdmin);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -59,6 +68,7 @@ const Header = () => {
                 src="/logo.svg"
                 alt="Logo"
               />
+
             </Link>
             <h1>CMackathon</h1>
           </div>
@@ -75,8 +85,8 @@ const Header = () => {
                     <NavigationMenuLink
                       className={cn(
                         "font-medium transition-colors hover:text-primary",
-                        pathname === "/" 
-                          ? "text-primary border-b-2 border-primary" 
+                        pathname === "/"
+                          ? "text-primary border-b-2 border-primary"
                           : "text-muted-foreground"
                       )}
                     >
@@ -90,8 +100,8 @@ const Header = () => {
                     <NavigationMenuLink
                       className={cn(
                         "font-medium transition-colors hover:text-primary",
-                        pathname === "/leaderboard" 
-                          ? "text-primary border-b-2 border-primary" 
+                        pathname === "/leaderboard"
+                          ? "text-primary border-b-2 border-primary"
                           : "text-muted-foreground"
                       )}
                     >
@@ -105,8 +115,8 @@ const Header = () => {
                     <NavigationMenuLink
                       className={cn(
                         "font-medium transition-colors hover:text-primary",
-                        pathname === "/prizes" 
-                          ? "text-primary border-b-2 border-primary" 
+                        pathname === "/prizes"
+                          ? "text-primary border-b-2 border-primary"
                           : "text-muted-foreground"
                       )}
                     >
@@ -119,8 +129,8 @@ const Header = () => {
                     <NavigationMenuLink
                       className={cn(
                         "font-medium transition-colors hover:text-primary",
-                        pathname === "/rules" 
-                          ? "text-primary border-b-2 border-primary" 
+                        pathname === "/rules"
+                          ? "text-primary border-b-2 border-primary"
                           : "text-muted-foreground"
                       )}
                     >
@@ -135,11 +145,23 @@ const Header = () => {
           {/* Right section */}
           <div className="flex items-center space-x-2">
             <Link href="/create" className="block">
-              <Button variant="default" size="sm">
-                Create Contest
-              </Button>
+              {isAdmin && (
+                <Button variant="default" size="sm">
+                  Create Contest
+                </Button>
+              )}
             </Link>
-            <Link href="/host" className="block">
+
+            <div className="block mt-2">
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
+
+            {/* <Link href="/host" className="block">
               <Button variant="outline" size="sm">
                 Sign Up
               </Button>
@@ -148,23 +170,25 @@ const Header = () => {
               <Button variant="default" size="sm">
                 Login
               </Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
     </header>
   );
-};
+}
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en" className={cn("antialiased", GeistSans.variable)}>
-      <body className="min-h-screen bg-background">
-        <Header />
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          {children}
-        </main>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={cn("antialiased", GeistSans.variable)}>
+        <body className="min-h-screen bg-background">
+          <Header />
+          <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            {children}
+          </main>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

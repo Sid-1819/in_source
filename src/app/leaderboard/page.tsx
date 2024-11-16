@@ -115,8 +115,8 @@ const LeaderboardList = () => {
               <TableRow>
                 <TableHead className="w-[60px]">Rank</TableHead>
                 <TableHead>Participant</TableHead>
-                <TableHead className="text-right hidden md:table-cell">Wins</TableHead>
-                <TableHead className="text-right hidden md:table-cell">Submissions</TableHead>
+                <TableHead className="text-right  md:table-cell">Wins</TableHead>
+                <TableHead className="text-right  md:table-cell">Submissions</TableHead>
                 <TableHead className="text-right">XP Points</TableHead>
               </TableRow>
             </TableHeader>
@@ -140,13 +140,13 @@ const LeaderboardList = () => {
                     </div>
                   </TableCell>
                   
-                  <TableCell className="text-right hidden md:table-cell">
+                  <TableCell className="text-right  md:table-cell">
                     <Badge variant="outline" className="font-medium">
                       {participant.contestsWon}
                     </Badge>
                   </TableCell>
                   
-                  <TableCell className="text-right hidden md:table-cell">
+                  <TableCell className="text-right  md:table-cell">
                     <Badge 
                       variant="outline" 
                       className="font-medium bg-blue-50 text-blue-700 hover:bg-blue-100"
