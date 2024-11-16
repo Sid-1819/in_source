@@ -17,6 +17,12 @@ export type Contest = {
     end_date: string;
 };
 
+interface Winner {
+    username: string;
+    points: number;
+    swag_prize: number;
+}
+
 export async function getContestById(contestId: number) {
 
     // const user = auth();
@@ -52,8 +58,32 @@ export async function getContestOnHome(status: string): Promise<Contest[]> {
         WHERE a.award_type_id=t.award_type_id AND a.contest_id=c.contest_id 
         AND t.award_type_name ='Points') points_awards 
 
-        FROM "public"."in-source_contest" c WHERE status='a';
+        FROM "public"."in-source_contest" c WHERE status=${status};
     `);
 
     return contestList.rows as Contest[];
 }
+
+
+export async function getContestWinners(contestId: number) {
+
+    const contestWinners = await db.execute(sql`
+        WITH user_awards AS (
+        SELECT
+        u.username,
+        COALESCE(SUM(CASE WHEN at.award_type_name = 'Points' THEN ia.award_details END), 0) AS points,
+        COALESCE(SUM(CASE WHEN at.award_type_name = 'Swag Bag' THEN ia.award_details END), 1) AS swag_prize
+        FROM "public"."in-source_user" u
+        LEFT JOIN "public"."in-source_winner" w ON u.user_id = w.user_id AND w.contest_id = ${contestId}
+        LEFT JOIN "public"."in-source_contest_award" ia ON w.award_id = ia.award_id
+        LEFT JOIN "public"."in-source_award_type" at ON ia.award_type_id = at.award_type_id
+        GROUP BY u.username
+        )
+        SELECT *
+        FROM user_awards
+        WHERE points > 0 AND swag_prize > 0;
+    `);
+
+    return contestWinners.rows as unknown as Winner[];
+
+};
