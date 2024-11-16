@@ -1,10 +1,10 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { Trophy, Users, Calendar } from "lucide-react";
+import { Gift, Star, Trophy, Users, Calendar } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
-import { getContestList, getContestOnHome } from "~/server/queries";
+import { getContestOnHome } from "~/server/queries";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import Image from "next/image";
@@ -17,11 +17,11 @@ export type Contest = {
   participants: number | null;
   cash_awards: number | null;
   swag_awards: number | null;
-  points_awards: number | null;
+  points_awards: number| null;
   banner_url: string | null;
   difficulty_level: string | null;
-  end_date: string;
   start_date: string;
+  end_date: string;
 };
 
 interface Prizes {
@@ -37,6 +37,7 @@ interface ContestCardProps {
 
 const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
   const tagArray = contest.tags?.split(",").map((tag) => tag.trim());
+  console.log(contest);
 
   return (
     <Link href={`/contest/1`}>
@@ -71,79 +72,36 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               <p className="text-sm text-gray-600">{contest.sub_title}</p>
             </div>
 
-            <div className="flex flex-col space-y-2 text-sm text-gray-600">
+            <div className="flex items-center space-x-2 text-sm text-gray-600">
               <div className="flex items-center gap-1">
-                <Trophy className="h-4 w-4" />
-                <span>{contest.cash_awards} in prizes</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Users className="h-4 w-4" />
-                <span>{contest.participants} participants</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <span>
-                  Starts: {new Date(contest.start_date).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {tagArray?.map((badge, index) => (
-                <Badge key={index + 1} variant="outline">
-                  {badge}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop Layout (side-by-side layout for larger screens) */}
-        <div className="hidden flex-row items-start gap-4 p-4 md:flex">
-          {/* Left image section */}
-          <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg">
-            <img
-              src={contest.banner_url ?? "/api/placeholder/96/96"}
-              alt={contest.title}
-              className="h-full w-full object-cover"
-            />
-          </div>
-
-          {/* Content section */}
-          <div className="flex-1 space-y-3">
-            <div>
-              <div className="mb-2 flex items-start justify-between">
-                <h3 className="text-lg font-semibold">{contest.title}</h3>
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "rounded-full border px-2 py-1 text-xs font-medium",
-                  )}
-                >
-                  {contest.difficulty_level}
-                </Badge>
-              </div>
-              <p className="text-sm text-secondary">{contest.sub_title}</p>
-            </div>
-
-            <div className="flex items-center gap-6 text-sm text-secondary">
-              <div className="flex items-center gap-1">
-                {contest.cash_awards ?? (
+              {contest.cash_awards  &&
                   <>
-                    <Trophy className="ml-2 h-4 w-4" />
-                    <span>{contest.cash_awards} in prizes</span>
+                    <Trophy className="w-4 h-4" />
+                    <span> ${contest.cash_awards} </span>
                   </>
-                )}
+                }
+                {contest.points_awards &&
+                  <>
+                    <Star className="w-4 h-4" />
+                    <span>{contest.points_awards} </span>
+                  </>
+                }
+
+                {contest.swag_awards &&
+                  <>
+                    <Gift className="w-4 h-4" />
+                    <span>{contest.swag_awards} </span>
+                  </>
+                }
+                <span>in prizes</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users className="h-4 w-4" />
                 <span>{contest.participants} participants</span>
               </div>
               <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <span>
-                  Starts: {new Date(contest.start_date).toLocaleDateString()}
-                </span>
+                <Calendar className="w-4 h-4" />
+                <span>{contest.start_date}</span>
               </div>
             </div>
 
@@ -152,7 +110,6 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                 <Badge
                   key={index + 1}
                   variant="outline"
-                  className={cn("rounded-full px-3 py-1 text-xs font-medium")}
                 >
                   {badge}
                 </Badge>
@@ -160,6 +117,9 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
             </div>
           </div>
         </div>
+
+        {/* Desktop Layout (side-by-side layout for larger screens) */}
+      
       </Card>
     </Link>
   );
@@ -253,9 +213,9 @@ const ContestList = async () => {
                       contest={{
                         ...contest,
                         tags: contest.tags,
-                        cash_awards: contest.cash_awards ?? 0,
-                        points_awards: contest.points_awards ?? 0,
-                        swag_awards: contest.swag_awards ?? 0,
+                        cash_awards: contest.cash_awards,
+                        points_awards: contest.points_awards,
+                        swag_awards: contest.swag_awards,
                         participants: contest.participants ?? 0,
                       }}
                     />
@@ -275,9 +235,9 @@ const ContestList = async () => {
                       contest={{
                         ...contest,
                         tags: contest.tags,
-                        cash_awards: contest.cash_awards ?? 0,
-                        points_awards: contest.points_awards ?? 0,
-                        swag_awards: contest.swag_awards ?? 0,
+                        cash_awards: contest.cash_awards,
+                        points_awards: contest.points_awards,
+                        swag_awards: contest.swag_awards,
                         participants: contest.participants ?? 0,
                       }}
                     />
@@ -297,9 +257,9 @@ const ContestList = async () => {
                       contest={{
                         ...contest,
                         tags: contest.tags,
-                        cash_awards: contest.cash_awards ?? 0,
-                        points_awards: contest.points_awards ?? 0,
-                        swag_awards: contest.swag_awards ?? 0,
+                        cash_awards: contest.cash_awards,
+                        points_awards: contest.points_awards,
+                        swag_awards: contest.swag_awards,
                         participants: contest.participants ?? 0,
                       }}
                     />

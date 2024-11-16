@@ -37,7 +37,7 @@ export const contests = createTable(
     prizes: varchar("prizes", { length: 225 }),
     bannerUrl: varchar("banner_url", { length: 255 }),
     status: char("status", { length: 1 }).default('a'),
-    difficultyLevel: varchar("difficulty_level", { length:255}),
+    difficultyLevel: varchar("difficulty_level", { length: 255 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -181,3 +181,36 @@ export const winners = createTable(
       .notNull(),
   }
 );
+
+export const leaderboard = createTable(
+  "leaderboard",
+  {
+    leaderboardId: serial("leaderboard_id").primaryKey(),
+    userId: integer("user_id")
+      .references(() => users.userId), // Removed { onDelete: 'cascade' }
+    contestId: integer("contest_id")
+      .references(() => contests.contestId), // Removed { onDelete: 'cascade' }
+    season: varchar("season", { length: 50 }),
+    expPoints: integer("exp_points"),
+    submissionCount: integer("submission_count"),
+    noOfWins: integer("no_of_wins"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date())
+  }
+);
+
+export const season = createTable(
+  "season",
+  {
+    seasonId: serial("season_id").primaryKey(),
+    seasonName: varchar("season_name", { length: 100 }),
+    startDate: date("start_date"),
+    endDate: date("end_date"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date())
+  }
+)
