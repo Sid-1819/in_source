@@ -116,7 +116,7 @@ const PrizesList = () => {
       rank: i + 11,
       awards: [
         {
-          item: "Fosil Grant Watch",
+          item: "Fossil Grant Watch",
         },
       ],
     })),
