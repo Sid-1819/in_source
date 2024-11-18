@@ -50,7 +50,7 @@ const Header = () => {
   const pathname = usePathname();
   const { user } = useUser();
 
-  const isAdmin = user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY";
+  const isAdmin = true //user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-background">
