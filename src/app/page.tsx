@@ -77,7 +77,11 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
               {contest.cash_awards  &&
                   <>
                     <Trophy className="w-4 h-4" />
-                    <span> ${contest.cash_awards} </span>
+                    <span>{new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(contest.cash_awards)} </span>
                   </>
                 }
                 {contest.points_awards &&
