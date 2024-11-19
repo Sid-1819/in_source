@@ -1,5 +1,4 @@
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Trophy, Medal } from "lucide-react";
 import {
   Card,
@@ -99,16 +98,16 @@ const LeaderboardList = async () => {
                       </div>
                     </div>
                   </TableCell>
-                  
+
                   <TableCell className="text-right  md:table-cell">
                     <Badge variant="outline" className="font-medium">
                       {participant.no_of_wins}
                     </Badge>
                   </TableCell>
-                  
+
                   <TableCell className="text-right  md:table-cell">
-                    <Badge 
-                      variant="outline" 
+                    <Badge
+                      variant="outline"
                       className="font-medium bg-blue-50 text-blue-700 hover:bg-blue-100"
                     >
                       {participant.total_submissions}

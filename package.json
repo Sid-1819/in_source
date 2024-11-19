@@ -66,9 +66,7 @@
     "@tiptap/pm": "^2.1.7",
     "@tiptap/react": "^2.1.7",
     "@tiptap/starter-kit": "^2.1.7",
-
     "@uiw/react-markdown-editor": "^6.1.2",
-
     "@uploadthing/react": "^7.1.1",
     "@vercel/postgres": "^0.10.0",
     "class-variance-authority": "^0.7.0",

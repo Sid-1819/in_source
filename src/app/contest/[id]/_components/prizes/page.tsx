@@ -1,59 +1,85 @@
 import React from "react";
 import { Card, CardHeader } from "~/components/ui/card";
 
-import { Trophy, Medal, Gift, Star, Award } from "lucide-react";
+import { Trophy, IndianRupee, Gift, Star, Award } from "lucide-react";
+import { getContestPizes } from "~/server/queries";
 
 interface Prizes {
-  name: string;
-  experiencePoints: number;
-
-  swags: string[];
+  position_id: number;
+  award_type: string;
+  award_details: number;
 }
 
-const PrizesPage = () => {
-  const winners: Prizes[] = [
-    {
-      name: "1st Prize",
-      experiencePoints: 15000,
+interface Award {
+  award_type: string;
+  award_details: number;
+}
 
+type SuffixMap = Record<number, string>;
 
-      swags: ["Premium Hoodie", "Mechanical Keyboard", "Dev Pack"],
-    },
-    {
-      name: "2nd Prize",
-      experiencePoints: 10000,
- 
+const getRankIcon = (rank: number) => {
+  switch (rank) {
+    case 0:
+      return <Trophy className="h-10 w-10 text-yellow-500" />;
+    case 1:
+      return <Award className="h-10 w-10 text-gray-400" />;
+    case 2:
+      return <Award className="h-10 w-10 text-amber-600" />;
+    default:
+      return <Trophy className="h-10 w-10 text-gray-400" />;
+  }
+};
 
-      swags: ["Hoodie", "Tech Pack"],
-    },
-    {
-      name: "3rd Prize",
-      experiencePoints: 5000,
-    
-
-      swags: ["T-Shirt", "Notebook", "Sticker Pack"],
-    },
-  ];
-
-  const getRankIcon = (rank: number) => {
-    switch (rank) {
-      case 0:
-        return <Trophy className="h-10 w-10 text-yellow-500" />;
-      case 1:
-        return <Award className="h-10 w-10 text-gray-400" />;
-      case 2:
-        return <Award className="h-10 w-10 text-amber-600" />;
-      default:
-        return <Trophy className="h-10 w-10 text-gray-400" />;
-    }
+function getPositionString(position_id: number): string {
+  const suffixes: SuffixMap = {
+    1: 'st',
+    2: 'nd',
+    3: 'rd',
   };
+  const lastDigit = position_id % 10;
+
+  // Special case for 11, 12, and 13 since they don't follow the normal suffix pattern
+  if (position_id >= 11 && position_id <= 13) {
+    return `${position_id}th Prize`;
+  }
+
+  // Determine the suffix based on the last digit of the position_id
+  const suffix = suffixes[lastDigit] ?? 'th';
+
+  return `${position_id}${suffix} Prize`;
+}
+
+function insertIntoIndexedArray(prizesArray: Prizes[]): Award[][] {
+  const result: Award[][] = [];
+
+  prizesArray.forEach((prize) => {
+    const index = prize.position_id - 1;
+    while (result.length <= index) {
+      result.push([]);
+    }
+
+    const award: Award = {
+      award_type: prize.award_type,
+      award_details: prize.award_details,
+    };
+    result[index]?.push(award);
+  });
+
+  return result;
+}
+
+const PrizesPage = async () => {
+
+  const prizes = await getContestPizes(1);
+  const prizesArray = insertIntoIndexedArray(prizes);
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4">
-      
 
-      {winners.map((winner, index) => (
-        <Card key={index+1} className="transition-shadow hover:shadow-lg">
+
+      {prizesArray.map((prize, index) => (
+
+        <Card key={index + 1} className="transition-shadow hover:shadow-lg">
           <CardHeader>
             <div className="flex items-start gap-4">
               {/* Rank Icon */}
@@ -66,23 +92,34 @@ const PrizesPage = () => {
                 {/* Name and Project */}
 
                 <div className="mb-1 flex items-center gap-2">
-                  <h3 className="text-lg font-semibold">{winner.name}</h3>
+                  <h3 className="text-lg font-semibold">{getPositionString(index + 1)}</h3>
                 </div>
 
                 {/* Rewards */}
                 <div className="flex flex-wrap gap-4 text-sm">
-                  <div className="flex items-center gap-1 text-purple-600">
-                    <Star className="h-4 w-4" />
-                    <span>{winner.experiencePoints.toLocaleString()} XP</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-green-600">
-               
-          
-                  </div>
-                  <div className="flex items-center gap-1 text-blue-600">
-                    <Gift className="h-4 w-4" />
-                    <span>Swag Bags</span>
-                  </div>
+                  { /* Loop over prize array */}
+                  {prize.map((award, idx) => (
+                    <div key={idx + 1} className="flex items-center gap-1">
+                      {award.award_type === "Cash Prize" && (
+                        <React.Fragment >
+                          <IndianRupee className="text-purple-600 h-4 w-4" />
+                          <span className="text-purple-600">{award.award_details}</span>
+                        </React.Fragment>
+                      )}
+                      {award.award_type === "Points" && (
+                        <React.Fragment>
+                          <Star className="text-green-600 h-4 w-4" />
+                          <span className="text-green-600">{award.award_details} XP</span>
+                        </React.Fragment>
+                      )}
+                      {award.award_type !== "Cash Prize" && award.award_type !== "Points" && (
+                        <React.Fragment>
+                          <Gift className="text-blue-600 h-4 w-4" />
+                          <span className="text-blue-600">{award.award_details} - {award.award_type}</span>
+                        </React.Fragment>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

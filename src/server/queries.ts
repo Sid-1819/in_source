@@ -35,6 +35,12 @@ interface Participant {
     total_submissions: number
 }
 
+interface Prizes {
+    position_id: number;
+    award_type: string;
+    award_details: number;
+}
+
 export async function getContestById(contestId: number) {
 
     // const user = auth();
@@ -129,4 +135,21 @@ export async function getSeasonNameById(season_id: number) {
     `);
 
     return seasonName.rows as unknown as Season[];
+}
+
+export async function getContestPizes(contestId: number): Promise<Prizes[]> {
+
+    const prizes = await db.execute(sql`
+        SELECT 
+        position_id,
+        (SELECT at.award_type_name FROM "in-source_award_type" at WHERE at.award_type_id = ca.award_type_id) AS award_type,
+        award_details
+        FROM "in-source_contest_award" ca
+        WHERE contest_id = ${contestId}
+        ORDER BY position_id, award_type;
+    `);
+
+    console.log(prizes.rows);
+
+    return prizes.rows as unknown as Prizes[];
 }

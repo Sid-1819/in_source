@@ -17,7 +17,7 @@ export type Contest = {
   participants: number | null;
   cash_awards: number | null;
   swag_awards: number | null;
-  points_awards: number| null;
+  points_awards: number | null;
   banner_url: string | null;
   difficulty_level: string | null;
   start_date: string;
@@ -74,14 +74,14 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 
             <div className="flex items-center space-x-2 text-sm text-gray-600">
               <div className="flex items-center gap-1">
-              {contest.cash_awards  &&
+                {contest.cash_awards &&
                   <>
                     <Trophy className="w-4 h-4" />
                     <span>{new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0
-    }).format(contest.cash_awards)} </span>
+                      style: 'currency',
+                      currency: 'INR',
+                      maximumFractionDigits: 0
+                    }).format(contest.cash_awards)} </span>
                   </>
                 }
                 {contest.points_awards &&
@@ -97,8 +97,8 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
                     <span>{contest.swag_awards} </span>
                   </>
                 }
-                <span>in prizes</span>
               </div>
+              <span>in prizes</span>
               <div className="flex items-center gap-1">
                 <Users className="h-4 w-4" />
                 <span>{contest.participants} participants</span>
@@ -123,7 +123,88 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
         </div>
 
         {/* Desktop Layout (side-by-side layout for larger screens) */}
-      
+        <div className="block md:hidden">
+          {/* Image */}
+          <div className="h-48 w-full overflow-hidden">
+            <img
+              src={contest.banner_url ?? ""}
+              alt={contest.title}
+              className="h-full w-full object-cover"
+            />
+          </div>
+
+          {/* Content */}
+          <div className="space-y-3 p-4">
+            <div>
+              <div className="mb-2 flex items-start justify-between">
+                <h3 className="text-lg font-semibold text-primary">
+                  {contest.title}
+                </h3>
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "rounded-full border px-2 py-1 text-xs font-medium",
+                  )}
+                >
+                  {contest.difficulty_level}
+                </Badge>
+              </div>
+              <p className="text-sm text-gray-600">{contest.sub_title}</p>
+            </div>
+
+            <div className="flex flex-col space-y-2 text-sm text-gray-600">
+
+              <div className="flex items-center gap-1">
+
+                {contest.cash_awards &&
+                  <>
+                    <Trophy className="w-4 h-4" />
+                    <span> {new Intl.NumberFormat('en-IN', {
+                      style: 'currency',
+                      currency: 'INR',
+                      maximumFractionDigits: 0
+                    }).format(contest.cash_awards)} </span>
+                  </>
+                }
+                {contest.points_awards &&
+                  <>
+                    <Star className="w-4 h-4" />
+                    <span>{contest.points_awards} </span>
+                  </>
+                }
+
+                {contest.swag_awards &&
+                  <>
+                    <Gift className="w-4 h-4" />
+                    <span>{contest.swag_awards} </span>
+                  </>
+                }
+                <span>in prizes</span>
+
+              </div>
+              <div className="flex items-center gap-1">
+                <Users className="h-4 w-4" />
+                <span>{contest.participants} participants</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                <span>{contest.start_date}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {tagArray?.map((badge, index) => (
+                <Badge
+                  key={index + 1}
+                  variant="outline"
+                >
+                  {badge}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+
       </Card>
     </Link>
   );
@@ -150,45 +231,45 @@ const ContestList = async () => {
 
   return (
     <>
-        <SignedOut>
-      <div className="flex h-full items-center justify-center bg-background">
-        <div className="w-full max-w-md px-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-center text-xl font-medium">
-                You are not signed in
-              </CardTitle>
-            </CardHeader>
+      <SignedOut>
+        <div className="flex h-full items-center justify-center bg-background">
+          <div className="w-full max-w-md px-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-center text-xl font-medium">
+                  You are not signed in
+                </CardTitle>
+              </CardHeader>
 
-            <CardContent className="flex flex-col items-center px-0">
-              <div className="flex w-full flex-col items-center gap-8">
-                <div className="text-lg font-semibold text-primary">
-                  CMackathon
-                </div>
+              <CardContent className="flex flex-col items-center px-0">
+                <div className="flex w-full flex-col items-center gap-8">
+                  <div className="text-lg font-semibold text-primary">
+                    CMackathon
+                  </div>
 
-                <div className="flex justify-center">
-                  <Image 
-                    src="/logo.svg" 
-                    alt="logo" 
-                    height={100} 
-                    width={100}
-                    className="h-24 w-24"
-                  />
-                </div>
+                  <div className="flex justify-center">
+                    <Image
+                      src="/logo.svg"
+                      alt="logo"
+                      height={100}
+                      width={100}
+                      className="h-24 w-24"
+                    />
+                  </div>
 
-                <div className="flex justify-center">
-                  <SignInButton>
-                    <button className="rounded-md bg-primary px-8 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90">
-                      Sign In
-                    </button>
-                  </SignInButton>
+                  <div className="flex justify-center">
+                    <SignInButton>
+                      <button className="rounded-md bg-primary px-8 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90">
+                        Sign In
+                      </button>
+                    </SignInButton>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
-    </SignedOut>
+      </SignedOut>
       <SignedIn>
         <div className="mx-auto max-w-4xl space-y-4 p-4">
           <div className="mb-8">
