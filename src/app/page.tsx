@@ -37,7 +37,6 @@ interface ContestCardProps {
 
 const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
   const tagArray = contest.tags?.split(",").map((tag) => tag.trim());
-  console.log(contest);
 
   return (
     <Link href={`/contest/1`}>

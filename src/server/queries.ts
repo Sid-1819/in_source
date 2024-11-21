@@ -170,7 +170,5 @@ export async function getContestParticipants(contestId: number) {
         ORDER BY pt.participation_date DESC;
     `);
 
-    console.log(participants.rows);
-
     return participants.rows as unknown as Participant[];
 }

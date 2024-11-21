@@ -21,37 +21,20 @@ import Image from "next/image";
 import { UploadButton } from "~/utils/uploadthing";
 import { Badge } from "~/components/ui/badge";
 import Editor from "~/components/editor";
-
-const formSchema = z.object({
-  title: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
-  }),
-  subtitle: z.string().min(10, {
-    message: "Subtitle must be at least 10 characters.",
-  }),
-  description: z.string().min(50, {
-    message: "Description must be at least 50 characters.",
-  }),
-  banner: z.string().optional(),
-  badges: z.string(), // For the comma-separated badges input
-  expPoints: z.number().nullable(),
-  cashPrize: z.number().nullable(),
-  swagCount: z.number().nullable(),
-});
+import { formSchema } from "~/utils/validation";
 
 const defaultValue = { "type": "doc", "content": [{ "type": "paragraph" }] }
 
 const CreateContestForm = () => {
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [content, setContent] = useState<string>('')
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       subtitle: "",
-      description: content,
+      description: "",
       banner: "",
       badges: "",
       expPoints: null,
@@ -63,7 +46,6 @@ const CreateContestForm = () => {
 
   const uploadImageToStorage = async (file: File): Promise<string> => {
     // Simulate upload time
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     // For demonstration, we just return a placeholder URL
     return URL.createObjectURL(file);
   };
@@ -164,7 +146,8 @@ const CreateContestForm = () => {
                           endpoint="imageUploader"
                           onClientUploadComplete={(res) => {
                             // Do something with the response
-                            // console.log("Files: ", res);
+
+                            form.setValue('banner', (res?.[0]?.url ?? ''));
                           }}
                           onUploadError={(error: Error) => {
                             // console.log("Error: ", error) 
@@ -199,8 +182,8 @@ const CreateContestForm = () => {
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Editor initialValue={defaultValue}
-                        onChange={setContent}
                         placeholder="Enter contest description..."
+                        {...field}
                       />
                     </FormControl>
                     <FormDescription>
@@ -222,14 +205,6 @@ const CreateContestForm = () => {
                         <Input
                           placeholder="Enter badges separated by commas (e.g., React, TypeScript, Web)"
                           {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            // Update badges preview
-                            const badgeValues = e.target.value
-                              .split(",")
-                              .map((badge) => badge.trim())
-                              .filter((badge) => badge !== "");
-                          }}
                         />
                         <div className="flex flex-wrap gap-2">
                           {field.value
@@ -237,7 +212,7 @@ const CreateContestForm = () => {
                             .map((badge) => badge.trim())
                             .filter((badge) => badge !== "")
                             .map((badge, index) => (
-                              <Badge key={index + 1} variant="secondary">
+                              <Badge key={index + 1} variant="default">
                                 {badge}
                               </Badge>
                             ))}
@@ -344,13 +319,11 @@ const CreateContestForm = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-4">
+              <div className="flex justify-between gap-4">
                 <Button variant="outline" type="button">
                   Cancel
                 </Button>
-                <Button type="submit" onClick={() => {
-                  // console.log("cileicekjflasf")
-                }}>Create Contest</Button>
+                <Button type="submit">Create Contest</Button>
               </div>
             </form>
           </Form>
