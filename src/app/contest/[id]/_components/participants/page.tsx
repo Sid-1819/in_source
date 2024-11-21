@@ -16,7 +16,7 @@ interface Participant {
 const ApplicantsList = async () => {
 
   let applicants: Participant[] = await getContestParticipants(1);
-  applicants = modifyUsernames(applicants);
+  applicants = modifyUsernames(applicants) as Participant[];
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4">

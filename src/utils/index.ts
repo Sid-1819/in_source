@@ -5,7 +5,7 @@ export function generateNameFromUsername(user_name: string): string {
         .join(' '); // Join the words with spaces
 }
 
-export function modifyUsernames(users: any[]) {
+export function modifyUsernames<T extends { username: string }>(users: Array<T>) { // ensures T must an property of named 'username' of type string
     return users.map(user => ({
         ...user,
         username: generateNameFromUsername(user.username),
