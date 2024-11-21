@@ -28,7 +28,7 @@ interface Season {
     season_name: string;
 }
 
-interface Participant {
+interface LeaderboardUser {
     username: string;
     exp_points: number,
     no_of_wins: number,
@@ -39,6 +39,12 @@ interface Prizes {
     position_id: number;
     award_type: string;
     award_details: number;
+}
+
+interface Participant {
+    user_id: number;
+    username: string;
+    participation_date: string;
 }
 
 export async function getContestById(contestId: number) {
@@ -125,7 +131,7 @@ export async function getLeaderBoardList(season_id: number) {
         lb.exp_points DESC;
     `);
 
-    return leaderboardData.rows as unknown as Participant[];
+    return leaderboardData.rows as unknown as LeaderboardUser[];
 }
 
 export async function getSeasonNameById(season_id: number) {
@@ -149,7 +155,22 @@ export async function getContestPizes(contestId: number): Promise<Prizes[]> {
         ORDER BY position_id, award_type;
     `);
 
-    console.log(prizes.rows);
-
     return prizes.rows as unknown as Prizes[];
+}
+
+export async function getContestParticipants(contestId: number) {
+
+    const participants = await db.execute(sql`
+        SELECT 
+        user_id,
+        (SELECT username FROM "in-source_user" us WHERE us.user_id = pt.user_id) AS username, 
+        participation_date 
+        FROM "in-source_participant" pt 
+        WHERE pt.contest_id = 1 
+        ORDER BY pt.participation_date DESC;
+    `);
+
+    console.log(participants.rows);
+
+    return participants.rows as unknown as Participant[];
 }

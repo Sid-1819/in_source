@@ -211,7 +211,7 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
 };
 
 const ContestList = async () => {
-  const contests = await getContestOnHome("a");
+  const contests = await getContestOnHome("A");
   const currentDate = new Date();
 
   // Filter contests based on dates

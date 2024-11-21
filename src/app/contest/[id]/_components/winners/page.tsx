@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
 import { Trophy, Star, Gift } from "lucide-react";
 import { getContestWinners } from '~/server/queries';
+import { modifyUsernames } from '~/utils';
 
 
 interface Winner {
@@ -14,21 +15,6 @@ interface Winner {
   points: number;
   swag_prize: number;
 }
-
-function generateNameFromUsername(user_name: string): string {
-  return user_name
-    .split('_') // Split the username by underscores
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-    .join(' '); // Join the words with spaces
-}
-
-function modifyUsernames(users: Winner[]) {
-  return users.map(user => ({
-    ...user,
-    username: generateNameFromUsername(user.username),
-  }));
-}
-
 
 const WinnersList = async () => {
 
