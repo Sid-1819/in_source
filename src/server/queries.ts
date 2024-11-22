@@ -48,13 +48,8 @@ interface Participant {
 }
 
 export async function getContestById(contestId: number) {
-
-    // const user = auth();
-    // if (!user.userId) throw new Error("Unauthorized");
-
     const contestsById = await db.select().from(contests).where(eq(contests.contestId, contestId));
     return contestsById;
-
 }
 
 export async function getContestList(status: string) {
@@ -172,3 +167,10 @@ export async function getContestParticipants(contestId: number) {
 
     return participants.rows as unknown as Participant[];
 }
+
+// export const createContest = async (contest: any) => {
+//     const createdContest = await db.insert(contests).values(contest);
+//     console.log(createdContest);
+
+//     return createdContest[0].contest_id;
+// }

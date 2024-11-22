@@ -50,7 +50,7 @@ const Header = () => {
   const pathname = usePathname();
   const { user } = useUser();
 
-  const isAdmin = true //user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY";
+  const isAdmin = user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY"; // user?.primaryEmailAddress?.emailAddress === 'godwin.pinto@cmss.in'
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-background">
@@ -140,13 +140,19 @@ const Header = () => {
 
             {/* Right section */}
             <div className="flex items-center space-x-2">
-              <Link href="/create" className="block">
-                {isAdmin && (
+              {isAdmin ? (
+                <Link href="/create" className="block">
                   <Button variant="default" size="sm">
                     Create Contest
                   </Button>
-                )}
-              </Link>
+                </Link>
+              ) : (
+                <Link href="/participations" className="block">
+                  <Button variant="default" size="sm">
+                    My Participations
+                  </Button>
+                </Link >
+              )}
               <UserButton />
             </div>
           </SignedIn>

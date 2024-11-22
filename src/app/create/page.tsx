@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -22,12 +22,26 @@ import { UploadButton } from "~/utils/uploadthing";
 import { Badge } from "~/components/ui/badge";
 import Editor from "~/components/editor";
 import { formSchema } from "~/utils/validation";
+import { Award, Plus, Trash2, Trophy } from "lucide-react";
+// import { createContest } from "~/lib/actions";
+// import { Contest, createContest } from "~/lib/actions";
 
 const defaultValue = { "type": "doc", "content": [{ "type": "paragraph" }] }
+
+export type RewardEntry = {
+  expPoints?: number | null;
+  cashPrize?: number | null;
+  swagCount?: number | null;
+};
 
 const CreateContestForm = () => {
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [rewards, setRewards] = useState<RewardEntry[]>([{
+    expPoints: null,
+    cashPrize: null,
+    swagCount: null
+  }]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,12 +51,40 @@ const CreateContestForm = () => {
       description: "",
       banner: "",
       badges: "",
-      expPoints: null,
-      cashPrize: null,
-      swagCount: null,
-
+      rewards
     },
   });
+
+  const addRewardEntry = () => {
+    setRewards([
+      ...rewards,
+      { expPoints: null, cashPrize: null, swagCount: null }
+    ]);
+  };
+
+  // Function to remove a reward entry
+  const removeRewardEntry = (indexToRemove: number) => {
+    if (rewards.length > 1) {
+      setRewards(rewards.filter((_, index) => index !== indexToRemove));
+    }
+  };
+
+  // Function to render the appropriate icon based on position
+  const renderPositionIcon = (index: number) => {
+    if (rewards.length > 0) {
+      switch (index) {
+        case 0:
+          return <Trophy className="h-6 w-6 mr-1 text-yellow-500" />;
+        case 1:
+          return <Award className="h-6 w-6 text-amber-600" />;
+        case 2:
+          return <Award className="h-6 w-6 text-gray-400" />;
+        default:
+          return <Trophy className="h-6 w-6 text-gray-400" />;
+      }
+    }
+    return null;
+  };
 
   const uploadImageToStorage = async (file: File): Promise<string> => {
     // Simulate upload time
@@ -73,9 +115,29 @@ const CreateContestForm = () => {
     }
   };
 
+  useEffect(() => {
+    form.setValue("rewards", rewards.map(reward => ({
+      expPoints: reward.expPoints ?? null,
+      cashPrize: reward.cashPrize ?? null,
+      swagCount: reward.swagCount ?? null
+    })));
+  }, [rewards, form]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values);
+    console.log(values);
     // Handle form submission
+    const constestToBeInserted = {
+      title: values.title,
+      subTitle: values.subtitle,
+      tags: values.badges,
+      description: values.description,
+      bannerUrl: values.banner,
+      status: "A",
+      difficultyLevel: "Medium",
+      startDate: '01/02/2025',
+      endDate: '01/04/2025'
+    }
+    // createContest(constestToBeInserted)
   }
 
   return (
@@ -228,27 +290,53 @@ const CreateContestForm = () => {
                 )}
               />
 
-              {/* Rewards Section */}
+              {/* Rewards Section with Dynamic Entries */}
               <div className="space-y-6">
-                <h3 className="text-lg font-medium">Rewards</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Experience Points */}
-                  <FormField
-                    control={form.control}
-                    name="expPoints"
-                    render={({ field }) => (
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium">Rewards</h3>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addRewardEntry}
+                    className="flex items-center gap-2"
+                  >
+                    <Plus size={16} /> Add Reward
+                  </Button>
+                </div>
+                {rewards.map((reward, index) => (
+                  <div key={index + 1} className="relative">
+                    {rewards.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeRewardEntry(index)}
+                        className="absolute right-0 top-0 z-10"
+                      >
+                        <Trash2 size={16} className="text-destructive" />
+                      </Button>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {/* Experience Points */}
                       <FormItem>
                         <FormLabel>Experience Points</FormLabel>
+
                         <FormControl>
                           <div className="flex items-center">
+                            {renderPositionIcon(index)}
                             <Input
                               type="number"
                               placeholder="Enter XP points"
-                              {...field}
-                              value={field.value ?? ''}
+                              value={reward.expPoints ?? ''}
                               onChange={(e) => {
+                                const newRewards = [...rewards];
                                 const value = e.target.value;
-                                field.onChange(value === '' ? null : Number(value));
+                                newRewards[index] = {
+                                  ...newRewards[index],
+                                  expPoints: value === '' ? null : Number(value)
+                                };
+                                setRewards(newRewards);
                               }}
                               className="pr-12"
                             />
@@ -257,16 +345,9 @@ const CreateContestForm = () => {
                             </span>
                           </div>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
-                    )}
-                  />
 
-                  {/* Cash Prize */}
-                  <FormField
-                    control={form.control}
-                    name="cashPrize"
-                    render={({ field }) => (
+                      {/* Cash Prize */}
                       <FormItem>
                         <FormLabel>Cash Prize</FormLabel>
                         <FormControl>
@@ -277,48 +358,48 @@ const CreateContestForm = () => {
                             <Input
                               type="number"
                               placeholder="Enter amount"
-                              {...field}
-                              value={field.value
-                                ?? ''}
+                              value={reward.cashPrize ?? ''}
                               onChange={(e) => {
+                                const newRewards = [...rewards];
                                 const value = e.target.value;
-                                field.onChange(value === '' ? null : Number(value));
+                                newRewards[index] = {
+                                  ...newRewards[index],
+                                  cashPrize: value === '' ? null : Number(value)
+                                };
+                                setRewards(newRewards);
                               }}
                               className="pl-7"
                             />
                           </div>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
-                    )}
-                  />
 
-                  {/* Swag Count */}
-                  <FormField
-                    control={form.control}
-                    name="swagCount"
-                    render={({ field }) => (
+                      {/* Swag Count */}
                       <FormItem>
                         <FormLabel>Number of Swags</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             placeholder="Enter swag count"
-                            {...field}
-                            value={field.value ?? ''}
+                            value={reward.swagCount ?? ''}
                             onChange={(e) => {
+                              const newRewards = [...rewards];
                               const value = e.target.value;
-                              field.onChange(value === '' ? null : Number(value));
+                              newRewards[index] = {
+                                ...newRewards[index],
+                                swagCount: value === '' ? null : Number(value)
+                              };
+                              setRewards(newRewards);
                             }}
                           />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
-                    )}
-                  />
-                </div>
+                    </div>
+                  </div>
+                ))}
               </div>
 
+              {/* Rest of the form remains the same */}
               <div className="flex justify-between gap-4">
                 <Button variant="outline" type="button">
                   Cancel
