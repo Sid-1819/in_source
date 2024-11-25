@@ -4,7 +4,7 @@ import { Badge } from "~/components/ui/badge";
 import { Gift, Star, Trophy, Users, Calendar } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
-import { getContestOnHome, getUserByEmail } from "~/server/queries";
+import { getContestOnHome } from "~/server/queries";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import Image from "next/image";

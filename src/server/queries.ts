@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "./db";
 import { eq, sql } from "drizzle-orm";
-import { contests, users } from "./db/schema";
+import { contests, participants, users } from "./db/schema";
 
 export type Contest = {
     contest_id: number;
@@ -45,6 +45,24 @@ interface Participant {
     user_id: number;
     username: string;
     participation_date: string;
+}
+
+interface UserParticipations {
+    contest_id: number,
+    title: string,
+    banner_url: string,
+    participation_status: string,
+    participation_date: string,
+    start_date: string,
+    end_date: string,
+}
+
+interface AddParticipation {
+    contest_id: number;
+    user_id: number;
+    start_date: string;
+    end_date: string;
+    participation_date: string
 }
 
 export async function getContestById(contestId: number) {
@@ -175,10 +193,11 @@ export async function getContestParticipants(contestId: number) {
 //     return createdContest[0].contest_id;
 // }
 
-export async function getUserByEmail(email: string) {
+export async function getUserIdByEmail(email: string) {
     try {
         const user = await db.select().from(users).where(eq(users.email, email));
-        return user;
+        if (user.length == 0) return null;
+        return user[0]?.userId;
     } catch (error) {
         console.error('Error fetching user by email:', error);
         throw error;
@@ -224,4 +243,63 @@ export async function createDbUser(userData: NewUser) {
         }
         throw new Error('Failed to create user');
     }
+}
+
+export async function getUserParticipations(email: string) {
+
+    const participants = await db.execute(sql`
+        WITH user_data AS (
+        SELECT user_id
+        FROM "in-source_user"
+        WHERE email = ${email}
+    ),
+    participation_data AS (
+        SELECT
+            participation_status,
+            participation_date,
+            contest_id,
+            user_id
+        FROM "in-source_participant"
+        WHERE user_id = (SELECT user_id FROM user_data)
+    ),
+    contest_data AS (
+        SELECT
+            contest_id,
+            title,
+            banner_url,
+            start_date,
+            end_date
+        FROM "in-source_contest"
+        WHERE contest_id IN (SELECT contest_id FROM participation_data)
+    )
+    SELECT
+        c.contest_id,
+        c.title,
+        c.banner_url,
+        p.participation_status,
+        p.participation_date,
+        c.start_date,
+        c.end_date
+    FROM contest_data c
+    JOIN participation_data p ON c.contest_id = p.contest_id;
+    `);
+
+    console.log("participation", participants.rows);
+    return participants.rows as unknown as UserParticipations[];
+}
+
+export async function addParticipation(user: AddParticipation) {
+    const newParticipant = await db.insert(participants).values({
+        contestId: user.contest_id,
+        userId: user.user_id,
+        participationDate: user.participation_date,
+        participationStatus: 'REGISTERED',
+        startDate: user.start_date,
+        endDate: user.end_date
+    }).returning();
+
+    console.log("newParticipant", newParticipant);
+
+    return newParticipant;
+
 }

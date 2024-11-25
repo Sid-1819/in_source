@@ -1,58 +1,79 @@
 import React from 'react';
-import { Card } from '~/components/ui/card';
+import { Card, CardContent } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { Badge } from '~/components/ui/badge';
-import { Calendar, X } from 'lucide-react';
+import { Calendar, Trophy, X } from 'lucide-react';
 import Link from 'next/link';
+import { getUserParticipations } from '~/server/queries';
+import { currentUser } from '@clerk/nextjs/server';
 
-interface ParticipatedContestCardProps {
-    contest: {
-        id: string;
-        title: string;
-        banner_url?: string;
-        start_date: string;
-        end_date: string;
-        date_of_participation: string;
-        status?: 'Completed' | 'Ongoing' | 'Upcoming';
-        result_status?: 'Won' | 'Participated' | 'Not Ranked';
-        prize_position?: number;
-    };
-    onUnjoinContest?: (contestId: string) => void;
+// Define proper types for our data structures
+interface UserParticipations {
+    contest_id: number,
+    title: string,
+    banner_url: string,
+    participation_status: string,
+    participation_date: string,
+    start_date: string,
+    end_date: string,
 }
+// const determineContestStatus = () => {
+//     const startDate = new Date(contest.start_date);
+//     const endDate = new Date(contest.end_date);
+//     const now = new Date();
 
-const ParticipatedContestCard = () => {
-    // Determine contest status and result status
+//     if (now < startDate) return 'Upcoming';
+//     if (now > endDate) return 'Completed';
+//     return 'Ongoing';
+// };
 
-    const contest = {
-        id: "123",
-        title: "Observability & Alerting Documentation Challenge: Know when it happens and what happened!",
-        banner_url: "https://pjrjxbdononaezaz.public.blob.vercel-storage.com/observability-roTq0Fva4HMcN1SvOtPBkj8LVpzGu3.png",
-        start_date: "2022-01-01T00:00:00",
-        end_date: "2022-01-31T23:59:59",
-        date_of_participation: "2022-01-15T12:00:00",
-        status: 'Completed',
-        result_status: 'Won',
-        prize_position: 1,
-    }
-    const onUnjoinContest = (contestId: string) => {
-        console.log("Unjoin");
-    }
+// const contestStatus = determineContestStatus();
 
-    const determineContestStatus = () => {
-        const startDate = new Date(contest.start_date);
-        const endDate = new Date(contest.end_date);
-        const now = new Date();
+const NoParticipationsCard: React.FC = () => (
+    <Card className="w-full">
+        <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="rounded-full bg-gray-100 p-4 mb-4">
+                <Trophy className="w-8 h-8 text-gray-400" />
+            </div>
 
-        if (now < startDate) return 'Upcoming';
-        if (now > endDate) return 'Completed';
-        return 'Ongoing';
-    };
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                No Contest Participations Yet
+            </h3>
 
-    const contestStatus = determineContestStatus();
+            <p className="text-gray-500 mb-6 max-w-md">
+                You haven't participated in any contests yet. Join a contest to showcase your skills and win exciting prizes!
+            </p>
+
+            <Link href="/">
+                <Button className="flex items-center gap-2">
+                    Browse Contests
+                </Button>
+            </Link>
+        </CardContent>
+    </Card>
+);
+
+const ContestCard: React.FC<{ contest: UserParticipations }> = ({ contest }) => {
+    // const getStatusBadgeStyle = (status: Contest['status']) => {
+    //     const styles = {
+    //         Completed: 'bg-green-50 text-green-600',
+    //         Ongoing: 'bg-blue-50 text-blue-600',
+    //         Upcoming: 'bg-gray-50 text-gray-600'
+    //     };
+    //     return styles[status];
+    // };
+
+    // const getParticipationBadgeStyle = (status: UserParticipations['participation_status']) => {
+    //     const styles = {
+    //         Won: 'bg-yellow-50 text-yellow-600',
+    //         Participated: 'bg-blue-50 text-blue-600',
+    //         'Not Ranked': 'bg-gray-50 text-gray-600'
+    //     };
+    //     return styles[status];
+    // };
 
     return (
         <Card className="flex items-center p-4 mb-4 overflow-hidden transition-shadow hover:shadow-lg">
-            {/* Contest Image */}
             <div className="w-24 h-24 mr-4 flex-shrink-0 overflow-hidden rounded-lg">
                 <img
                     src={contest.banner_url ?? "/placeholder-contest.png"}
@@ -61,7 +82,6 @@ const ParticipatedContestCard = () => {
                 />
             </div>
 
-            {/* Contest Details */}
             <div className="flex-grow space-y-2">
                 <div className="flex justify-between items-start">
                     <div>
@@ -69,67 +89,53 @@ const ParticipatedContestCard = () => {
                             {contest.title}
                         </h3>
                         <div className="flex items-center space-x-2 text-sm text-gray-600">
+                            {/* <Badge
+                                variant="outline"
+                                className={(contest.)}
+                            >
+                                {contest.status}
+                            </Badge> */}
                             <Badge
                                 variant="outline"
-                                className={`
-                  ${contestStatus === 'Completed' ? 'bg-green-50 text-green-600' :
-                                        contestStatus === 'Ongoing' ? 'bg-blue-50 text-blue-600' :
-                                            'bg-gray-50 text-gray-600'}
-                `}
+                                className={(contest.participation_status)}
                             >
-                                {contestStatus}
+                                {contest.participation_status}
                             </Badge>
-                            {contest.result_status && (
-                                <Badge
-                                    variant="outline"
-                                    className={`
-                    ${contest.result_status === 'Won' ? 'bg-yellow-50 text-yellow-600' :
-                                            contest.result_status === 'Participated' ? 'bg-blue-50 text-blue-600' :
-                                                'bg-gray-50 text-gray-600'}
-                  `}
-                                >
-                                    {contest.result_status}
-                                    {contest.prize_position && ` (#${contest.prize_position})`}
-                                </Badge>
-                            )}
                         </div>
                     </div>
                 </div>
 
-                {/* Date Information */}
                 <div className="flex items-center space-x-4 text-sm text-gray-600">
-                    <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>Start: {contest.start_date}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>End: {contest.end_date}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>Joined: {contest.date_of_participation}</span>
-                    </div>
+                    {[
+                        { label: 'Start', date: contest.start_date },
+                        { label: 'End', date: contest.end_date },
+                        { label: 'Joined', date: contest.participation_date }
+                    ].map(({ label, date }) => (
+                        <div key={label} className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            <span>{label}: {date}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            {/* Actions */}
             <div className="flex flex-col space-y-2 ml-4">
-                <Link href={`/contest/${contest.id}`}>
+                <Link href={`/contest/${contest.contest_id}`}>
                     <Button variant="outline" size="sm">
                         View Details
                     </Button>
                 </Link>
 
-                {contestStatus !== 'Completed' && (
+                {contest.participation_status !== 'Won' && (
                     <Button
                         variant="destructive"
                         size="sm"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            onUnjoinContest(contest.id);
-                        }}
                         className="flex items-center"
+                    // onClick={(e) => {
+                    //     e.preventDefault();
+                    //     // Add your unjoin logic here
+                    //     console.log(`Unjoining contest ${contest.contest_id}`);
+                    // }}
                     >
                         <X className="w-4 h-4 mr-1" />
                         Unjoin
@@ -137,6 +143,24 @@ const ParticipatedContestCard = () => {
                 )}
             </div>
         </Card>
+    );
+};
+
+const ParticipatedContestCard = async () => {
+    const user = await currentUser();
+    const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
+    const contestList = await getUserParticipations("john@example.com");
+
+    if (!contestList.length) {
+        return <NoParticipationsCard />;
+    }
+
+    return (
+        <div className="space-y-4">
+            {contestList.map((contest) => (
+                <ContestCard key={contest.contest_id} contest={contest} />
+            ))}
+        </div>
     );
 };
 

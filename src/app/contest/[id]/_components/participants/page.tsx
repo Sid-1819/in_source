@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
 import { UsersRound, Calendar } from "lucide-react";
 import { getContestParticipants } from "~/server/queries";
-import { numeric } from "drizzle-orm/pg-core";
 import { modifyUsernames, formatDate } from "~/utils";
 
 interface Participant {

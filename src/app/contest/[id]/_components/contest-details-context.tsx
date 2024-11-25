@@ -1,5 +1,5 @@
 import { generateHTML } from "@tiptap/html";
-import React from "react";
+import React, { useId } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import TiptapLink from "@tiptap/extension-link";
@@ -20,13 +20,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import WinnersList from "./winners/page";
 import InformationPage from "./information/page";
 import PrizesPage from "./prizes/page";
-import { getContestById } from "~/server/queries";
+import { addParticipation, getContestById, getUserIdByEmail } from "~/server/queries";
 import ApplicantsList from "./participants/page";
 import Image from 'next/image';
 import { FileText, Info, Trophy, Users } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/server";
+import { date } from "drizzle-orm/mysql-core";
 
 interface TabContentProps {
   output: string;
+}
+
+interface AddParticipation {
+  contest_id: number;
+  user_id: number;
+  start_date: string;
+  end_date: string;
+  participation_date: string
 }
 
 const TabContent: React.FC<TabContentProps> = ({ output }) => {
@@ -245,7 +255,7 @@ const defaultExtensions = [
 ];
 
 const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
-    
+
   return (
     <div className="mx-auto w-full max-w-3xl">
       <Tabs defaultValue="description" className="w-full">
@@ -297,26 +307,45 @@ const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
 };
 
 export default async function ContestDetailsContent(props: { id: string }) {
-    const filterOutImages = (content: JSONContent): JSONContent => {
-        if (!content) return content;
-      
-        // Filter out image nodes from content array
-        if (Array.isArray(content.content)) {
-          content.content = content.content.filter(node => node.type !== 'image');
-          // Recursively filter nested content
-          content.content = content.content.map(node => filterOutImages(node));
-        }
-        
-        return content;
-      };
+  const filterOutImages = (content: JSONContent): JSONContent => {
+    if (!content) return content;
+
+    // Filter out image nodes from content array
+    if (Array.isArray(content.content)) {
+      content.content = content.content.filter(node => node.type !== 'image');
+      // Recursively filter nested content
+      content.content = content.content.map(node => filterOutImages(node));
+    }
+
+    return content;
+  };
+
   const contestId = parseInt(props.id ?? "0");
   const contestById = await getContestById(contestId);
-  console.log(contestById);
   const tagArray = contestById[0]?.tags?.split(",").map((tag) => tag.trim());
   const json = contestById[0]?.description ?? "";
-  const parsedJson = json ? JSON.parse(json) as JSONContent  : null
+  const parsedJson = json ? JSON.parse(json) as JSONContent : null
   const filteredJson = parsedJson ? filterOutImages(parsedJson) : null;
   const output = filteredJson ? generateHTML(filteredJson, defaultExtensions) : "";
+
+  const user = await currentUser();
+  const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
+  const userId = await getUserIdByEmail("john@example.com") ?? 65;
+
+  const newParticipation: AddParticipation = {
+    contest_id: contestId,
+    user_id: userId,
+    start_date: contestById[0]?.startDate ?? '2024-12-01',
+    end_date: contestById[0]?.endDate ?? '2025-04-31',
+    participation_date: '2024-11-25'
+  }
+
+  async function handleClick() {
+    const res = await addParticipation(newParticipation);
+    if (res.length > 0) {
+      alert("success")
+    }
+  }
 
 
   return (
@@ -329,7 +358,6 @@ export default async function ContestDetailsContent(props: { id: string }) {
           </CardTitle>
           <p className="text-base text-muted-foreground">
             {contestById[0]?.subTitle}
-            
           </p>
         </CardHeader>
         <CardContent>
@@ -353,11 +381,15 @@ export default async function ContestDetailsContent(props: { id: string }) {
                 <div className="flex flex-col">
                   <span className="text-right font-medium ">Participation</span>
                   <span className="text-right">5,227 participants</span>
-               
+
                 </div>
                 <div>
-                  <Button variant="default">Join Hackathon</Button>
-               
+                  <Button
+                    variant="default"
+                    onClick={handleClick}
+                  >
+                    Join Hackathon
+                  </Button>
                 </div>
               </div>
             </div>
@@ -369,15 +401,11 @@ export default async function ContestDetailsContent(props: { id: string }) {
                   </Badge>
                 ))}
               </div>
-           <Image
-           src={contestById[0]?.bannerUrl ?? 
-            ""
-           }
-           alt={contestById[0]?.title ?? ""}
-           width={800}
-           height={200}/>
-     
-          
+              <Image
+                src={contestById[0]?.bannerUrl ?? ""}
+                alt={contestById[0]?.title ?? ""}
+                width={800}
+                height={200} />
             </div>
           </div>
         </CardContent>
