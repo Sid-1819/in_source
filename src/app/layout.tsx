@@ -4,7 +4,7 @@ import "@uploadthing/react/styles.css";
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "~/lib/utils";
-import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs'
+import { ClerkProvider, SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs'
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
@@ -50,7 +50,7 @@ const Header = () => {
   const pathname = usePathname();
   const { user } = useUser();
 
-  const isAdmin = user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY"; // user?.primaryEmailAddress?.emailAddress === 'godwin.pinto@cmss.in'
+  const isAdmin = user?.primaryEmailAddress?.emailAddress === 'godwin.pinto@cmss.in'//user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY"; 
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-background">

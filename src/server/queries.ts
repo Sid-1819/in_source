@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "./db";
 import { eq, sql } from "drizzle-orm";
-import { contests } from "./db/schema";
+import { contests, users } from "./db/schema";
 
 export type Contest = {
     contest_id: number;
@@ -174,3 +174,54 @@ export async function getContestParticipants(contestId: number) {
 
 //     return createdContest[0].contest_id;
 // }
+
+export async function getUserByEmail(email: string) {
+    try {
+        const user = await db.select().from(users).where(eq(users.email, email));
+        return user;
+    } catch (error) {
+        console.error('Error fetching user by email:', error);
+        throw error;
+    }
+};
+
+interface NewUser {
+    username: string;
+    email: string;
+}
+
+export async function createDbUser(userData: NewUser) {
+    try {
+        // First check if user already exists
+        const existingUser = await db.query.users.findFirst({
+            where: eq(users.email, userData.email)
+        });
+
+        if (existingUser) {
+            return existingUser;
+        }
+
+        // Insert new user
+        const [newUser] = await db.insert(users)
+            .values({
+                username: userData.username,
+                email: userData.email,
+                // createdAt will be set automatically by the default value
+            })
+            .returning();
+
+        return newUser;
+    } catch (error) {
+        console.error('Error creating user:', error);
+        // Check for unique constraint violations
+        if (error instanceof Error && error.message.includes('unique constraint')) {
+            if (error.message.includes('username_unique')) {
+                throw new Error('Username already taken');
+            }
+            if (error.message.includes('email_unique')) {
+                throw new Error('Email already registered');
+            }
+        }
+        throw new Error('Failed to create user');
+    }
+}

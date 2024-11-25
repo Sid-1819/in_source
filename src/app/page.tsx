@@ -4,7 +4,7 @@ import { Badge } from "~/components/ui/badge";
 import { Gift, Star, Trophy, Users, Calendar } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
-import { getContestOnHome } from "~/server/queries";
+import { getContestOnHome, getUserByEmail } from "~/server/queries";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import Image from "next/image";
@@ -35,18 +35,18 @@ interface ContestCardProps {
   contest: Contest;
 }
 
-const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
+const ContestCard: React.FC<ContestCardProps> = async ({ contest }) => {
   const tagArray = contest.tags?.split(",").map((tag) => tag.trim());
 
   return (
-    <Link href={`/contest/1`}>
+    <Link href={`/contest/${contest.contest_id}`}>
       <Card className="mb-4 overflow-hidden transition-shadow hover:shadow-lg">
         {/* Mobile Layout (stacked layout for smaller screens) */}
         <div className="block md:hidden">
           {/* Image */}
           <div className="h-48 w-full overflow-hidden">
             <img
-              src={contest.banner_url ?? ""}
+              src={contest.banner_url ?? "./logo.svg"}
               alt={contest.title}
               className="h-full w-full object-cover"
             />
@@ -122,11 +122,11 @@ const ContestCard: React.FC<ContestCardProps> = ({ contest }) => {
         </div>
 
         {/* Desktop Layout (side-by-side layout for larger screens) */}
-        <div className="block md:hidden">
+        <div className="block">
           {/* Image */}
           <div className="h-48 w-full overflow-hidden">
             <img
-              src={contest.banner_url ?? ""}
+              src={contest.banner_url ?? "./LogOut.svg"}
               alt={contest.title}
               className="h-full w-full object-cover"
             />
