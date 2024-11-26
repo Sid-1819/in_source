@@ -26,6 +26,8 @@ import { FileText, Info, Trophy, Users } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 import JoinButton from "./join-button";
 import { handleAddParticipation, isUserJoined } from "~/lib/actions"
+import { Button } from "~/components/ui/button";
+import Link from "next/link";
 
 interface TabContentProps {
   output: string;
@@ -370,7 +372,7 @@ export default async function ContestDetailsContent(props: { id: string }) {
                   <span className="text-right">5,227 participants</span>
 
                 </div>
-                {!isAlreadyParticipated && (
+                {!isAlreadyParticipated ? (
                   <form action={handleAddParticipation}>
                     <input
                       type="hidden"
@@ -387,6 +389,18 @@ export default async function ContestDetailsContent(props: { id: string }) {
                       userId={userId}
                     />
                   </form>
+                ) : (
+                  <Link
+                    href="/submit"
+                  >
+                    <Button
+                      variant="default"
+                      type="submit"
+                    >
+                      Submit
+                    </Button>
+
+                  </Link>
                 )}
               </div>
             </div>
