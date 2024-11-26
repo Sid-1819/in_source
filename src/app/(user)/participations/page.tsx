@@ -151,7 +151,7 @@ const ContestCard: React.FC<{ contest: UserParticipations }> = ({ contest }) => 
 const ParticipatedContestCard = async () => {
     const user = await currentUser();
     const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
-    const contestList = await getUserParticipations("john@example.com");
+    const contestList = await getUserParticipations(email);
 
     if (!contestList.length) {
         return <NoParticipationsCard />;

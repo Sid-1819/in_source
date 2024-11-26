@@ -287,7 +287,7 @@ export async function getUserParticipations(email: string) {
     JOIN participation_data p ON c.contest_id = p.contest_id;
     `);
 
-    console.log("participation", participants.rows);
+    // console.log("participation", participants.rows);
     return participants.rows as unknown as UserParticipations[];
 }
 
@@ -301,7 +301,7 @@ export async function addParticipation(user: AddParticipation) {
         endDate: user.end_date
     }).returning();
 
-    console.log("newParticipant", newParticipant);
+    // console.log("newParticipant", newParticipant);
 
     return newParticipant;
 

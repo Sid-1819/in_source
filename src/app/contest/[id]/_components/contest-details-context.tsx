@@ -19,13 +19,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import WinnersList from "./winners/page";
 import InformationPage from "./information/page";
 import PrizesPage from "./prizes/page";
-import { addParticipation, getContestById, getUserIdByEmail } from "~/server/queries";
+import { getContestById, getUserIdByEmail } from "~/server/queries";
 import ApplicantsList from "./participants/page";
 import Image from 'next/image';
 import { FileText, Info, Trophy, Users } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 import JoinButton from "./join-button";
-import { handleAddParticipation } from "~/lib/actions"
+import { handleAddParticipation, isUserJoined } from "~/lib/actions"
 
 interface TabContentProps {
   output: string;
@@ -330,15 +330,10 @@ export default async function ContestDetailsContent(props: { id: string }) {
 
   const user = await currentUser();
   const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
-  const userId = await getUserIdByEmail("john@example.com") ?? 65;
+  const userId = await getUserIdByEmail(email) ?? 65;
 
-  const newParticipation: AddParticipation = {
-    contest_id: contestId,
-    user_id: userId,
-    start_date: contestById[0]?.startDate ?? '2024-12-01',
-    end_date: contestById[0]?.endDate ?? '2025-04-31',
-    participation_date: '2024-11-25'
-  }
+  const isAlreadyParticipated = await isUserJoined(userId, contestId)
+
 
   return (
     <>
@@ -375,22 +370,24 @@ export default async function ContestDetailsContent(props: { id: string }) {
                   <span className="text-right">5,227 participants</span>
 
                 </div>
-                <form action={handleAddParticipation}>
-                  <input
-                    type="hidden"
-                    name="contestId"
-                    value={contestId}
-                  />
-                  <input
-                    type="hidden"
-                    name="userId"
-                    value={userId}
-                  />
-                  <JoinButton
-                    contestId={contestId}
-                    userId={userId}
-                  />
-                </form>
+                {!isAlreadyParticipated && (
+                  <form action={handleAddParticipation}>
+                    <input
+                      type="hidden"
+                      name="contestId"
+                      value={contestId}
+                    />
+                    <input
+                      type="hidden"
+                      name="userId"
+                      value={userId}
+                    />
+                    <JoinButton
+                      contestId={contestId}
+                      userId={userId}
+                    />
+                  </form>
+                )}
               </div>
             </div>
             <div className="mt-8 flex-col space-y-8 items-center justify-between border-t pt-4">

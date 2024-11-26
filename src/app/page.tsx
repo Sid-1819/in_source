@@ -8,6 +8,7 @@ import { getContestOnHome } from "~/server/queries";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import Image from "next/image";
+import { createUserIfNotexists } from "~/lib/actions";
 
 export type Contest = {
   contest_id: number;
@@ -227,6 +228,8 @@ const ContestList = async () => {
   const endedContests = contests.filter(
     (contest) => new Date(contest.end_date) < currentDate,
   );
+
+  await createUserIfNotexists();
 
   return (
     <>
