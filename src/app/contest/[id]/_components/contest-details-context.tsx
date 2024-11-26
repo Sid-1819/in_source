@@ -1,5 +1,5 @@
 import { generateHTML } from "@tiptap/html";
-import React, { useId } from "react";
+import React from "react";
 import StarterKit from "@tiptap/starter-kit";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import TiptapLink from "@tiptap/extension-link";
@@ -14,7 +14,6 @@ import Highlight from "@tiptap/extension-highlight";
 import { InputRule, JSONContent } from "@tiptap/core";
 import { Image as TiptapImage } from "@tiptap/extension-image"; // Alias the TipTap Image importimport { FileText, Info, Users, Trophy } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import WinnersList from "./winners/page";
@@ -25,7 +24,8 @@ import ApplicantsList from "./participants/page";
 import Image from 'next/image';
 import { FileText, Info, Trophy, Users } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
-import { date } from "drizzle-orm/mysql-core";
+import JoinButton from "./join-button";
+import { handleAddParticipation } from "~/lib/actions"
 
 interface TabContentProps {
   output: string;
@@ -340,14 +340,6 @@ export default async function ContestDetailsContent(props: { id: string }) {
     participation_date: '2024-11-25'
   }
 
-  async function handleClick() {
-    const res = await addParticipation(newParticipation);
-    if (res.length > 0) {
-      alert("success")
-    }
-  }
-
-
   return (
     <>
       {/* Header Card */}
@@ -383,14 +375,22 @@ export default async function ContestDetailsContent(props: { id: string }) {
                   <span className="text-right">5,227 participants</span>
 
                 </div>
-                <div>
-                  <Button
-                    variant="default"
-                    onClick={handleClick}
-                  >
-                    Join Hackathon
-                  </Button>
-                </div>
+                <form action={handleAddParticipation}>
+                  <input
+                    type="hidden"
+                    name="contestId"
+                    value={contestId}
+                  />
+                  <input
+                    type="hidden"
+                    name="userId"
+                    value={userId}
+                  />
+                  <JoinButton
+                    contestId={contestId}
+                    userId={userId}
+                  />
+                </form>
               </div>
             </div>
             <div className="mt-8 flex-col space-y-8 items-center justify-between border-t pt-4">

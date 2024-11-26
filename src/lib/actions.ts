@@ -1,9 +1,10 @@
 "use server"
 
 import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { db } from "~/server/db";
-import { contests, users } from "~/server/db/schema"
-import { createDbUser, getUserByEmail } from "~/server/queries";
+import { contests } from "~/server/db/schema"
+import { addParticipation, createDbUser, getContestById, getUserIdByEmail } from "~/server/queries";
 
 export type Contest = typeof contests.$inferInsert;
 export const createContest = async (contest: Contest) => {
@@ -13,7 +14,7 @@ export const createContest = async (contest: Contest) => {
 }
 
 export const getUser = async (email: string) => {
-    const user = getUserByEmail(email);
+    const user = getUserIdByEmail(email);
     console.log("actios: ", user);
     return user;
 }
@@ -44,5 +45,28 @@ export async function getCurrentUser(): Promise<User | null> {
     } catch (error) {
         console.error('Error fetching current user:', error);
         return null;
+    }
+}
+
+export async function handleAddParticipation(formData: FormData) {
+    const contestId = formData.get('contestId') as string;
+    const userId = formData.get('userId') as string;
+    const contestById = await getContestById(parseInt(contestId));
+
+    const newParticipation = {
+        contest_id: parseInt(contestId),
+        user_id: parseInt(userId),
+        start_date: contestById[0]?.startDate ?? '2024-11-08',
+        end_date: contestById[0]?.endDate ?? '2025-06-31',
+        participation_date: new Date().toISOString().split('T')[0] ?? '2024-11-26'
+    };
+
+    try {
+        const res = await addParticipation(newParticipation);
+        console.log("res", res);
+        redirect("/participations")
+        return;
+    } catch (error) {
+        throw error;
     }
 }
