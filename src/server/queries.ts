@@ -51,6 +51,7 @@ interface UserParticipations {
     contest_id: number,
     title: string,
     banner_url: string,
+    participant_id: number,
     participation_status: string,
     participation_date: string,
     start_date: string,
@@ -255,6 +256,7 @@ export async function getUserParticipations(email: string) {
     ),
     participation_data AS (
         SELECT
+            participant_id,
             participation_status,
             participation_date,
             contest_id,
@@ -276,6 +278,7 @@ export async function getUserParticipations(email: string) {
         c.contest_id,
         c.title,
         c.banner_url,
+        p.participant_id,
         p.participation_status,
         p.participation_date,
         c.start_date,

@@ -1,9 +1,10 @@
 "use server"
 
 import { currentUser } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { db } from "~/server/db";
-import { contests } from "~/server/db/schema"
+import { contests, participants } from "~/server/db/schema"
 import { addParticipation, createDbUser, getContestById, getUserIdByEmail } from "~/server/queries";
 
 export type Contest = typeof contests.$inferInsert;
@@ -69,4 +70,15 @@ export async function handleAddParticipation(formData: FormData) {
     } catch (error) {
         throw error;
     }
+}
+
+export async function removeParticipation(formData: FormData) {
+    const id = formData.get('participantId') as string;
+    const participantId = parseInt(id)
+
+    console.log("participantId", participantId);
+
+    const result = await db.delete(participants).where(eq(participants.participantId, participantId))
+    console.log("result of unjion hackathon", result);
+    redirect("/participations")
 }

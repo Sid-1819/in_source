@@ -6,10 +6,13 @@ import { Calendar, Trophy, X } from 'lucide-react';
 import Link from 'next/link';
 import { getUserParticipations } from '~/server/queries';
 import { currentUser } from '@clerk/nextjs/server';
+import { removeParticipation } from '~/lib/actions';
+import UnjoinButton from './unjoin-button';
 
 // Define proper types for our data structures
 interface UserParticipations {
     contest_id: number,
+    participant_id: number,
     title: string,
     banner_url: string,
     participation_status: string,
@@ -127,19 +130,18 @@ const ContestCard: React.FC<{ contest: UserParticipations }> = ({ contest }) => 
                 </Link>
 
                 {contest.participation_status !== 'Won' && (
-                    <Button
-                        variant="destructive"
-                        size="sm"
-                        className="flex items-center"
-                    // onClick={(e) => {
-                    //     e.preventDefault();
-                    //     // Add your unjoin logic here
-                    //     console.log(`Unjoining contest ${contest.contest_id}`);
-                    // }}
-                    >
-                        <X className="w-4 h-4 mr-1" />
-                        Unjoin
-                    </Button>
+                    <form action={removeParticipation}>
+                        <input
+                            type="hidden"
+                            name="participantId"
+                            value={contest.participant_id}
+                        />
+
+                        <UnjoinButton
+                            participantId={contest.participant_id}
+                        />
+                    </form>
+
                 )}
             </div>
         </Card>
@@ -157,8 +159,8 @@ const ParticipatedContestCard = async () => {
 
     return (
         <div className="space-y-4">
-            {contestList.map((contest) => (
-                <ContestCard key={contest.contest_id} contest={contest} />
+            {contestList.map((contest, idx) => (
+                <ContestCard key={idx + 1} contest={contest} />
             ))}
         </div>
     );
