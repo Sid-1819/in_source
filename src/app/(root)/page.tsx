@@ -42,146 +42,70 @@ const ContestCard: React.FC<ContestCardProps> = async ({ contest }) => {
   return (
     <Link href={`/contest/${contest.contest_id}`}>
       <Card className="mb-4 overflow-hidden transition-shadow hover:shadow-lg">
-        {/* Mobile Layout (stacked layout for smaller screens) */}
-        <div className="block md:hidden">
-          {/* Image */}
-          <div className="h-48 w-full overflow-hidden">
-            <img
-              src={contest.banner_url ?? "./logo.svg"}
-              alt={contest.title}
-              className="h-full w-full object-cover"
-            />
-          </div>
-
-          {/* Content */}
-          <div className="space-y-3 p-4">
-            <div>
-              <div className="mb-2 flex items-start justify-between">
-                <h3 className="text-lg font-semibold text-primary">
-                  {contest.title}
-                </h3>
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "rounded-full border px-2 py-1 text-xs font-medium",
-                  )}
-                >
-                  {contest.difficulty_level}
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-600">{contest.sub_title}</p>
-            </div>
-
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
-              <div className="flex items-center gap-1">
-                {contest.cash_awards &&
-                  <>
-                    <Trophy className="w-4 h-4" />
-                    <span>{new Intl.NumberFormat('en-IN', {
-                      style: 'currency',
-                      currency: 'INR',
-                      maximumFractionDigits: 0
-                    }).format(contest.cash_awards)} </span>
-                  </>
-                }
-                {contest.points_awards &&
-                  <>
-                    <Star className="w-4 h-4" />
-                    <span>{contest.points_awards} </span>
-                  </>
-                }
-
-                {contest.swag_awards &&
-                  <>
-                    <Gift className="w-4 h-4" />
-                    <span>{contest.swag_awards} </span>
-                  </>
-                }
-              </div>
-              <span>in prizes</span>
-              <div className="flex items-center gap-1">
-                <Users className="h-4 w-4" />
-                <span>{contest.participants} participants</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                <span>{contest.start_date}</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {tagArray?.map((badge, index) => (
-                <Badge
-                  key={index + 1}
-                  variant="outline"
-                >
-                  {badge}
-                </Badge>
-              ))}
-            </div>
-          </div>
+        {/* Responsive Image */}
+        <div className="h-48 w-full overflow-hidden">
+          <img
+            src={contest.banner_url ?? "./logo.svg"}
+            alt={contest.title}
+            className="h-full w-full object-cover"
+          />
         </div>
 
-        {/* Desktop Layout (side-by-side layout for larger screens) */}
-        <div className="block">
-          {/* Image */}
-          <div className="h-48 w-full overflow-hidden">
-            <img
-              src={contest.banner_url ?? "./LogOut.svg"}
-              alt={contest.title}
-              className="h-full w-full object-cover"
-            />
+        {/* Responsive Content */}
+        <div className="space-y-3 p-4">
+          {/* Title and Difficulty */}
+          <div className="flex items-start justify-between">
+            <h3 className="text-lg font-semibold text-primary">
+              {contest.title}
+            </h3>
+            <Badge
+              variant="outline"
+              className={cn(
+                "rounded-full border px-2 py-1 text-xs font-medium"
+              )}
+            >
+              {contest.difficulty_level}
+            </Badge>
           </div>
 
-          {/* Content */}
-          <div className="space-y-3 p-4">
-            <div>
-              <div className="mb-2 flex items-start justify-between">
-                <h3 className="text-lg font-semibold text-primary">
-                  {contest.title}
-                </h3>
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "rounded-full border px-2 py-1 text-xs font-medium",
-                  )}
-                >
-                  {contest.difficulty_level}
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-600">{contest.sub_title}</p>
-            </div>
+          {/* Subtitle */}
+          <p className="text-sm text-gray-600">{contest.sub_title}</p>
 
-            <div className="flex flex-col space-y-2 text-sm text-gray-600">
-
-              <div className="flex items-center gap-1">
-
-                {contest.cash_awards &&
-                  <>
+          {/* Prizes and Details */}
+          <div className="flex flex-row sm:flex-row sm:items-center sm:justify-normal space-y-2 sm:space-y-0 text-sm text-gray-600">
+            {/* Awards Section */}
+            {(contest.cash_awards ?? contest.points_awards ?? contest.swag_awards) && (
+              <div className="flex flex-wrap items-center gap-2">
+                {contest.cash_awards && (
+                  <div className="flex items-center gap-1">
                     <Trophy className="w-4 h-4" />
-                    <span> {new Intl.NumberFormat('en-IN', {
-                      style: 'currency',
-                      currency: 'INR',
-                      maximumFractionDigits: 0
-                    }).format(contest.cash_awards)} </span>
-                  </>
-                }
-                {contest.points_awards &&
-                  <>
+                    <span>
+                      {new Intl.NumberFormat('en-IN', {
+                        style: 'currency',
+                        currency: 'INR',
+                        maximumFractionDigits: 0
+                      }).format(contest.cash_awards)}
+                    </span>
+                  </div>
+                )}
+                {contest.points_awards && (
+                  <div className="flex items-center gap-1">
                     <Star className="w-4 h-4" />
-                    <span>{contest.points_awards} </span>
-                  </>
-                }
-
-                {contest.swag_awards &&
-                  <>
+                    <span>{contest.points_awards}</span>
+                  </div>
+                )}
+                {contest.swag_awards && (
+                  <div className="flex items-center gap-1">
                     <Gift className="w-4 h-4" />
-                    <span>{contest.swag_awards} </span>
-                  </>
-                }
+                    <span>{contest.swag_awards}</span>
+                  </div>
+                )}
                 <span>in prizes</span>
-
               </div>
+            )}
+
+            {/* Additional Details */}
+            <div className="flex flex-wrap items-center gap-2">
               <div className="flex items-center gap-1">
                 <Users className="h-4 w-4" />
                 <span>{contest.participants} participants</span>
@@ -191,20 +115,20 @@ const ContestCard: React.FC<ContestCardProps> = async ({ contest }) => {
                 <span>{contest.start_date}</span>
               </div>
             </div>
+          </div>
 
-            <div className="flex flex-wrap gap-2">
-              {tagArray?.map((badge, index) => (
-                <Badge
-                  key={index + 1}
-                  variant="outline"
-                >
-                  {badge}
-                </Badge>
-              ))}
-            </div>
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2">
+            {tagArray?.map((badge, index) => (
+              <Badge
+                key={index + 1}
+                variant="outline"
+              >
+                {badge}
+              </Badge>
+            ))}
           </div>
         </div>
-
       </Card>
     </Link>
   );
@@ -212,6 +136,8 @@ const ContestCard: React.FC<ContestCardProps> = async ({ contest }) => {
 
 const ContestList = async () => {
   const contests = await getContestOnHome("A");
+  // console.log("contest: ", contests);
+
   const currentDate = new Date();
 
   // Filter contests based on dates
@@ -272,6 +198,7 @@ const ContestList = async () => {
           </div>
         </div>
       </SignedOut>
+
       <SignedIn>
         <div className="mx-auto max-w-4xl space-y-4 p-4">
           <div className="mb-8">
