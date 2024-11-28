@@ -82,7 +82,7 @@ const Header = () => {
                         className={cn(
                           "font-medium transition-colors hover:text-primary",
                           pathname === "/"
-                            ? "text-primary"
+                            ? "text-primary border-b-2 border-primary"
                             : "text-muted-foreground"
                         )}
                       >
@@ -97,7 +97,7 @@ const Header = () => {
                         className={cn(
                           "font-medium transition-colors hover:text-primary",
                           pathname === "/leaderboard"
-                            ? "text-primary"
+                            ? "text-primary border-b-2 border-primary"
                             : "text-muted-foreground"
                         )}
                       >
@@ -112,7 +112,7 @@ const Header = () => {
                         className={cn(
                           "font-medium transition-colors hover:text-primary",
                           pathname === "/prizes"
-                            ? "text-primary"
+                            ? "text-primary border-b-2 border-primary"
                             : "text-muted-foreground"
                         )}
                       >
@@ -126,7 +126,7 @@ const Header = () => {
                         className={cn(
                           "font-medium transition-colors hover:text-primary",
                           pathname === "/rules"
-                            ? "text-primary"
+                            ? "text-primary border-b-2 border-primary"
                             : "text-muted-foreground"
                         )}
                       >
