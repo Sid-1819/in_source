@@ -393,7 +393,7 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
                   </form>
                 ) : (
                   <Link
-                    href="/submit"
+                    href="/create-submission"
                   >
                     <Button
                       variant="default"
