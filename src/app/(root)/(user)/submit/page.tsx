@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -17,15 +17,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Plus, Trash2 } from "lucide-react";
-
-// Create a Zod schema for form validation
-const submissionSchema = z.object({
-    sourceCodeLink: z.string().url({ message: "Please enter a valid URL" }),
-    teamMembers: z.array(z.string().min(1, { message: "Team member name cannot be empty" })).optional(),
-    technologies: z.string().optional(),
-    description: z.string().optional(),
-    deploymentLink: z.string().url({ message: "Please enter a valid URL" }).optional(),
-});
+import { submissionSchema } from "~/utils/validation";
+import { addSubmission } from "~/lib/actions";
+import { ContestSumbmission } from "~/app/types";
 
 const SubmitForm = () => {
     const [teamMembers, setTeamMembers] = useState<string[]>([""]);
@@ -35,7 +29,6 @@ const SubmitForm = () => {
         defaultValues: {
             sourceCodeLink: "",
             teamMembers: [""],
-            technologies: "",
             description: "",
             deploymentLink: "",
         },
@@ -46,29 +39,39 @@ const SubmitForm = () => {
     };
 
     const removeTeamMember = (indexToRemove: number) => {
-        if (teamMembers.length > 1) {
-            setTeamMembers(teamMembers.filter((_, index) => index !== indexToRemove));
-        }
+        const updatedTeamMembers = teamMembers.filter((_, index) => index !== indexToRemove);
+        setTeamMembers(updatedTeamMembers);
+        form.setValue("teamMembers", updatedTeamMembers); // Sync with form values
     };
 
     async function onSubmit(values: z.infer<typeof submissionSchema>) {
-        console.log(values);
-        // Handle form submission logic here
-        // This could include sending data to a backend API
+        const formattedValues: ContestSumbmission = {
+            description: values.description ?? "NULL",
+            sourceCodeLink: values.sourceCodeLink,
+            deploymentLink: values.deploymentLink ?? "NULL",
+            teamMembers: teamMembers ? JSON.stringify(teamMembers) : "NULL",
+            contestId: 1,
+            userId: 65
+        };
+
+        console.log("formattedValues", formattedValues);
+
+        await addSubmission(formattedValues);
     }
 
     return (
         <div className="container mx-auto py-10">
             <Card className="mx-auto max-w-3xl">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold">
-                        Create Submission
-                    </CardTitle>
+                    <CardTitle className="text-2xl font-bold">Create Submission</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            onReset={() => form.reset()}
+                            className="space-y-8"
+                        >
                             {/* Source Code Link */}
                             <FormField
                                 control={form.control}
@@ -142,7 +145,7 @@ const SubmitForm = () => {
                                 name="description"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel> Description</FormLabel>
+                                        <FormLabel>Description</FormLabel>
                                         <FormControl>
                                             <textarea
                                                 placeholder="Briefly describe your approach and key changes"
@@ -150,9 +153,7 @@ const SubmitForm = () => {
                                                 className="w-full min-h-[100px] border rounded-md p-2"
                                             />
                                         </FormControl>
-                                        <FormDescription>
-                                            Provide a breif overview of your approach.
-                                        </FormDescription>
+                                        <FormDescription>Provide a brief overview of your approach.</FormDescription>
                                     </FormItem>
                                 )}
                             />
@@ -165,10 +166,7 @@ const SubmitForm = () => {
                                     <FormItem>
                                         <FormLabel>Deployment Link (Optional)</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                placeholder="Enter live URL"
-                                                {...field}
-                                            />
+                                            <Input placeholder="Enter live URL" {...field} />
                                         </FormControl>
                                         <FormDescription>
                                             If your code is deployed, provide the live URL.
@@ -180,8 +178,8 @@ const SubmitForm = () => {
 
                             {/* Save Button */}
                             <div className="flex justify-between gap-4">
-                                <Button variant="outline" type="button">
-                                    Cancel
+                                <Button variant="outline" type="reset">
+                                    Reset
                                 </Button>
                                 <Button type="submit">Save</Button>
                             </div>

@@ -1,11 +1,22 @@
 "use server"
 
 import { currentUser } from "@clerk/nextjs/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { ContestSumbmission } from "~/app/types";
 import { db } from "~/server/db";
-import { contests, participants } from "~/server/db/schema"
+import { contests, contestSubmissions, participants } from "~/server/db/schema"
 import { addParticipation, createDbUser, getContestById, getUserIdByEmail } from "~/server/queries";
+
+interface UserSubmission {
+    contest_id: number;
+    contest_title: string;
+    contest_banner_url: string;
+    contest_end_date: string;
+    submission_team_members: string;
+    created_at: string;
+    updated_at: string;
+}
 
 export type Contest = typeof contests.$inferInsert;
 export const createContest = async (contest: Contest) => {
@@ -30,7 +41,7 @@ interface User {
 export async function createUserIfNotexists(): Promise<User | null> {
     try {
         const user = await currentUser();
-        const username = user?.primaryEmailAddress?.emailAddress.split("@")[0] ?? "";
+        const username = user?.primaryEmailAddress?.emailAddress.split("@")[0]?.replace('.', '_') ?? "";
         const userEmail = user?.primaryEmailAddress?.emailAddress ?? "johndoe@gmail.com";
 
         if (!user) {
@@ -91,5 +102,48 @@ export async function isUserJoined(userId: number, contestId: number) {
 
     // console.log("isAlreadyJoined", isAlreadyJoined);
     return isAlreadyJoined.length > 0;
+
+}
+
+export async function addSubmission(data: ContestSumbmission) {
+    const submission = await db.insert(contestSubmissions).values({
+        contestId: data.contestId,
+        userId: data.userId,
+        teamMembers: data.teamMembers,
+        sourceCodeLink: data.sourceCodeLink,
+        deploymentLink: data.deploymentLink,
+        description: data.description,
+    }).returning();
+
+    console.log("addSubmission", submission);
+    redirect("/submissions")
+}
+
+export async function getUserSubmission(emailId: string): Promise<UserSubmission[]> {
+    // console.log(emailId);
+
+
+    // const submissions = await db.select().from(contestSubmissions).where(eq(contestSubmissions.userId, userId));
+    const submissions = await db.execute(sql`
+        SELECT 
+        s.contest_id AS contest_id,
+        (SELECT c.title FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_title,
+        (SELECT c.banner_url FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_banner_url,
+        (SELECT c.end_date FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_end_date,
+        s.user_id AS user_id,
+        s.team_members AS submission_team_members,
+        s.created_at AS created_at,
+        s.updated_at AS updated_at
+        FROM 
+            "in-source_contest_submissions" s
+        WHERE 
+            s.user_id = (SELECT u.user_id FROM "in-source_user" u WHERE u.email = ${emailId});
+    `);
+    // console.log("getUserSubmission", submissions.rows);
+    return submissions.rows as unknown as UserSubmission[];
+}
+
+export async function removeSubmission(formData: FormData) {
+    console.log("delelted");
 
 }
