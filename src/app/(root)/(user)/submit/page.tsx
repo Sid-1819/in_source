@@ -27,7 +27,6 @@ const SubmitForm = () => {
     const { user } = useUser();
     const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
 
-
     const form = useForm<z.infer<typeof submissionSchema>>({
         resolver: zodResolver(submissionSchema),
         defaultValues: {
@@ -59,7 +58,6 @@ const SubmitForm = () => {
         };
 
         console.log("formattedValues", formattedValues);
-
         await addSubmission(formattedValues, email);
     }
 
