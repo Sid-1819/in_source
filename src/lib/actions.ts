@@ -2,6 +2,7 @@
 
 import { currentUser } from "@clerk/nextjs/server";
 import { and, eq, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ContestSumbmission, Submission } from "~/app/types";
 import { db } from "~/server/db";
@@ -152,6 +153,7 @@ export async function removeSubmission(formData: FormData) {
     console.log("submissionId", submissionId, formData);
     const removedSubmission = await db.delete(contestSubmissions).where(eq(contestSubmissions.submissionId, submissionId));
 
+    revalidatePath("/submissions")
     console.log("removedSub: ", removedSubmission);
 
 }

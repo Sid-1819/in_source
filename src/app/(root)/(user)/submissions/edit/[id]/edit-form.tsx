@@ -18,11 +18,11 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Plus, Trash2 } from "lucide-react";
 import { submissionSchema } from "~/utils/validation";
-import { addSubmission } from "~/lib/actions";
+import { addSubmission, getSubmissionById } from "~/lib/actions";
 import { ContestSumbmission } from "~/app/types";
 import { useUser } from "@clerk/nextjs";
 
-const SubmitForm = () => {
+const EditForm = () => {
     const [teamMembers, setTeamMembers] = useState<string[]>([""]);
     const { user } = useUser();
     const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
@@ -65,7 +65,7 @@ const SubmitForm = () => {
         <div className="container mx-auto py-10">
             <Card className="mx-auto max-w-3xl">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold">Create Submission</CardTitle>
+                    <CardTitle className="text-2xl font-bold">Edit Submission</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
@@ -193,4 +193,4 @@ const SubmitForm = () => {
     );
 };
 
-export default SubmitForm;
+export default EditForm;

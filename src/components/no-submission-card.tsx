@@ -1,6 +1,7 @@
-import { Trophy, Link } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function NoSubmissionsCard() {
 
@@ -19,7 +20,7 @@ export default function NoSubmissionsCard() {
                     You haven&apos;t made any contest submissions. Start participating and showcase your skills!
                 </p>
 
-                <Link href="/contests">
+                <Link href="/">
                     <Button className="flex items-center gap-2">
                         Browse Contests
                     </Button>

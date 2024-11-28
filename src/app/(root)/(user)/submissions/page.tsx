@@ -1,6 +1,6 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { getUserSubmission } from '~/lib/actions';
-import NoSubmissionsCard from '~/components/no-participation-card';
+import NoSubmissionsCard from '~/components/no-submission-card';
 import SubmissionCard from '~/components/submission-card';
 
 export const dynamic = "force-dynamic"

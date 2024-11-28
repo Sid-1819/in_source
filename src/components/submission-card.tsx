@@ -12,9 +12,8 @@ const SubmissionCard: React.FC<{ submission: UserSubmission }> = ({ submission }
     const teamMembers: Array<string> = JSON.parse(submission.submission_team_members) as Array<string>;
 
     return (
-
-        <Link href={`/submissions/${submission.submission_id}`}>
-            <Card className="flex items-center p-4 mb-4 overflow-hidden transition-shadow hover:shadow-lg">
+        <Card className="flex items-center p-4 mb-4 overflow-hidden transition-shadow hover:shadow-lg">
+            <Link href={`/submissions/${submission.submission_id}`}>
                 <div className="w-24 h-24 mr-4 flex-shrink-0 overflow-hidden rounded-lg">
                     <img
                         src={submission.contest_banner_url ?? "/placeholder-contest.png"}
@@ -22,8 +21,10 @@ const SubmissionCard: React.FC<{ submission: UserSubmission }> = ({ submission }
                         className="w-full h-full object-cover"
                     />
                 </div>
+            </Link>
 
-                <div className="flex-grow space-y-2">
+            <div className="flex-grow space-y-2">
+                <Link href={`/submissions/${submission.submission_id}`}>
                     <div className="flex justify-between items-start">
                         <div>
                             <h3 className="text-lg font-semibold text-primary">
@@ -56,33 +57,33 @@ const SubmissionCard: React.FC<{ submission: UserSubmission }> = ({ submission }
                             <p>Created: {formatDate(submission.created_at)}</p>
                         )}
                     </div>
-                </div>
+                </Link>
+            </div>
 
-                <div className="flex flex-col space-y-2 ml-4">
-                    <Link href={`/submissions/edit/${submission.submission_id}`}>
-                        <Button variant="outline" size="sm" className="flex items-center gap-2 w-full">
-                            <Edit className="w-6 h-4" /> Edit
-                        </Button>
-                    </Link>
+            <div className="flex flex-col space-y-2 ml-4">
+                <Link href={`/submissions/edit/${submission.submission_id}`}>
+                    <Button variant="outline" size="sm" className="flex items-center gap-2 w-full">
+                        <Edit className="w-6 h-4" /> Edit
+                    </Button>
+                </Link>
 
-                    <form action={removeSubmission}>
-                        <input
-                            type="hidden"
-                            name="submissionId"
-                            value={submission.submission_id}
-                        />
-                        <Button
-                            variant="destructive"
-                            type="submit"
-                            size="sm"
-                            className="flex items-center gap-2 w-full"
-                        >
-                            <Trash2 className="w-4 h-4" /> Delete
-                        </Button>
-                    </form>
-                </div>
-            </Card>
-        </Link>
+                <form action={removeSubmission}>
+                    <input
+                        type="hidden"
+                        name="submissionId"
+                        value={submission.submission_id}
+                    />
+                    <Button
+                        variant="destructive"
+                        type="submit"
+                        size="sm"
+                        className="flex items-center gap-2 w-full"
+                    >
+                        <Trash2 className="w-4 h-4" /> Delete
+                    </Button>
+                </form>
+            </div>
+        </Card>
     );
 };
 

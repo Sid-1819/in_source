@@ -23,5 +23,5 @@ export const submissionSchema = z.object({
     sourceCodeLink: z.string().url({ message: "Please enter a valid URL" }),
     teamMembers: z.array(z.string().min(3, { message: "Team member name cannot be empty" })).optional(),
     description: z.string().optional(),
-    deploymentLink: z.string().url({ message: "Please enter a valid URL" }).optional(),
+    deploymentLink: z.string().optional()
 });
