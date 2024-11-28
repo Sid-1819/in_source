@@ -105,10 +105,12 @@ export async function isUserJoined(userId: number, contestId: number) {
 
 }
 
-export async function addSubmission(data: ContestSumbmission) {
+export async function addSubmission(data: ContestSumbmission, emailId: string) {
+    const userId = await getUserIdByEmail(emailId) ?? 65;
+
     const submission = await db.insert(contestSubmissions).values({
         contestId: data.contestId,
-        userId: data.userId,
+        userId: userId,
         teamMembers: data.teamMembers,
         sourceCodeLink: data.sourceCodeLink,
         deploymentLink: data.deploymentLink,
@@ -120,7 +122,7 @@ export async function addSubmission(data: ContestSumbmission) {
 }
 
 export async function getUserSubmission(emailId: string): Promise<UserSubmission[]> {
-    // console.log(emailId);
+    console.log(emailId);
 
 
     // const submissions = await db.select().from(contestSubmissions).where(eq(contestSubmissions.userId, userId));

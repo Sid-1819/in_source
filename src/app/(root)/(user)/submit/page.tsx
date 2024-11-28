@@ -20,9 +20,13 @@ import { Plus, Trash2 } from "lucide-react";
 import { submissionSchema } from "~/utils/validation";
 import { addSubmission } from "~/lib/actions";
 import { ContestSumbmission } from "~/app/types";
+import { useUser } from "@clerk/nextjs";
 
 const SubmitForm = () => {
     const [teamMembers, setTeamMembers] = useState<string[]>([""]);
+    const { user } = useUser();
+    const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
+
 
     const form = useForm<z.infer<typeof submissionSchema>>({
         resolver: zodResolver(submissionSchema),
@@ -56,7 +60,7 @@ const SubmitForm = () => {
 
         console.log("formattedValues", formattedValues);
 
-        await addSubmission(formattedValues);
+        await addSubmission(formattedValues, email);
     }
 
     return (
