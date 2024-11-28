@@ -179,6 +179,6 @@ export async function getSubmissionById(submissionId: number) {
             s.submission_id = ${submissionId};
     `);
 
-    console.log("submissions: ", submission.rows);
+    // console.log("submissions: ", submission.rows);
     return submission.rows[0] as unknown as Submission;
 }

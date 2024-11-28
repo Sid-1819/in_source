@@ -2,23 +2,11 @@ import React from 'react';
 import Image from 'next/image';
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { FileText, Users, Clock } from "lucide-react";
-import { UserSubmission } from '~/app/types';
 import { getSubmissionById } from '~/lib/actions';
 import Link from 'next/link';
-
-
-function parseJsonArray(jsonString: string): string[] {
-    const parsed: string = JSON.parse(jsonString) as string;
-    if (Array.isArray(parsed) && parsed.every(item => typeof item === 'string')) {
-        return parsed;
-    } else {
-        throw new Error('The JSON string does not represent an array of strings.');
-    }
-}
-
+import { parseJsonArray } from '~/utils';
 
 const SubmissionDetails = async ({ params }: { params: Promise<{ id: number }> }) => {
     const { id } = await params;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
@@ -18,24 +18,51 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Plus, Trash2 } from "lucide-react";
 import { submissionSchema } from "~/utils/validation";
-import { addSubmission, getSubmissionById } from "~/lib/actions";
-import { ContestSumbmission } from "~/app/types";
+import { addSubmission } from "~/lib/actions";
+import { ContestSumbmission, Submission } from "~/app/types";
 import { useUser } from "@clerk/nextjs";
+import { parseJsonArray } from "~/utils";
 
-const EditForm = () => {
+interface Props {
+    initialData?: Submission;
+}
+
+const resetFormData: Submission = {
+    source_code_link: "",
+    submission_team_members: "[]",
+    description: "",
+    deployment_link: "",
+    contest_banner_url: '',
+    contest_end_date: '',
+    contest_id: 1,
+    contest_title: '',
+    created_at: '',
+    updated_at: '',
+    submission_id: 0,
+    user_id: 0,
+}
+
+const EditForm: React.FC<Props> = ({ initialData }) => {
     const [teamMembers, setTeamMembers] = useState<string[]>([""]);
+
+    useEffect(() => {
+        setTeamMembers(parseJsonArray(initialData?.submission_team_members ?? ""))
+    }, [])
+
     const { user } = useUser();
     const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
 
     const form = useForm<z.infer<typeof submissionSchema>>({
         resolver: zodResolver(submissionSchema),
         defaultValues: {
-            sourceCodeLink: "",
-            teamMembers: [""],
-            description: "",
-            deploymentLink: "",
+            sourceCodeLink: initialData?.source_code_link ?? "",
+            teamMembers,
+            description: initialData?.description ?? "",
+            deploymentLink: initialData?.deployment_link ?? "",
         },
     });
+
+    console.log("form: ", form.getValues());
 
     const addTeamMember = () => {
         setTeamMembers([...teamMembers, ""]);
@@ -52,7 +79,7 @@ const EditForm = () => {
             description: values.description ?? "",
             sourceCodeLink: values.sourceCodeLink,
             deploymentLink: values.deploymentLink ?? "",
-            teamMembers: teamMembers ? JSON.stringify(teamMembers) : "",
+            teamMembers: teamMembers ? JSON.stringify(teamMembers) : JSON.stringify([]),
             contestId: 1, // need to figure out how to get contest id
             userId: 65
         };
@@ -71,7 +98,7 @@ const EditForm = () => {
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            onReset={() => form.reset()}
+                            onReset={(e) => { e.preventDefault(); initialData = resetFormData; return form.reset() }}
                             className="space-y-8"
                         >
                             {/* Source Code Link */}
@@ -189,7 +216,7 @@ const EditForm = () => {
                     </Form>
                 </CardContent>
             </Card>
-        </div>
+        </div >
     );
 };
 

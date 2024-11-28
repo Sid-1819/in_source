@@ -1,9 +1,12 @@
 import React from 'react'
 import EditForm from './edit-form'
+import { getSubmissionById } from '~/lib/actions'
 
-export default function EditPage({ params }: { readonly params: Promise<{ id: number }> }) {
-    // populate the edit form with previous submission value
+export default async function EditPage({ params }: { readonly params: Promise<{ id: number }> }) {
+    const { id } = await params;
+    const submissionById = await getSubmissionById(id);
+
     return (
-        <EditForm />
+        <EditForm initialData={submissionById} />
     )
 }

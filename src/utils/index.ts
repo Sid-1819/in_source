@@ -19,3 +19,15 @@ export function formatDate(date: string) {
         year: 'numeric',
     });
 }
+
+export function parseJsonArray(jsonString: string): string[] {
+    console.log("Json", jsonString);
+
+    const parsed: string = JSON.parse(jsonString) as string;
+    if (Array.isArray(parsed) && parsed.every(item => typeof item === 'string')) {
+        return parsed;
+    } else {
+        return [""];
+        // throw new Error('The JSON string does not represent an array of strings.');
+    }
+}
