@@ -14,6 +14,7 @@ import {
   primaryKey,
   uniqueIndex,
   serial,
+  json,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -135,7 +136,7 @@ export const leaderboard = createTable(
       .references(() => users.userId), // Removed { onDelete: 'cascade' }
     contestId: integer("contest_id")
       .references(() => contests.contestId), // Removed { onDelete: 'cascade' }
-    season: varchar("season", { length: 50 }),
+    seasonId: integer("season_id").references(() => season.seasonId),
     expPoints: integer("exp_points"),
     submissionCount: integer("submission_count"),
     noOfWins: integer("no_of_wins"),
@@ -221,5 +222,20 @@ export const winners = createTable(
     winDate: timestamp("win_date", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+  }
+);
+
+export const contestSubmissions = createTable(
+  "contest_submissions",
+  {
+    submissionId: serial("submission_id").primaryKey(),
+    contestId: integer("contest_id").notNull().references(() => contests.contestId, { onDelete: 'cascade' }),
+    userId: integer("user_id").notNull().references(() => users.userId, { onDelete: 'cascade' }),
+    teamMembers: json("team_members"),
+    sourceCodeLink: varchar("source_code_link", { length: 512 }),
+    deploymentLink: varchar("deployment_link", { length: 512 }),
+    description: text("description"),
+    createdAt: timestamp("created_at", { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => sql`CURRENT_TIMESTAMP`)
   }
 );

@@ -29,6 +29,8 @@ import { handleAddParticipation, isUserJoined } from "~/lib/actions"
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic"
+
 interface TabContentProps {
   output: string;
 }
@@ -308,7 +310,7 @@ const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
   );
 };
 
-export default async function ContestDetailsContent(props: { id: string }) {
+export default async function ContestDetailsContent(props: Readonly<{ id: string }>) {
   const filterOutImages = (content: JSONContent): JSONContent => {
     if (!content) return content;
 
@@ -391,7 +393,7 @@ export default async function ContestDetailsContent(props: { id: string }) {
                   </form>
                 ) : (
                   <Link
-                    href="/submit"
+                    href="/create-submission"
                   >
                     <Button
                       variant="default"
