@@ -3,14 +3,28 @@ import { Trash2, Plus } from "lucide-react";
 import { FormItem, FormLabel, FormControl } from "./ui/form";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { ControllerRenderProps, UseFormReturn, Path } from "react-hook-form";
 
+// Define the form schema interface
+interface FormSchema {
+    sourceCodeLink: string;
+    teamMembers?: string[];
+    description?: string;
+    deploymentLink?: string;
+}
+
+// Define a more specific prop type for the form
 interface TeamMemberSectionProps {
     teamMembers: string[];
     setTeamMembers: React.Dispatch<React.SetStateAction<string[]>>;
-    form: any; // Use the correct type for the form if available
+    form: UseFormReturn<FormSchema>;
 }
 
-const TeamMemberSection: React.FC<TeamMemberSectionProps> = ({ teamMembers, setTeamMembers, form }) => {
+const TeamMemberSection: React.FC<TeamMemberSectionProps> = ({
+    teamMembers,
+    setTeamMembers,
+    form
+}) => {
     const addTeamMember = () => {
         setTeamMembers([...teamMembers, ""]);
     };
@@ -18,7 +32,9 @@ const TeamMemberSection: React.FC<TeamMemberSectionProps> = ({ teamMembers, setT
     const removeTeamMember = (indexToRemove: number) => {
         const updatedTeamMembers = teamMembers.filter((_, index) => index !== indexToRemove);
         setTeamMembers(updatedTeamMembers);
-        form.setValue("teamMembers", updatedTeamMembers); // Sync with form values
+
+        // Safely update form value with type checking
+        form.setValue("teamMembers", updatedTeamMembers);
     };
 
     return (
@@ -59,6 +75,8 @@ const TeamMemberSection: React.FC<TeamMemberSectionProps> = ({ teamMembers, setT
                                         const newTeamMembers = [...teamMembers];
                                         newTeamMembers[index] = e.target.value;
                                         setTeamMembers(newTeamMembers);
+
+                                        // Safely update form value with type checking
                                         form.setValue("teamMembers", newTeamMembers);
                                     }}
                                 />

@@ -26,7 +26,7 @@ interface SubmissionFormProps {
 }
 
 const SubmissionForm: React.FC<SubmissionFormProps> = ({ initialData, onSubmit }) => {
-    const [teamMembers, setTeamMembers] = useState<string[]>(initialData?.teamMembers ? JSON.parse(initialData.teamMembers) : [""]);
+    const [teamMembers, setTeamMembers] = useState<string[]>(initialData?.teamMembers ? JSON.parse(initialData.teamMembers) as Array<string> : [""]);
 
     const form = useForm<z.infer<typeof submissionSchema>>({
         resolver: zodResolver(submissionSchema),
