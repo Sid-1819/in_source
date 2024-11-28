@@ -10,6 +10,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import Image from "next/image";
 import { createUserIfNotexists } from "~/lib/actions";
 
+export const dynamic = "force-dynamic"
+
 export type Contest = {
   contest_id: number;
   title: string;

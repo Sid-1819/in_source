@@ -135,7 +135,7 @@ export const leaderboard = createTable(
       .references(() => users.userId), // Removed { onDelete: 'cascade' }
     contestId: integer("contest_id")
       .references(() => contests.contestId), // Removed { onDelete: 'cascade' }
-    season: varchar("season", { length: 50 }),
+    seasonId: integer("season_id").references(() => season.seasonId),
     expPoints: integer("exp_points"),
     submissionCount: integer("submission_count"),
     noOfWins: integer("no_of_wins"),
