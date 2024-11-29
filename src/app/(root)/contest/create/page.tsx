@@ -124,7 +124,7 @@ const CreateContestForm = () => {
   }, [rewards, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    // console.log(values);
     // Handle form submission
     const constestToBeInserted = {
       title: values.title,

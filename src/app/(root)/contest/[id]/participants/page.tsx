@@ -2,9 +2,9 @@ import React from "react";
 import { Card, CardHeader } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
-import { UsersRound, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { getContestParticipants } from "~/server/queries";
-import { modifyUsernames, formatDate } from "~/utils";
+import { modifyUsernames, formatDate, FormatType } from "~/utils";
 
 interface Participant {
   user_id: number;
@@ -49,7 +49,7 @@ const ApplicantsList = async () => {
                 <div className="flex flex-wrap gap-4 text-sm">
                   <div className="space-between flex gap-1 text-blue-600">
                     <Calendar className="h-4 w-4" />
-                    <span>Date applied: {formatDate(applicant.participation_date)}</span>
+                    <span>Date applied: {formatDate(applicant.participation_date, FormatType.dateOnly)}</span>
                   </div>
                 </div>
               </div>

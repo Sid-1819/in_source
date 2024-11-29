@@ -90,8 +90,8 @@ export async function removeParticipation(formData: FormData) {
 
     // console.log("participantId", participantId);
 
-    const result = await db.delete(participants).where(eq(participants.participantId, participantId))
-    console.log("result of unjion hackathon", result);
+    await db.delete(participants).where(eq(participants.participantId, participantId));
+    // console.log("result of unjion hackathon", result);
     redirect("/participations")
 }
 
@@ -110,6 +110,8 @@ export async function isUserJoined(userId: number, contestId: number) {
 
 export async function addSubmission(data: ContestSumbmission, emailId: string) {
     const userId = await getUserIdByEmail(emailId) ?? 65;
+    // console.log("userId: ", userId, "data: ", data);
+
 
     const submission = await db.insert(contestSubmissions).values({
         contestId: data.contestId,
@@ -120,7 +122,29 @@ export async function addSubmission(data: ContestSumbmission, emailId: string) {
         description: data.description,
     }).returning();
 
-    console.log("addSubmission", submission);
+    // console.log("addSubmission", submission);
+    redirect("/submissions")
+}
+
+export async function editSubmission(data: ContestSumbmission, submissionId: number, emailId: string) {
+    const userId = await getUserIdByEmail(emailId) ?? 65;
+    // console.log("userId: ", userId, "data: ", data);
+
+
+    await db.update(contestSubmissions)
+        .set({
+            contestId: data.contestId,
+            userId: userId,
+            teamMembers: data.teamMembers,
+            sourceCodeLink: data.sourceCodeLink,
+            deploymentLink: data.deploymentLink,
+            description: data.description,
+            updatedAt: (sql`CURRENT_TIMESTAMP`)
+        })
+        .where(eq(contestSubmissions.submissionId, submissionId))
+        .returning();
+
+    // console.log("editSubmission", submission);
     redirect("/submissions")
 }
 
@@ -150,11 +174,11 @@ export async function getUserSubmission(emailId: string): Promise<UserSubmission
 export async function removeSubmission(formData: FormData) {
     const submissionId = parseInt(formData.get('submissionId') as string);
 
-    console.log("submissionId", submissionId, formData);
-    const removedSubmission = await db.delete(contestSubmissions).where(eq(contestSubmissions.submissionId, submissionId));
+    // console.log("submissionId", submissionId, formData);
+    await db.delete(contestSubmissions).where(eq(contestSubmissions.submissionId, submissionId));
 
     revalidatePath("/submissions")
-    console.log("removedSub: ", removedSubmission);
+    // console.log("removedSub: ", removedSubmission);
 
 }
 

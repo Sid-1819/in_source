@@ -18,87 +18,149 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Plus, Trash2 } from "lucide-react";
 import { submissionSchema } from "~/utils/validation";
-import { addSubmission } from "~/lib/actions";
+import { addSubmission, editSubmission } from "~/lib/actions";
 import { ContestSumbmission, Submission } from "~/app/types";
 import { useUser } from "@clerk/nextjs";
 import { parseJsonArray } from "~/utils";
+import { toast } from "~/hooks/use-toast";
 
 interface Props {
-    initialData?: Submission;
+    initialData?: Partial<Submission>;
+    onSubmissionSuccess?: () => void;
 }
 
-const resetFormData: Submission = {
-    source_code_link: "",
-    submission_team_members: "[]",
-    description: "",
-    deployment_link: "",
-    contest_banner_url: '',
-    contest_end_date: '',
-    contest_id: 1,
-    contest_title: '',
-    created_at: '',
-    updated_at: '',
-    submission_id: 0,
-    user_id: 0,
+interface FormFields {
+    sourceCodeLink: string;
+    teamMembers: string[];
+    description: string;
+    deploymentLink: string;
 }
 
-const EditForm: React.FC<Props> = ({ initialData }) => {
-    const [teamMembers, setTeamMembers] = useState<string[]>([""]);
-
-    useEffect(() => {
-        setTeamMembers(parseJsonArray(initialData?.submission_team_members ?? ""))
-    }, [])
-
+const EditForm: React.FC<Props> = ({ initialData, onSubmissionSuccess }) => {
     const { user } = useUser();
     const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
 
-    const form = useForm<z.infer<typeof submissionSchema>>({
-        resolver: zodResolver(submissionSchema),
-        defaultValues: {
-            sourceCodeLink: initialData?.source_code_link ?? "",
-            teamMembers,
-            description: initialData?.description ?? "",
-            deploymentLink: initialData?.deployment_link ?? "",
-        },
+    // Initialize form state with default or initial values
+    const [formState, setFormState] = useState<FormFields>({
+        sourceCodeLink: initialData?.source_code_link ?? "",
+        teamMembers: initialData?.submission_team_members
+            ? parseJsonArray(initialData.submission_team_members)
+            : [""],
+        description: initialData?.description ?? "",
+        deploymentLink: initialData?.deployment_link ?? "",
     });
 
-    console.log("form: ", form.getValues());
+    const form = useForm<z.infer<typeof submissionSchema>>({
+        resolver: zodResolver(submissionSchema),
+        defaultValues: formState,
+    });
 
+    // Update form values when initial data changes
+    useEffect(() => {
+        if (initialData) {
+            const updatedFormState = {
+                sourceCodeLink: initialData.source_code_link ?? "",
+                teamMembers: initialData.submission_team_members
+                    ? parseJsonArray(initialData.submission_team_members)
+                    : [""],
+                description: initialData.description ?? "",
+                deploymentLink: initialData.deployment_link ?? "",
+            };
+            setFormState(updatedFormState);
+            form.reset(updatedFormState);
+        }
+    }, [initialData]);
+
+    // Add a new team member input
     const addTeamMember = () => {
-        setTeamMembers([...teamMembers, ""]);
+        const updatedTeamMembers = [...formState.teamMembers, ""];
+        handleStateUpdate('teamMembers', updatedTeamMembers);
     };
 
+    // Remove a team member input
     const removeTeamMember = (indexToRemove: number) => {
-        const updatedTeamMembers = teamMembers.filter((_, index) => index !== indexToRemove);
-        setTeamMembers(updatedTeamMembers);
-        form.setValue("teamMembers", updatedTeamMembers); // Sync with form values
+        const updatedTeamMembers = formState.teamMembers.filter((_, index) => index !== indexToRemove);
+        handleStateUpdate('teamMembers', updatedTeamMembers);
     };
 
-    async function onSubmit(values: z.infer<typeof submissionSchema>) {
-        const formattedValues: ContestSumbmission = {
-            description: values.description ?? "",
-            sourceCodeLink: values.sourceCodeLink,
-            deploymentLink: values.deploymentLink ?? "",
-            teamMembers: teamMembers ? JSON.stringify(teamMembers) : JSON.stringify([]),
-            contestId: 1, // need to figure out how to get contest id
-            userId: 65
-        };
+    // Generic state update method
+    const handleStateUpdate = (
+        field: keyof FormFields,
+        value: string | string[]
+    ) => {
+        const newState = { ...formState, [field]: value };
+        setFormState(newState);
+        form.setValue(field, value);
+    };
 
-        console.log("formattedValues", formattedValues);
-        await addSubmission(formattedValues, email);
+    // Handle team member name changes
+    const handleTeamMemberChange = (index: number, value: string) => {
+        const newTeamMembers = [...formState.teamMembers];
+        newTeamMembers[index] = value;
+        handleStateUpdate('teamMembers', newTeamMembers);
+    };
+
+    // Form submission handler
+    async function onSubmit(values: z.infer<typeof submissionSchema>) {
+        try {
+            const formattedValues: ContestSumbmission = {
+                description: values.description ?? "",
+                sourceCodeLink: values.sourceCodeLink,
+                deploymentLink: values.deploymentLink ?? "",
+                teamMembers: JSON.stringify(formState.teamMembers),
+                contestId: 1, // TODO: Dynamic contest ID
+                userId: 65 // TODO: Dynamic user ID
+            };
+
+            await editSubmission(
+                formattedValues,
+                initialData?.submission_id ?? 0,
+                email
+            );
+
+            toast({
+                title: "Submission Updated",
+                description: "Your submission has been successfully updated.",
+            });
+
+            onSubmissionSuccess?.();
+        } catch (error) {
+            console.error("Submission error:", error);
+            toast({
+                title: "Submission Failed",
+                description: "There was an error updating your submission.",
+                variant: "destructive"
+            });
+        }
     }
+
+    // Reset form to initial state
+    const handleReset = () => {
+        setFormState({
+            sourceCodeLink: "",
+            teamMembers: [""],
+            description: "",
+            deploymentLink: "",
+        });
+        form.reset();
+    };
 
     return (
         <div className="container mx-auto py-10">
             <Card className="mx-auto max-w-3xl">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold">Edit Submission</CardTitle>
+                    <CardTitle className="text-2xl font-bold">
+                        {initialData?.submission_id ? 'Edit Submission' : 'Submit Submission'}
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            onReset={(e) => { e.preventDefault(); initialData = resetFormData; return form.reset() }}
+                            onReset={(e) => {
+                                e.preventDefault();
+                                handleReset();
+                            }}
                             className="space-y-8"
                         >
                             {/* Source Code Link */}
@@ -112,6 +174,8 @@ const EditForm: React.FC<Props> = ({ initialData }) => {
                                             <Input
                                                 placeholder="Enter GitHub/GitLab/Drive link"
                                                 {...field}
+                                                value={formState.sourceCodeLink}
+                                                onChange={(e) => handleStateUpdate('sourceCodeLink', e.target.value)}
                                             />
                                         </FormControl>
                                         <FormDescription>
@@ -136,9 +200,9 @@ const EditForm: React.FC<Props> = ({ initialData }) => {
                                         <Plus size={16} /> Add Team Member
                                     </Button>
                                 </div>
-                                {teamMembers.map((member, index) => (
+                                {formState.teamMembers.map((member, index) => (
                                     <div key={index + 1} className="relative">
-                                        {teamMembers.length > 1 && (
+                                        {formState.teamMembers.length > 1 && (
                                             <Button
                                                 type="button"
                                                 variant="ghost"
@@ -155,12 +219,7 @@ const EditForm: React.FC<Props> = ({ initialData }) => {
                                                 <Input
                                                     placeholder="Enter team member name"
                                                     value={member}
-                                                    onChange={(e) => {
-                                                        const newTeamMembers = [...teamMembers];
-                                                        newTeamMembers[index] = e.target.value;
-                                                        setTeamMembers(newTeamMembers);
-                                                        form.setValue('teamMembers', newTeamMembers);
-                                                    }}
+                                                    onChange={(e) => handleTeamMemberChange(index, e.target.value)}
                                                 />
                                             </FormControl>
                                         </FormItem>
@@ -179,10 +238,14 @@ const EditForm: React.FC<Props> = ({ initialData }) => {
                                             <textarea
                                                 placeholder="Briefly describe your approach and key changes"
                                                 {...field}
+                                                value={formState.description}
+                                                onChange={(e) => handleStateUpdate('description', e.target.value)}
                                                 className="w-full min-h-[100px] border rounded-md p-2"
                                             />
                                         </FormControl>
-                                        <FormDescription>Provide a brief overview of your approach.</FormDescription>
+                                        <FormDescription>
+                                            Provide a brief overview of your approach.
+                                        </FormDescription>
                                     </FormItem>
                                 )}
                             />
@@ -195,7 +258,12 @@ const EditForm: React.FC<Props> = ({ initialData }) => {
                                     <FormItem>
                                         <FormLabel>Deployment Link (Optional)</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter live URL" {...field} />
+                                            <Input
+                                                placeholder="Enter live URL"
+                                                {...field}
+                                                value={formState.deploymentLink}
+                                                onChange={(e) => handleStateUpdate('deploymentLink', e.target.value)}
+                                            />
                                         </FormControl>
                                         <FormDescription>
                                             If your code is deployed, provide the live URL.
@@ -207,16 +275,14 @@ const EditForm: React.FC<Props> = ({ initialData }) => {
 
                             {/* Save Button */}
                             <div className="flex justify-between gap-4">
-                                <Button variant="outline" type="reset">
-                                    Reset
-                                </Button>
-                                <Button type="submit">Save</Button>
+                                <Button variant="outline" type="reset">Reset</Button>
+                                <Button type="submit">Update</Button>
                             </div>
                         </form>
                     </Form>
                 </CardContent>
             </Card>
-        </div >
+        </div>
     );
 };
 
