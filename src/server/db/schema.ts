@@ -85,7 +85,7 @@ export const contestAwards = createTable(
     awardId: serial("award_id").primaryKey(),
     contestId: integer("contest_id").references(() => contests.contestId, { onDelete: 'cascade' }),
     awardTypeId: integer("award_type_id").references(() => awardTypes.awardTypeId),
-    positionId: integer("position_id").references(() => contestPrizePosition.positionId),
+    positionId: integer("position_id"), //.references(() => contestPrizePosition.positionId),
     awardDetails: integer("award_details"),
   }
 );
@@ -177,13 +177,14 @@ export const season = createTable(
   }
 )
 
-export const contestPrizePosition = createTable(
-  "contest_prize_position",
-  {
-    positionId: serial("position_id").primaryKey(),
-    positionName: varchar("position_name", { length: 25 }),
-  }
-)
+// not needed
+// export const contestPrizePosition = createTable(
+//   "contest_prize_position",
+//   {
+//     positionId: serial("position_id").primaryKey(),
+//     positionName: varchar("position_name", { length: 25 }),
+//   }
+// )
 
 export const tags = createTable(
   "tag",
