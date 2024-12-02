@@ -19,10 +19,11 @@ import * as z from "zod";
 import { Plus, Trash2 } from "lucide-react";
 import { submissionSchema } from "~/utils/validation";
 import { addSubmission, editSubmission } from "~/lib/actions";
-import { ContestSumbmission, Submission } from "~/app/types";
+import { ContestSumbmission } from "~/app/types";
 import { useUser } from "@clerk/nextjs";
 import { parseJsonArray } from "~/utils";
 import { toast } from "~/hooks/use-toast";
+import { Submission } from "~/app/types/contest-submission/types";
 
 interface Props {
     initialData?: Partial<Submission>;

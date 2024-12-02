@@ -160,7 +160,7 @@ const Header = () => {
                       My Participations
                     </Button>
                   </Link >
-                  <Link href="/user/create-submissions" className="block">
+                  <Link href="/user/submissions" className="block">
                     <Button variant="default" size="sm">
                       My Submissions
                     </Button>

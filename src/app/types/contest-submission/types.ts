@@ -1,7 +1,7 @@
 export enum submissionStatus {
-    "A",
-    "S",
-    "D"
+    "A" = "A",
+    "S" = "S",
+    "D" = "D"
 }
 
 export interface Submission {
@@ -17,4 +17,17 @@ export interface Submission {
     deployment_link?: string,
     created_at: string,
     updated_at: string,
+}
+
+export interface AllSubmissions {
+    contestId: number;
+    description?: string;
+    createdAt: Date,
+    updatedAt: Date;
+    userId: number;
+    submissionId: number;
+    teamMembers?: string;
+    submissionStatus: submissionStatus;
+    sourceCodeLink: string;
+    deploymentLink?: string;
 }

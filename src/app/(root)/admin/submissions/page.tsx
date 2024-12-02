@@ -1,16 +1,16 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { getUserSubmission } from '~/lib/actions';
+import { getAllSubmissions } from '~/lib/actions';
 import NoSubmissionsCard from '~/components/no-submission-card';
 import SubmissionCard from '~/components/submission-card';
 
 export const dynamic = "force-dynamic"
 
-const UserSubmissionsCard = async () => {
-    const user = await currentUser();
-    const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
-    const submissionsList = await getUserSubmission(email);
 
-    if (!submissionsList.length) {
+
+const UserSubmissionsCard = async () => {
+    const submissionsList = await getAllSubmissions();
+
+    if (submissionsList.length === 0) {
         return <NoSubmissionsCard />;
     }
 
@@ -22,6 +22,8 @@ const UserSubmissionsCard = async () => {
                     submission={submission}
                 />
             ))}
+
+            subsasfas
         </div>
     );
 };

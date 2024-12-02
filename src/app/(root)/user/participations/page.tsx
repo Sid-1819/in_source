@@ -44,7 +44,7 @@ const NoParticipationsCard: React.FC = () => (
             </h3>
 
             <p className="text-gray-500 mb-6 max-w-md">
-                You haven`&apos`t participated in any contests yet. Join a contest to showcase your skills and win exciting prizes!
+                You haven&apos;t participated in any contests yet. Join a contest to showcase your skills and win exciting prizes!
             </p>
 
             <Link href="/">

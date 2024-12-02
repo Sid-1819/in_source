@@ -2,9 +2,11 @@
 
 import { currentUser } from "@clerk/nextjs/server";
 import { and, eq, sql } from "drizzle-orm";
+import { all } from "lowlight";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { ContestSumbmission, Submission } from "~/app/types";
+import { ContestSumbmission } from "~/app/types";
+import { AllSubmissions, Submission, submissionStatus } from "~/app/types/contest-submission/types";
 import { db } from "~/server/db";
 import { contests, contestSubmissions, participants } from "~/server/db/schema"
 import { addParticipation, createDbUser, getContestById, getUserIdByEmail } from "~/server/queries";
@@ -116,6 +118,7 @@ export async function addSubmission(data: ContestSumbmission, emailId: string) {
     const submission = await db.insert(contestSubmissions).values({
         contestId: data.contestId,
         userId: userId,
+        submissionStatus: submissionStatus.S,
         teamMembers: data.teamMembers,
         sourceCodeLink: data.sourceCodeLink,
         deploymentLink: data.deploymentLink,
@@ -205,4 +208,11 @@ export async function getSubmissionById(submissionId: number) {
 
     // console.log("submissions: ", submission.rows);
     return submission.rows[0] as unknown as Submission;
+}
+
+export async function getAllSubmissions(): Promise<AllSubmissions[]> {
+    const subs = await db.select().from(contestSubmissions).where(eq(contestSubmissions.submissionStatus, submissionStatus.S));
+
+    // console.log("subs: ", subs);
+    return subs[0] as unknown as AllSubmissions[];
 }

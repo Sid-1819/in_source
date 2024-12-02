@@ -234,7 +234,7 @@ export const contestSubmissions = createTable(
     contestId: integer("contest_id").notNull().references(() => contests.contestId, { onDelete: 'cascade' }),
     userId: integer("user_id").notNull().references(() => users.userId, { onDelete: 'cascade' }),
     teamMembers: json("team_members"),
-    submissionStatus: varchar("submission_status").$type<submissionStatus>(),
+    submissionStatus: varchar("submission_status").$type<submissionStatus>().$default(() => submissionStatus.S),
     sourceCodeLink: varchar("source_code_link", { length: 512 }),
     deploymentLink: varchar("deployment_link", { length: 512 }),
     description: text("description"),
