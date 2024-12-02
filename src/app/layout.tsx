@@ -141,17 +141,31 @@ const Header = () => {
             {/* Right section */}
             <div className="flex items-center space-x-2">
               {isAdmin ? (
-                <Link href="/create" className="block">
-                  <Button variant="default" size="sm">
-                    Create Contest
-                  </Button>
-                </Link>
+                <>
+                  <Link href="/admin/create-contest" className="block">
+                    <Button variant="default" size="sm">
+                      Create Contest
+                    </Button>
+                  </Link>
+                  <Link href="/admin/submissions" className="block">
+                    <Button variant="default" size="sm">
+                      All Submissions
+                    </Button>
+                  </Link>
+                </>
               ) : (
-                <Link href="/participations" className="block">
-                  <Button variant="default" size="sm">
-                    My Participations
-                  </Button>
-                </Link >
+                <>
+                  <Link href="/user/participations" className="block">
+                    <Button variant="default" size="sm">
+                      My Participations
+                    </Button>
+                  </Link >
+                  <Link href="/user/create-submissions" className="block">
+                    <Button variant="default" size="sm">
+                      My Submissions
+                    </Button>
+                  </Link >
+                </>
               )}
               <UserButton />
             </div>

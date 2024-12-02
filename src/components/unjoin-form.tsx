@@ -1,5 +1,5 @@
 import React from 'react';
-import UnjoinButton from '~/app/(root)/(user)/participations/unjoin-button';
+import UnjoinButton from '~/app/(root)/user/participations/unjoin-button';
 import { removeParticipation } from '~/lib/actions';
 
 interface UnjoinFormProps {

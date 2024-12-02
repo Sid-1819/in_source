@@ -16,6 +16,7 @@ import {
   serial,
   json,
 } from "drizzle-orm/pg-core";
+import { submissionStatus } from "~/app/types/contest-submission/types";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -233,6 +234,7 @@ export const contestSubmissions = createTable(
     contestId: integer("contest_id").notNull().references(() => contests.contestId, { onDelete: 'cascade' }),
     userId: integer("user_id").notNull().references(() => users.userId, { onDelete: 'cascade' }),
     teamMembers: json("team_members"),
+    submissionStatus: varchar("submission_status").$type<submissionStatus>(),
     sourceCodeLink: varchar("source_code_link", { length: 512 }),
     deploymentLink: varchar("deployment_link", { length: 512 }),
     description: text("description"),
