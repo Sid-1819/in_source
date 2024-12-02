@@ -16,12 +16,12 @@ const UserSubmissionsCard = async () => {
 
     return (
         <div className="space-y-4">
-            {submissionsList.map((submission, idx) => (
+            {/* {submissionsList.map((submission, idx) => (
                 <SubmissionCard
                     key={idx + 1}
                     submission={submission}
                 />
-            ))}
+            ))} */}
 
             subsasfas
         </div>

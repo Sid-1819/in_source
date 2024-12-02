@@ -57,16 +57,16 @@ const Header = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex flex-row items-center space-x-4">
-            <Link href="/" className="flex items-center">
-              <img
-                className="h-12 w-12"
-                src="/logo.svg"
-                alt="Logo"
-              />
-            </Link>
+          {/* <div className=""> */}
+          <Link href="/" className="flex flex-row items-center space-x-4">
+            <img
+              className="h-12 w-12"
+              src="/logo.svg"
+              alt="Logo"
+            />
             <h1>CMackathon</h1>
-          </div>
+          </Link>
+          {/* </div> */}
 
           <SignedIn>
             {/* Mobile Menu */}
