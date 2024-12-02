@@ -61,7 +61,7 @@ const SubmissionCard: React.FC<{ submission: UserSubmission }> = ({ submission }
             </div>
 
             <div className="flex flex-col space-y-2 ml-4">
-                <Link href={`/submissions/edit/${submission.submission_id}`}>
+                <Link href={`/user/submissions/edit/${submission.submission_id}`}>
                     <Button variant="outline" size="sm" className="flex items-center gap-2 w-full">
                         <Edit className="w-6 h-4" /> Edit
                     </Button>

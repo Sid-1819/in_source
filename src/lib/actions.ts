@@ -148,7 +148,7 @@ export async function editSubmission(data: ContestSumbmission, submissionId: num
         .returning();
 
     // console.log("editSubmission", submission);
-    redirect("/submissions")
+    redirect("/user/submissions")
 }
 
 export async function getUserSubmission(emailId: string): Promise<UserSubmission[]> {
