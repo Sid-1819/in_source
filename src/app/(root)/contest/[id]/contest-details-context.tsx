@@ -326,11 +326,13 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
 
   const contestId = parseInt(props.id ?? "0");
   const contestById = await getContestById(contestId);
+
   const tagArray = contestById[0]?.tags?.split(",").map((tag) => tag.trim());
-  const json = contestById[0]?.description ?? "";
-  const parsedJson = json ? JSON.parse(json) as JSONContent : null
-  const filteredJson = parsedJson ? filterOutImages(parsedJson) : null;
-  const output = filteredJson ? generateHTML(filteredJson, defaultExtensions) : "";
+  const descriptionHTML = contestById[0]?.description ?? "";
+
+  // const parsedJson = json ? JSON.parse(json) as JSONContent : null
+  // const filteredJson = parsedJson ? filterOutImages(parsedJson) : null;
+  // const output = filteredJson ? generateHTML(filteredJson, defaultExtensions) : "";
 
   const user = await currentUser();
   const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
@@ -426,7 +428,7 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
 
       {/* Description */}
       <div className="mx-auto w-full max-w-3xl">
-        <HackathonTabs output={output} />
+        <HackathonTabs output={descriptionHTML} />
       </div>
     </>
   );

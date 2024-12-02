@@ -138,6 +138,7 @@ const CreateContestForm = () => {
       endDate: '01/04/2025'
     }
     // createContest(constestToBeInserted)
+    // console.log("contest", constestToBeInserted)
   }
 
   return (

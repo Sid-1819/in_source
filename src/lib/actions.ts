@@ -126,7 +126,7 @@ export async function addSubmission(data: ContestSumbmission, emailId: string) {
     }).returning();
 
     // console.log("addSubmission", submission);
-    redirect("/submissions")
+    redirect("/user/submissions")
 }
 
 export async function editSubmission(data: ContestSumbmission, submissionId: number, emailId: string) {

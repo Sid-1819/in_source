@@ -24,7 +24,7 @@ const SubmissionCard: React.FC<{ submission: UserSubmission }> = ({ submission }
             </Link>
 
             <div className="flex-grow space-y-2">
-                <Link href={`/submissions/${submission.submission_id}`}>
+                <Link href={`/user/submissions/${submission.submission_id}`}>
                     <div className="flex justify-between items-start">
                         <div>
                             <h3 className="text-lg font-semibold text-primary">

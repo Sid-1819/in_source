@@ -5,9 +5,7 @@ import SubmissionCard from '~/components/submission-card';
 
 export const dynamic = "force-dynamic"
 
-
-
-const UserSubmissionsCard = async () => {
+const AllSubmissions = async () => {
     const submissionsList = await getAllSubmissions();
 
     if (submissionsList.length === 0) {
@@ -28,4 +26,4 @@ const UserSubmissionsCard = async () => {
     );
 };
 
-export default UserSubmissionsCard;
+export default AllSubmissions;
