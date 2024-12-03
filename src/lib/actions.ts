@@ -4,8 +4,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { and, asc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { ContestSumbmission } from "~/app/types";
-import { AllSubmissions, Submission, submissionStatus } from "~/app/types/contest-submission/types";
+import { ContestSumbmission } from "~/types";
+import { AllSubmissions, Submission, submissionStatus } from "~/types/contest-submission/types";
 import { db } from "~/server/db";
 import { contests, contestSubmissions, participants } from "~/server/db/schema"
 import { addParticipation, createDbUser, getContestById, getUserIdByEmail } from "~/server/queries";

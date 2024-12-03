@@ -19,7 +19,7 @@ import * as z from "zod";
 import { Plus, Trash2 } from "lucide-react";
 import { submissionSchema } from "~/utils/validation";
 import { addSubmission } from "~/lib/actions";
-import { ContestSumbmission } from "~/app/types";
+import { ContestSumbmission } from "~/types";
 import { useUser } from "@clerk/nextjs";
 
 const SubmitForm = () => {

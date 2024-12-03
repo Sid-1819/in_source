@@ -1,4 +1,4 @@
-import { UserSubmission } from "~/app/types";
+import { UserSubmission } from "~/types";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";

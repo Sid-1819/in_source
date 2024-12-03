@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { submissionSchema } from "~/utils/validation";
-import { ContestSumbmission } from "~/app/types";
+import { ContestSumbmission } from "~/types";
 import TeamMemberSection from "./team-member-section";
 
 interface SubmissionFormProps {

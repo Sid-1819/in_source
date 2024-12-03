@@ -4,7 +4,7 @@ import { Badge } from "~/components/ui/badge";
 import { Gift, Star, Trophy, Users, Calendar } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
-import { getContestOnHome } from "~/server/queries";
+import { getContestOnHome } from "~/server/queries/contest/queries";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import Image from "next/image";
@@ -137,7 +137,7 @@ const ContestCard: React.FC<ContestCardProps> = async ({ contest }) => {
 };
 
 const ContestList = async () => {
-  const contests = await getContestOnHome("A");
+  const contests = await getContestOnHome("U");
   const currentDate = new Date();
 
   // Filter contests based on dates
