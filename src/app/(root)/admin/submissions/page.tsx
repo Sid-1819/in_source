@@ -1,7 +1,6 @@
-import { currentUser } from '@clerk/nextjs/server';
 import { getAllSubmissions } from '~/lib/actions';
 import NoSubmissionsCard from '~/components/no-submission-card';
-import SubmissionCard from '~/components/submission-card';
+import AllSubmissionCard from '~/components/all-submission-card';
 
 export const dynamic = "force-dynamic"
 
@@ -14,12 +13,12 @@ const AllSubmissions = async () => {
 
     return (
         <div className="space-y-4">
-            {/* {submissionsList.map((submission, idx) => (
-                <SubmissionCard
+            {submissionsList.map((submission, idx) => (
+                <AllSubmissionCard
                     key={idx + 1}
-                    submission={submission}
+                    allSubmissions={submission}
                 />
-            ))} */}
+            ))}
 
             subsasfas
         </div>

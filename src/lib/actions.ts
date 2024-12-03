@@ -1,8 +1,7 @@
 "use server"
 
 import { currentUser } from "@clerk/nextjs/server";
-import { and, eq, sql } from "drizzle-orm";
-import { all } from "lowlight";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ContestSumbmission } from "~/app/types";
@@ -73,13 +72,13 @@ export async function handleAddParticipation(formData: FormData) {
         user_id: parseInt(userId),
         start_date: contestById[0]?.startDate ?? '2024-11-08',
         end_date: contestById[0]?.endDate ?? '2025-06-31',
-        participation_date: new Date().toISOString().split('T')[0] ?? '2024-11-26'
+        participation_date: new Date().toISOString().split('T')[0] ?? '2024-12-01'
     };
 
     try {
         const res = await addParticipation(newParticipation);
         // console.log("res", res);
-        redirect("/participations")
+        redirect("/user/participations")
         return;
     } catch (error) {
         throw error;
@@ -94,7 +93,7 @@ export async function removeParticipation(formData: FormData) {
 
     await db.delete(participants).where(eq(participants.participantId, participantId));
     // console.log("result of unjion hackathon", result);
-    redirect("/participations")
+    revalidatePath("/user/participations")
 }
 
 export async function isUserJoined(userId: number, contestId: number) {
@@ -211,8 +210,11 @@ export async function getSubmissionById(submissionId: number) {
 }
 
 export async function getAllSubmissions(): Promise<AllSubmissions[]> {
-    const subs = await db.select().from(contestSubmissions).where(eq(contestSubmissions.submissionStatus, submissionStatus.S));
+    const subs = await db.select()
+        .from(contestSubmissions)
+        .where(eq(contestSubmissions.submissionStatus, submissionStatus.S))
+        .orderBy(asc(contestSubmissions.contestId));
 
     // console.log("subs: ", subs);
-    return subs[0] as unknown as AllSubmissions[];
+    return subs as unknown as AllSubmissions[];
 }
