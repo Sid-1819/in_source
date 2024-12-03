@@ -1,5 +1,6 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { getUserSubmission } from '~/lib/actions';
+import { getUserSubmission } from '~/actions/submissions';
+
 import NoSubmissionsCard from '~/components/no-submission-card';
 import SubmissionCard from '~/components/submission-card';
 

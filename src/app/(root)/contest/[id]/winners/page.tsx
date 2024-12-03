@@ -6,8 +6,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
 import { Trophy, Star, Gift } from "lucide-react";
-import { getContestWinners } from '~/server/queries';
 import { modifyUsernames } from '~/utils';
+import { getContestWinners } from '~/actions/winners';
 
 
 interface Winner {

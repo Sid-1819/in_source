@@ -3,8 +3,8 @@ import { Card, CardHeader } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
 import { Calendar } from "lucide-react";
-import { getContestParticipants } from "~/server/queries";
 import { modifyUsernames, formatDate, FormatType } from "~/utils";
+import { getContestParticipants } from "~/actions/contest";
 
 interface Participant {
   user_id: number;

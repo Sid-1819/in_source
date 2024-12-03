@@ -1,4 +1,3 @@
-import { generateHTML } from "@tiptap/html";
 import React from "react";
 import StarterKit from "@tiptap/starter-kit";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
@@ -19,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import WinnersList from "./winners/page";
 import InformationPage from "./information/page";
 import PrizesPage from "./prizes/page";
-import { getContestById, getUserIdByEmail } from "~/server/queries";
+import { getUserIdByEmail } from "~/server/queries";
 import ApplicantsList from "./participants/page";
 import Image from 'next/image';
 import { FileText, Info, Trophy, Users } from "lucide-react";
@@ -28,6 +27,7 @@ import JoinButton from "./join-button";
 import { handleAddParticipation, isUserJoined } from "~/lib/actions"
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
+import { getContestById } from "~/actions/contest";
 
 export const dynamic = "force-dynamic"
 
@@ -324,7 +324,7 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
     return content;
   };
 
-  const contestId = parseInt(props.id ?? "0");
+  const contestId = (props.id);
   const contestById = await getContestById(contestId);
 
   const tagArray = contestById[0]?.tags?.split(",").map((tag) => tag.trim());
@@ -336,7 +336,7 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
 
   const user = await currentUser();
   const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
-  const userId = await getUserIdByEmail(email) ?? 65;
+  const userId = await getUserIdByEmail(email) ?? "65";
 
   const isAlreadyParticipated = await isUserJoined(userId, contestId)
 

@@ -12,3 +12,15 @@ export type Contest = {
     start_date: string;
     end_date: string;
 };
+
+export interface ContestPrizes {
+    position_id: number;
+    award_type: string;
+    award_details: number;
+}
+
+export interface ContestParticipant {
+    user_id: number;
+    username: string;
+    participation_date: string;
+}

@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardHeader } from "~/components/ui/card";
 
 import { Trophy, IndianRupee, Gift, Star, Award } from "lucide-react";
-import { getContestPizes } from "~/server/queries";
+import { getContestPizes } from "~/actions/contest";
 
 interface Prizes {
   position_id: number;

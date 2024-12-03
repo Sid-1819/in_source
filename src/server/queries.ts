@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "./db";
-import { eq, sql } from "drizzle-orm";
-import { contests, participants, users } from "./db/schema";
+import { eq } from "drizzle-orm";
+import { participants, users } from "./db/schema";
 
 export type Contest = {
     contest_id: number;
@@ -59,133 +59,131 @@ interface UserParticipations {
 }
 
 interface AddParticipation {
-    contest_id: number;
-    user_id: number;
-    start_date: string;
-    end_date: string;
+    contest_id: string;
+    user_id: string;
     participation_date: string
 }
 
-export async function getContestById(contestId: number) {
-    const contestsById = await db.select().from(contests).where(eq(contests.contestId, contestId));
-    return contestsById;
-}
+// export async function getContestById(contestId: number) {
+//     const contestsById = await db.select().from(contests).where(eq(contests.contestId, contestId));
+//     return contestsById;
+// }
 
-export async function getContestList(status: string) {
+// export async function getContestList(status: string) {
 
-    const contestsList = await db.select().from(contests).where(eq(contests.status, status));
-    return contestsList;
-}
-
-
-export async function getContestOnHome(status: string): Promise<Contest[]> {
-    const contestList = await db.execute(sql`
-        SELECT contest_id, title, sub_title, start_date, end_date, difficulty_level, banner_url, tags, 
-
-        (SELECT count(1) FROM "public"."in-source_participant" p WHERE p.contest_id=c.contest_id) participants, 
-
-        (SELECT sum(award_details) FROM "public"."in-source_contest_award" a,"public"."in-source_award_type" t  
-        WHERE a.award_type_id=t.award_type_id AND a.contest_id=c.contest_id 
-             AND t.award_type_name ='Cash Prize') cash_awards,
-
-        (SELECT sum(award_details) FROM "public"."in-source_contest_award" a,"public"."in-source_award_type" t  
-        WHERE a.award_type_id=t.award_type_id AND a.contest_id=c.contest_id 
-             AND t.award_type_name ='Swag Bag') swag_awards,
-
-        (SELECT sum(award_details) FROM "public"."in-source_contest_award" a,"public"."in-source_award_type" t  
-        WHERE a.award_type_id=t.award_type_id AND a.contest_id=c.contest_id 
-             AND t.award_type_name ='Points') points_awards 
-
-        FROM "public"."in-source_contest" c WHERE status=${status}
-        ORDER BY c.contest_id ASC;
-    `);
-
-    return contestList.rows as Contest[];
-}
+//     const contestsList = await db.select().from(contests).where(eq(contests.status, status));
+//     return contestsList;
+// }
 
 
-export async function getContestWinners(contestId: number) {
+// export async function getContestOnHome(status: string): Promise<Contest[]> {
+//     const contestList = await db.execute(sql`
+//         SELECT contest_id, title, sub_title, start_date, end_date, difficulty_level, banner_url, tags, 
 
-    const contestWinners = await db.execute(sql`
-        WITH user_awards AS (
-        SELECT
-        u.username,
-        COALESCE(SUM(CASE WHEN at.award_type_name = 'Points' THEN ia.award_details END), 0) AS points,
-        COALESCE(SUM(CASE WHEN at.award_type_name = 'Swag Bag' THEN ia.award_details END), 1) AS swag_prize
-        FROM "public"."in-source_user" u
-        LEFT JOIN "public"."in-source_winner" w ON u.user_id = w.user_id AND w.contest_id = ${contestId}
-        LEFT JOIN "public"."in-source_contest_award" ia ON w.award_id = ia.award_id
-        LEFT JOIN "public"."in-source_award_type" at ON ia.award_type_id = at.award_type_id
-        GROUP BY u.username
-        )
-        SELECT *
-        FROM user_awards
-        WHERE points > 0 AND swag_prize > 0;
-    `);
+//         (SELECT count(1) FROM "public"."in-source_participant" p WHERE p.contest_id=c.contest_id) participants, 
 
-    return contestWinners.rows as unknown as Winner[];
+//         (SELECT sum(award_details) FROM "public"."in-source_contest_award" a,"public"."in-source_award_type" t  
+//         WHERE a.award_type_id=t.award_type_id AND a.contest_id=c.contest_id 
+//              AND t.award_type_name ='Cash Prize') cash_awards,
 
-};
+//         (SELECT sum(award_details) FROM "public"."in-source_contest_award" a,"public"."in-source_award_type" t  
+//         WHERE a.award_type_id=t.award_type_id AND a.contest_id=c.contest_id 
+//              AND t.award_type_name ='Swag Bag') swag_awards,
 
-export async function getLeaderBoardList(season_id: number) {
+//         (SELECT sum(award_details) FROM "public"."in-source_contest_award" a,"public"."in-source_award_type" t  
+//         WHERE a.award_type_id=t.award_type_id AND a.contest_id=c.contest_id 
+//              AND t.award_type_name ='Points') points_awards 
 
-    const leaderboardData = await db.execute(sql`
-        SELECT 
-        u.username,
-        lb.exp_points,
-        lb.no_of_wins,
-        lb.submission_count AS total_submissions
-        FROM 
-        "in-source_user" u
-        INNER JOIN "in-source_leaderboard" lb ON u.user_id = lb.user_id
-        INNER JOIN "in-source_season" s ON lb.season_id = s.season_id
-        WHERE 
-        lb.season_id = ${season_id}
-        ORDER BY 
-        lb.exp_points DESC;
-    `);
+//         FROM "public"."in-source_contest" c WHERE status=${status}
+//         ORDER BY c.contest_id ASC;
+//     `);
 
-    return leaderboardData.rows as unknown as LeaderboardUser[];
-}
+//     return contestList.rows as Contest[];
+// }
 
-export async function getSeasonNameById(season_id: number) {
 
-    const seasonName = await db.execute(sql`
-        SELECT s.season_name FROM "in-source_season" s WHERE s.season_id = ${season_id};
-    `);
+// export async function getContestWinners(contestId: number) {
 
-    return seasonName.rows as unknown as Season[];
-}
+//     const contestWinners = await db.execute(sql`
+//         WITH user_awards AS (
+//         SELECT
+//         u.username,
+//         COALESCE(SUM(CASE WHEN at.award_type_name = 'Points' THEN ia.award_details END), 0) AS points,
+//         COALESCE(SUM(CASE WHEN at.award_type_name = 'Swag Bag' THEN ia.award_details END), 1) AS swag_prize
+//         FROM "public"."in-source_user" u
+//         LEFT JOIN "public"."in-source_winner" w ON u.user_id = w.user_id AND w.contest_id = ${contestId}
+//         LEFT JOIN "public"."in-source_contest_award" ia ON w.award_id = ia.award_id
+//         LEFT JOIN "public"."in-source_award_type" at ON ia.award_type_id = at.award_type_id
+//         GROUP BY u.username
+//         )
+//         SELECT *
+//         FROM user_awards
+//         WHERE points > 0 AND swag_prize > 0;
+//     `);
 
-export async function getContestPizes(contestId: number): Promise<Prizes[]> {
+//     return contestWinners.rows as unknown as Winner[];
 
-    const prizes = await db.execute(sql`
-        SELECT 
-        position_id,
-        (SELECT at.award_type_name FROM "in-source_award_type" at WHERE at.award_type_id = ca.award_type_id) AS award_type,
-        award_details
-        FROM "in-source_contest_award" ca
-        WHERE contest_id = ${contestId}
-        ORDER BY position_id, award_type;
-    `);
+// };
 
-    return prizes.rows as unknown as Prizes[];
-}
+// export async function getLeaderBoardList(season_id: number) {
 
-export async function getContestParticipants(contestId: number) {
+//     const leaderboardData = await db.execute(sql`
+//         SELECT 
+//         u.username,
+//         lb.exp_points,
+//         lb.no_of_wins,
+//         lb.submission_count AS total_submissions
+//         FROM 
+//         "in-source_user" u
+//         INNER JOIN "in-source_leaderboard" lb ON u.user_id = lb.user_id
+//         INNER JOIN "in-source_season" s ON lb.season_id = s.season_id
+//         WHERE 
+//         lb.season_id = ${season_id}
+//         ORDER BY 
+//         lb.exp_points DESC;
+//     `);
 
-    const participants = await db.execute(sql`
-        SELECT 
-        user_id,
-        (SELECT username FROM "in-source_user" us WHERE us.user_id = pt.user_id) AS username, 
-        participation_date 
-        FROM "in-source_participant" pt 
-        WHERE pt.contest_id = 1 
-        ORDER BY pt.participation_date DESC;
-    `);
+//     return leaderboardData.rows as unknown as LeaderboardUser[];
+// }
 
-    return participants.rows as unknown as Participant[];
-}
+// export async function getSeasonNameById(season_id: number) {
+
+//     const seasonName = await db.execute(sql`
+//         SELECT s.season_name FROM "in-source_season" s WHERE s.season_id = ${season_id};
+//     `);
+
+//     return seasonName.rows as unknown as Season[];
+// }
+
+// export async function getContestPizes(contestId: number): Promise<Prizes[]> {
+
+//     const prizes = await db.execute(sql`
+//         SELECT 
+//         position_id,
+//         (SELECT at.award_type_name FROM "in-source_award_type" at WHERE at.award_type_id = ca.award_type_id) AS award_type,
+//         award_details
+//         FROM "in-source_contest_award" ca
+//         WHERE contest_id = ${contestId}
+//         ORDER BY position_id, award_type;
+//     `);
+
+//     return prizes.rows as unknown as Prizes[];
+// }
+
+// export async function getContestParticipants(contestId: number) {
+
+//     const participants = await db.execute(sql`
+//         SELECT 
+//         user_id,
+//         (SELECT username FROM "in-source_user" us WHERE us.user_id = pt.user_id) AS username, 
+//         participation_date 
+//         FROM "in-source_participant" pt 
+//         WHERE pt.contest_id = 1 
+//         ORDER BY pt.participation_date DESC;
+//     `);
+
+//     return participants.rows as unknown as Participant[];
+// }
 
 // export const createContest = async (contest: any) => {
 //     const createdContest = await db.insert(contests).values(contest);
@@ -198,7 +196,7 @@ export async function getUserIdByEmail(email: string) {
     try {
         const user = await db.select().from(users).where(eq(users.email, email));
         if (user.length == 0) return null;
-        return user[0]?.userId;
+        return user[0]?.userId as string;
     } catch (error) {
         console.error('Error fetching user by email:', error);
         throw error;
@@ -246,59 +244,57 @@ export async function createDbUser(userData: NewUser) {
     }
 }
 
-export async function getUserParticipations(email: string) {
+// export async function getUserParticipations(email: string) {
 
-    const participants = await db.execute(sql`
-        WITH user_data AS (
-        SELECT user_id
-        FROM "in-source_user"
-        WHERE email = ${email}
-    ),
-    participation_data AS (
-        SELECT
-            participant_id,
-            participation_status,
-            participation_date,
-            contest_id,
-            user_id
-        FROM "in-source_participant"
-        WHERE user_id = (SELECT user_id FROM user_data)
-    ),
-    contest_data AS (
-        SELECT
-            contest_id,
-            title,
-            banner_url,
-            start_date,
-            end_date
-        FROM "in-source_contest"
-        WHERE contest_id IN (SELECT contest_id FROM participation_data)
-    )
-    SELECT
-        c.contest_id,
-        c.title,
-        c.banner_url,
-        p.participant_id,
-        p.participation_status,
-        p.participation_date,
-        c.start_date,
-        c.end_date
-    FROM contest_data c
-    JOIN participation_data p ON c.contest_id = p.contest_id;
-    `);
+//     const participants = await db.execute(sql`
+//         WITH user_data AS (
+//         SELECT user_id
+//         FROM "in-source_user"
+//         WHERE email = ${email}
+//     ),
+//     participation_data AS (
+//         SELECT
+//             participant_id,
+//             participation_status,
+//             participation_date,
+//             contest_id,
+//             user_id
+//         FROM "in-source_participant"
+//         WHERE user_id = (SELECT user_id FROM user_data)
+//     ),
+//     contest_data AS (
+//         SELECT
+//             contest_id,
+//             title,
+//             banner_url,
+//             start_date,
+//             end_date
+//         FROM "in-source_contest"
+//         WHERE contest_id IN (SELECT contest_id FROM participation_data)
+//     )
+//     SELECT
+//         c.contest_id,
+//         c.title,
+//         c.banner_url,
+//         p.participant_id,
+//         p.participation_status,
+//         p.participation_date,
+//         c.start_date,
+//         c.end_date
+//     FROM contest_data c
+//     JOIN participation_data p ON c.contest_id = p.contest_id;
+//     `);
 
-    // console.log("participation", participants.rows);
-    return participants.rows as unknown as UserParticipations[];
-}
+//     // console.log("participation", participants.rows);
+//     return participants.rows as unknown as UserParticipations[];
+// }
 
 export async function addParticipation(user: AddParticipation) {
     const newParticipant = await db.insert(participants).values({
         contestId: user.contest_id,
         userId: user.user_id,
         participationDate: user.participation_date,
-        participationStatus: 'REGISTERED',
-        startDate: user.start_date,
-        endDate: user.end_date
+        participationStatus: 'A',
     }).returning();
 
     // console.log("newParticipant", newParticipant);

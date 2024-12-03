@@ -1,6 +1,6 @@
-import { getAllSubmissions } from '~/lib/actions';
 import NoSubmissionsCard from '~/components/no-submission-card';
 import AllSubmissionCard from '~/components/all-submission-card';
+import { getAllSubmissions } from '~/actions/submissions';
 
 export const dynamic = "force-dynamic"
 

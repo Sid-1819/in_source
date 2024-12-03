@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { FileText, Users, Clock, ExternalLink, Code } from "lucide-react";
-import { getSubmissionById } from '~/lib/actions';
+import { getSubmissionById } from '~/actions/submissions';
+
 import { formatDate, FormatType, parseJsonArray } from '~/utils';
 
 

@@ -3,7 +3,7 @@ import UnjoinButton from '~/app/(root)/user/participations/unjoin-button';
 import { removeParticipation } from '~/lib/actions';
 
 interface UnjoinFormProps {
-    participantId: number;
+    participantId: string;
     onSubmit?: () => void; // Optional callback for additional functionality
 }
 

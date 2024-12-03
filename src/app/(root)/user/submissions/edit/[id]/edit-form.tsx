@@ -18,12 +18,11 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Plus, Trash2 } from "lucide-react";
 import { submissionSchema } from "~/utils/validation";
-import { addSubmission, editSubmission } from "~/lib/actions";
-import { ContestSumbmission } from "~/types";
 import { useUser } from "@clerk/nextjs";
 import { parseJsonArray } from "~/utils";
 import { toast } from "~/hooks/use-toast";
-import { Submission } from "~/types/contest-submission/types";
+import { ContestSumbmission, Submission } from "~/types/submission";
+import { editSubmission } from "~/actions/submissions";
 
 interface Props {
     initialData?: Partial<Submission>;
@@ -109,13 +108,13 @@ const EditForm: React.FC<Props> = ({ initialData, onSubmissionSuccess }) => {
                 sourceCodeLink: values.sourceCodeLink,
                 deploymentLink: values.deploymentLink ?? "",
                 teamMembers: JSON.stringify(formState.teamMembers),
-                contestId: 1, // TODO: Dynamic contest ID
-                userId: 65 // TODO: Dynamic user ID
+                contestId: "", // TODO: Dynamic contest ID
+                userId: "" // TODO: Dynamic user ID
             };
 
             await editSubmission(
                 formattedValues,
-                initialData?.submission_id ?? 0,
+                initialData?.submission_id ?? "",
                 email
             );
 

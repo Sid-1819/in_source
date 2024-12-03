@@ -1,14 +1,13 @@
 "use server"
 
 import { currentUser } from "@clerk/nextjs/server";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { ContestSumbmission } from "~/types";
-import { AllSubmissions, Submission, submissionStatus } from "~/types/contest-submission/types";
+import { ContestSumbmission, submissionStatus } from "~/types/submission";
 import { db } from "~/server/db";
 import { contests, contestSubmissions, participants } from "~/server/db/schema"
-import { addParticipation, createDbUser, getContestById, getUserIdByEmail } from "~/server/queries";
+import { addParticipation, createDbUser, getUserIdByEmail } from "~/server/queries";
 
 interface UserSubmission {
     contest_id: number;
@@ -23,11 +22,11 @@ interface UserSubmission {
 }
 
 export type Contest = typeof contests.$inferInsert;
-export const createContest = async (contest: Contest) => {
-    const res = await db.insert(contests).values(contest);
-    // console.log("res", res);
+// export const createContest = async (contest: Contest) => {
+//     const res = await db.insert(contests).values(contest);
+//     // console.log("res", res);
 
-}
+// }
 
 export const getUser = async (email: string) => {
     const user = getUserIdByEmail(email);
@@ -37,7 +36,7 @@ export const getUser = async (email: string) => {
 
 interface User {
     createdAt: Date;
-    userId: number;
+    userId: string;
     username: string;
     email: string;
 }
@@ -65,29 +64,32 @@ export async function createUserIfNotexists(): Promise<User | null> {
 export async function handleAddParticipation(formData: FormData) {
     const contestId = formData.get('contestId') as string;
     const userId = formData.get('userId') as string;
-    const contestById = await getContestById(parseInt(contestId));
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
+    console.log(formattedDate); // Outputs: 2024-12-03
 
     const newParticipation = {
-        contest_id: parseInt(contestId),
-        user_id: parseInt(userId),
-        start_date: contestById[0]?.startDate ?? '2024-11-08',
-        end_date: contestById[0]?.endDate ?? '2025-06-31',
-        participation_date: new Date().toISOString().split('T')[0] ?? '2024-12-01'
+        contest_id: (contestId),
+        user_id: (userId),
+        participation_date: formattedDate
     };
 
     try {
-        const res = await addParticipation(newParticipation);
+        await addParticipation(newParticipation);
         // console.log("res", res);
         redirect("/user/participations")
         return;
     } catch (error) {
+        console.log("Something went wrong: ", error)
         throw error;
     }
 }
 
 export async function removeParticipation(formData: FormData) {
-    const id = formData.get('participantId') as string;
-    const participantId = parseInt(id)
+    const participantId = formData.get('participantId') as string;
 
     // console.log("participantId", participantId);
 
@@ -96,7 +98,7 @@ export async function removeParticipation(formData: FormData) {
     revalidatePath("/user/participations")
 }
 
-export async function isUserJoined(userId: number, contestId: number) {
+export async function isUserJoined(userId: string, contestId: string) {
     const isAlreadyJoined = await db.select().from(participants).where(
         and(
             eq(participants.userId, userId),
@@ -110,11 +112,11 @@ export async function isUserJoined(userId: number, contestId: number) {
 }
 
 export async function addSubmission(data: ContestSumbmission, emailId: string) {
-    const userId = await getUserIdByEmail(emailId) ?? 65;
+    const userId = await getUserIdByEmail(emailId) ?? "65";
     // console.log("userId: ", userId, "data: ", data);
 
 
-    const submission = await db.insert(contestSubmissions).values({
+    await db.insert(contestSubmissions).values({
         contestId: data.contestId,
         userId: userId,
         submissionStatus: submissionStatus.S,
@@ -128,8 +130,8 @@ export async function addSubmission(data: ContestSumbmission, emailId: string) {
     redirect("/user/submissions")
 }
 
-export async function editSubmission(data: ContestSumbmission, submissionId: number, emailId: string) {
-    const userId = await getUserIdByEmail(emailId) ?? 65;
+export async function editSubmission(data: ContestSumbmission, submissionId: string, emailId: string) {
+    const userId = await getUserIdByEmail(emailId) ?? "65";
     // console.log("userId: ", userId, "data: ", data);
 
 
@@ -150,71 +152,68 @@ export async function editSubmission(data: ContestSumbmission, submissionId: num
     redirect("/user/submissions")
 }
 
-export async function getUserSubmission(emailId: string): Promise<UserSubmission[]> {
+// export async function getUserSubmission(emailId: string): Promise<UserSubmission[]> {
 
-    const submissions = await db.execute(sql`
-        SELECT 
-        s.contest_id AS contest_id,
-        (SELECT c.title FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_title,
-        (SELECT c.banner_url FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_banner_url,
-        (SELECT c.end_date FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_end_date,
-        s.user_id AS user_id,
-        s.team_members AS submission_team_members,
-        s.description,
-        s.submission_id,
-        s.created_at AS created_at,
-        s.updated_at AS updated_at
-        FROM 
-            "in-source_contest_submissions" s
-        WHERE 
-            s.user_id = (SELECT u.user_id FROM "in-source_user" u WHERE u.email = ${emailId});
-    `);
-    // console.log("getUserSubmission", submissions.rows);
-    return submissions.rows as unknown as UserSubmission[];
-}
+//     const submissions = await db.execute(sql`
+//         SELECT 
+//         s.contest_id AS contest_id,
+//         (SELECT c.title FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_title,
+//         (SELECT c.banner_url FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_banner_url,
+//         (SELECT c.end_date FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_end_date,
+//         s.user_id AS user_id,
+//         s.team_members AS submission_team_members,
+//         s.description,
+//         s.submission_id,
+//         s.created_at AS created_at,
+//         s.updated_at AS updated_at
+//         FROM 
+//             "in-source_contest_submissions" s
+//         WHERE 
+//             s.user_id = (SELECT u.user_id FROM "in-source_user" u WHERE u.email = ${emailId});
+//     `);
+//     // console.log("getUserSubmission", submissions.rows);
+//     return submissions.rows as unknown as UserSubmission[];
+// }
 
-export async function removeSubmission(formData: FormData) {
-    const submissionId = parseInt(formData.get('submissionId') as string);
+// export async function removeSubmission(formData: FormData) {
+//     const submissionId = parseInt(formData.get('submissionId') as string);
+//     // console.log("submissionId", submissionId, formData);
+//     await db.delete(contestSubmissions).where(eq(contestSubmissions.submissionId, submissionId));
+//     revalidatePath("/submissions")
+//     // console.log("removedSub: ", removedSubmission);
+// }
 
-    // console.log("submissionId", submissionId, formData);
-    await db.delete(contestSubmissions).where(eq(contestSubmissions.submissionId, submissionId));
+// export async function getSubmissionById(submissionId: number) {
+//     const submission = await db.execute(sql`
+//     SELECT 
+//         s.contest_id AS contest_id,
+//         (SELECT c.title FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_title,
+//         (SELECT c.banner_url FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_banner_url,
+//         (SELECT c.end_date FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_end_date,
+//         s.user_id AS user_id,
+//         s.team_members AS submission_team_members,
+//         s.description,
+//         s.submission_id,
+//         s.source_code_link,
+//         s.deployment_link,
+//         s.created_at AS created_at,
+//         s.updated_at AS updated_at
+//         FROM 
+//             "in-source_contest_submissions" s
+//         WHERE 
+//             s.submission_id = ${submissionId};
+//     `);
 
-    revalidatePath("/submissions")
-    // console.log("removedSub: ", removedSubmission);
+//     // console.log("submissions: ", submission.rows);
+//     return submission.rows[0] as unknown as Submission;
+// }
 
-}
+// export async function getAllSubmissions(): Promise<AllSubmissions[]> {
+//     const subs = await db.select()
+//         .from(contestSubmissions)
+//         .where(eq(contestSubmissions.submissionStatus, submissionStatus.S))
+//         .orderBy(asc(contestSubmissions.contestId));
 
-export async function getSubmissionById(submissionId: number) {
-    const submission = await db.execute(sql`
-    SELECT 
-        s.contest_id AS contest_id,
-        (SELECT c.title FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_title,
-        (SELECT c.banner_url FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_banner_url,
-        (SELECT c.end_date FROM "in-source_contest" c WHERE c.contest_id = s.contest_id) AS contest_end_date,
-        s.user_id AS user_id,
-        s.team_members AS submission_team_members,
-        s.description,
-        s.submission_id,
-        s.source_code_link,
-        s.deployment_link,
-        s.created_at AS created_at,
-        s.updated_at AS updated_at
-        FROM 
-            "in-source_contest_submissions" s
-        WHERE 
-            s.submission_id = ${submissionId};
-    `);
-
-    // console.log("submissions: ", submission.rows);
-    return submission.rows[0] as unknown as Submission;
-}
-
-export async function getAllSubmissions(): Promise<AllSubmissions[]> {
-    const subs = await db.select()
-        .from(contestSubmissions)
-        .where(eq(contestSubmissions.submissionStatus, submissionStatus.S))
-        .orderBy(asc(contestSubmissions.contestId));
-
-    // console.log("subs: ", subs);
-    return subs as unknown as AllSubmissions[];
-}
+//     // console.log("subs: ", subs);
+//     return subs as unknown as AllSubmissions[];
+// }

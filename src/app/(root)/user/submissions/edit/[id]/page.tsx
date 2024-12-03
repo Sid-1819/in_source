@@ -1,6 +1,7 @@
 import React from 'react'
 import EditForm from './edit-form'
-import { getSubmissionById } from '~/lib/actions'
+import { getSubmissionById } from '~/actions/submissions';
+
 
 export default async function EditPage({ params }: { readonly params: Promise<{ id: number }> }) {
     const { id } = await params;

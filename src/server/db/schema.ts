@@ -13,7 +13,6 @@ import {
   serial,
   json,
 } from "drizzle-orm/pg-core";
-import { submissionStatus } from "~/types/contest-submission/types";
 
 export const createTable = pgTableCreator((name) => `${name}_tbl`);
 

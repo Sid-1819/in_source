@@ -4,7 +4,8 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { Edit, Trash2 } from "lucide-react";
-import { removeSubmission } from "~/lib/actions";
+import { removeSubmission } from "~/actions/submissions";
+
 
 const SubmissionCard: React.FC<{ submission: UserSubmission }> = ({ submission }) => {
 

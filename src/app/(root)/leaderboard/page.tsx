@@ -8,7 +8,8 @@ import {
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
-import { getLeaderBoardList, getSeasonNameById } from "~/server/queries";
+import { getLeaderBoardList } from "~/actions/leaderboard";
+import { getSeasonNameById } from "~/actions/season";
 
 interface Participant {
   username: string;
