@@ -40,9 +40,9 @@ export async function getContestPizes(contestId: string): Promise<ContestPrizes[
      const prizes = await db.execute(sql`
         SELECT 
         position_id,
-        (SELECT at.award_type_name FROM "award_type" at WHERE at.award_type_id = ca.award_type_id) AS award_type,
+        (SELECT at.award_type_name FROM "award_type_tbl" at WHERE at.award_type_id = ca.award_type_id) AS award_type,
         award_details
-        FROM "contest_award" ca
+        FROM "contest_award_tbl" ca
         WHERE contest_id = ${contestId}
         ORDER BY position_id, award_type;
     `);
@@ -58,7 +58,7 @@ export async function getContestParticipants(contestId: string) {
         (SELECT username FROM "user_tbl" us WHERE us.user_id = pt.user_id) AS username, 
         participation_date 
         FROM "participant_tbl" pt 
-        WHERE pt.contest_id = ${contestId}
+        WHERE pt.contest_id = ${contestId} AND pt.participation_status = 'A'
         ORDER BY pt.participation_date DESC;
     `);
 

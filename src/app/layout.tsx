@@ -50,7 +50,7 @@ const Header = () => {
   const pathname = usePathname();
   const { user } = useUser();
 
-  const isAdmin = user?.primaryEmailAddress?.emailAddress === 'godwin.pinto@cmss.in'//user?.id === "user_2osHWGb6tiQWKqWGEC1C1XjvFiY"; 
+  const isAdmin = user?.primaryEmailAddress?.emailAddress === 'godwin.pinto@cmss.in';
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-background">

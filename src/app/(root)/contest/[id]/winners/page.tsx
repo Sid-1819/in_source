@@ -16,10 +16,19 @@ interface Winner {
   swag_prize: number;
 }
 
+const NoContestWinners = () => {
+  return (
+    <div className='flex justify-center align-center '>
+      No Winners Yet.
+    </div>
+  )
+}
 const WinnersList = async () => {
 
   let constestwinner: Winner[] = await getContestWinners('2c5689f0-4821-4fc6-a292-0be90d714b2f'); // TODO: DYNAMICALLY PASS CONTEST ID
   constestwinner = modifyUsernames(constestwinner) as Winner[];
+
+  if (constestwinner.length < 1) return <NoContestWinners />
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4">
