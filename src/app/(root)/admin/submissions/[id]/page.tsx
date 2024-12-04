@@ -8,7 +8,7 @@ import { formatDate, FormatType, parseJsonArray } from '~/utils';
 import { getSubmissionById } from '~/actions/submissions';
 
 
-const SubmissionDetails = async ({ params }: { params: Promise<{ id: number }> }) => {
+const SubmissionDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const submission = await getSubmissionById(id);
 

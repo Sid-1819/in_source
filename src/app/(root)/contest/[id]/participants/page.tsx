@@ -14,7 +14,7 @@ interface Participant {
 
 const ApplicantsList = async () => {
 
-  let applicants: Participant[] = await getContestParticipants(1);
+  let applicants: Participant[] = await getContestParticipants('2c5689f0-4821-4fc6-a292-0be90d714b2f');
   applicants = modifyUsernames(applicants) as Participant[];
 
   return (

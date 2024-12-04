@@ -196,7 +196,7 @@ export async function getUserIdByEmail(email: string) {
     try {
         const user = await db.select().from(users).where(eq(users.email, email));
         if (user.length == 0) return null;
-        return user[0]?.userId as string;
+        return user[0]?.userId ?? "";
     } catch (error) {
         console.error('Error fetching user by email:', error);
         throw error;

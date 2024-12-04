@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "~/server/db";
 import { eq, sql } from "drizzle-orm";
 import { Contest, ContestParticipant, ContestPrizes } from "~/types/contest";
@@ -30,17 +32,17 @@ export async function getContestOnHome(status: string): Promise<Contest[]> {
 
 export async function getContestById(contestId: string) {
      const contestsById = await db.select().from(contests).where(eq(contests.contestId, contestId));
-     return contestsById;
+     return contestsById[0];
 }
 
-export async function getContestPizes(contestId: number): Promise<ContestPrizes[]> {
+export async function getContestPizes(contestId: string): Promise<ContestPrizes[]> {
 
      const prizes = await db.execute(sql`
         SELECT 
         position_id,
-        (SELECT at.award_type_name FROM "in-source_award_type" at WHERE at.award_type_id = ca.award_type_id) AS award_type,
+        (SELECT at.award_type_name FROM "award_type" at WHERE at.award_type_id = ca.award_type_id) AS award_type,
         award_details
-        FROM "in-source_contest_award" ca
+        FROM "contest_award" ca
         WHERE contest_id = ${contestId}
         ORDER BY position_id, award_type;
     `);
@@ -48,15 +50,15 @@ export async function getContestPizes(contestId: number): Promise<ContestPrizes[
      return prizes.rows as unknown as ContestPrizes[];
 }
 
-export async function getContestParticipants(contestId: number) {
+export async function getContestParticipants(contestId: string) {
 
      const participants = await db.execute(sql`
         SELECT 
         user_id,
-        (SELECT username FROM "in-source_user" us WHERE us.user_id = pt.user_id) AS username, 
+        (SELECT username FROM "user_tbl" us WHERE us.user_id = pt.user_id) AS username, 
         participation_date 
-        FROM "in-source_participant" pt 
-        WHERE pt.contest_id = 1 
+        FROM "participant_tbl" pt 
+        WHERE pt.contest_id = ${contestId}
         ORDER BY pt.participation_date DESC;
     `);
 

@@ -23,6 +23,7 @@ import { parseJsonArray } from "~/utils";
 import { toast } from "~/hooks/use-toast";
 import { ContestSumbmission, Submission } from "~/types/submission";
 import { editSubmission } from "~/actions/submissions";
+import { redirect } from "next/navigation";
 
 interface Props {
     initialData?: Partial<Submission>;
@@ -38,7 +39,7 @@ interface FormFields {
 
 const EditForm: React.FC<Props> = ({ initialData, onSubmissionSuccess }) => {
     const { user } = useUser();
-    const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
+    if (!user) redirect("/");
 
     // Initialize form state with default or initial values
     const [formState, setFormState] = useState<FormFields>({
@@ -108,14 +109,13 @@ const EditForm: React.FC<Props> = ({ initialData, onSubmissionSuccess }) => {
                 sourceCodeLink: values.sourceCodeLink,
                 deploymentLink: values.deploymentLink ?? "",
                 teamMembers: JSON.stringify(formState.teamMembers),
-                contestId: "", // TODO: Dynamic contest ID
-                userId: "" // TODO: Dynamic user ID
+                contestId: initialData?.contest_id ?? "",
+                userId: initialData?.user_id ?? ""
             };
 
             await editSubmission(
                 formattedValues,
                 initialData?.submission_id ?? "",
-                email
             );
 
             toast({

@@ -124,7 +124,7 @@ export const winners = createTable(
   }
 );
 
-export const contestSubmissions = createTable(
+export const contestSubmission = createTable(
   "contest_submission",
   {
     submissionId: uuid("submission_id").primaryKey().defaultRandom(),
@@ -133,8 +133,8 @@ export const contestSubmissions = createTable(
     description: text("description"),
     teamMembers: json("team_members"),
     submissionStatus: char("submission_status", { length: 1 }).default('S'), //'Draft - D' | 'Submitted - S' | 'Deleted - N'
-    sourceCodeLink: varchar("source_code_link", { length: 50 }).notNull(),
-    deploymentLink: varchar("deployment_link", { length: 50 }),
+    sourceCodeLink: varchar("source_code_link", { length: 500 }).notNull(),
+    deploymentLink: varchar("deployment_link", { length: 500 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

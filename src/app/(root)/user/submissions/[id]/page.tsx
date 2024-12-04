@@ -9,7 +9,7 @@ import { getSubmissionById } from '~/actions/submissions';
 import { formatDate, FormatType, parseJsonArray } from '~/utils';
 
 
-const SubmissionDetails = async ({ params }: { params: Promise<{ id: number }> }) => {
+const SubmissionDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const submission = await getSubmissionById(id);
 
@@ -68,7 +68,7 @@ const SubmissionDetails = async ({ params }: { params: Promise<{ id: number }> }
                                 <span className="font-medium block">Contest Deadline</span>
                                 <span>{contestEndDate}</span>
                             </div>
-                            <Link href={`/submissions/edit/${submission.submission_id}`}>
+                            <Link href={`/user/submissions/edit/${submission.submission_id}`}>
                                 <Button variant="default">Edit Submission</Button>
                             </Link>
                         </div>

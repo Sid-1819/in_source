@@ -8,18 +8,19 @@ import { currentUser } from '@clerk/nextjs/server';
 import { removeParticipation } from '~/lib/actions';
 import UnjoinButton from './unjoin-button';
 import { getUserParticipations } from '~/actions/participations';
+import { UserParticipations } from '~/types/participations';
 
 // Define proper types for our data structures
-interface UserParticipations {
-    contest_id: number,
-    participant_id: number,
-    title: string,
-    banner_url: string,
-    participation_status: string,
-    participation_date: string,
-    start_date: string,
-    end_date: string,
-}
+// interface UserParticipations {
+//     contest_id: string,
+//     participant_id: string,
+//     title: string,
+//     banner_url: string,
+//     participation_status: string,
+//     participation_date: string,
+//     start_date: string,
+//     end_date: string,
+// }
 // const determineContestStatus = () => {
 //     const startDate = new Date(contest.start_date);
 //     const endDate = new Date(contest.end_date);

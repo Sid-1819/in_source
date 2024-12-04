@@ -18,7 +18,7 @@ interface Winner {
 
 const WinnersList = async () => {
 
-  let constestwinner: Winner[] = await getContestWinners(1);
+  let constestwinner: Winner[] = await getContestWinners('2c5689f0-4821-4fc6-a292-0be90d714b2f'); // TODO: DYNAMICALLY PASS CONTEST ID
   constestwinner = modifyUsernames(constestwinner) as Winner[];
 
   return (

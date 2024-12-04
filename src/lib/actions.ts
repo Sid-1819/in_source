@@ -6,33 +6,33 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ContestSumbmission, submissionStatus } from "~/types/submission";
 import { db } from "~/server/db";
-import { contests, contestSubmissions, participants } from "~/server/db/schema"
+import { contests, contestSubmission, participants } from "~/server/db/schema"
 import { addParticipation, createDbUser, getUserIdByEmail } from "~/server/queries";
 
-interface UserSubmission {
-    contest_id: number;
-    submission_id: number,
-    contest_title: string;
-    contest_banner_url: string;
-    contest_end_date: string;
-    description: string,
-    submission_team_members: string;
-    created_at: string;
-    updated_at: string;
-}
+// interface UserSubmission {
+//     contest_id: number;
+//     submission_id: number,
+//     contest_title: string;
+//     contest_banner_url: string;
+//     contest_end_date: string;
+//     description: string,
+//     submission_team_members: string;
+//     created_at: string;
+//     updated_at: string;
+// }
 
-export type Contest = typeof contests.$inferInsert;
+// export type Contest = typeof contests.$inferInsert;
 // export const createContest = async (contest: Contest) => {
 //     const res = await db.insert(contests).values(contest);
 //     // console.log("res", res);
 
 // }
 
-export const getUser = async (email: string) => {
-    const user = getUserIdByEmail(email);
-    // console.log("actios: ", user);
-    return user;
-}
+// export const getUser = async (email: string) => {
+//     const user = getUserIdByEmail(email);
+//     // console.log("actios: ", user);
+//     return user;
+// }
 
 interface User {
     createdAt: Date;
@@ -44,8 +44,8 @@ interface User {
 export async function createUserIfNotexists(): Promise<User | null> {
     try {
         const user = await currentUser();
-        const username = user?.primaryEmailAddress?.emailAddress.split("@")[0]?.replace('.', '_') ?? "";
-        const userEmail = user?.primaryEmailAddress?.emailAddress ?? "johndoe@gmail.com";
+        const userEmail = user?.primaryEmailAddress?.emailAddress ?? "john.doe@gmail.com";
+        const username = userEmail.split("@")[0]?.replace('.', '_') ?? "";
 
         if (!user) {
             redirect("/")
@@ -93,7 +93,7 @@ export async function removeParticipation(formData: FormData) {
 
     // console.log("participantId", participantId);
 
-    await db.delete(participants).where(eq(participants.participantId, participantId));
+    await db.update(participants).set({ participationStatus: 'N' }).where(eq(participants.participantId, participantId));
     // console.log("result of unjion hackathon", result);
     revalidatePath("/user/participations")
 }
@@ -102,7 +102,8 @@ export async function isUserJoined(userId: string, contestId: string) {
     const isAlreadyJoined = await db.select().from(participants).where(
         and(
             eq(participants.userId, userId),
-            eq(participants.contestId, contestId)
+            eq(participants.contestId, contestId),
+            eq(participants.participationStatus, 'A')
         )
     );
 
@@ -111,46 +112,43 @@ export async function isUserJoined(userId: string, contestId: string) {
 
 }
 
-export async function addSubmission(data: ContestSumbmission, emailId: string) {
-    const userId = await getUserIdByEmail(emailId) ?? "65";
-    // console.log("userId: ", userId, "data: ", data);
+// export async function addSubmission(data: ContestSumbmission, emailId: string) {
+
+//     await db.insert(contestSubmission).values({
+//         contestId: data.contestId,
+//         userId: data.userId,
+//         submissionStatus: submissionStatus.S,
+//         teamMembers: data.teamMembers,
+//         sourceCodeLink: data.sourceCodeLink,
+//         deploymentLink: data.deploymentLink,
+//         description: data.description,
+//     }).returning();
+
+//     // console.log("addSubmission", submission);
+//     redirect("/user/submissions")
+// }
+
+// export async function editSubmission(data: ContestSumbmission, submissionId: string, emailId: string) {
+//     const userId = await getUserIdByEmail(emailId) ?? "65";
+//     // console.log("userId: ", userId, "data: ", data);
 
 
-    await db.insert(contestSubmissions).values({
-        contestId: data.contestId,
-        userId: userId,
-        submissionStatus: submissionStatus.S,
-        teamMembers: data.teamMembers,
-        sourceCodeLink: data.sourceCodeLink,
-        deploymentLink: data.deploymentLink,
-        description: data.description,
-    }).returning();
+//     await db.update(contestSubmission)
+//         .set({
+//             contestId: data.contestId,
+//             userId: userId,
+//             teamMembers: data.teamMembers,
+//             sourceCodeLink: data.sourceCodeLink,
+//             deploymentLink: data.deploymentLink,
+//             description: data.description,
+//             updatedAt: (sql`CURRENT_TIMESTAMP`)
+//         })
+//         .where(eq(contestSubmission.submissionId, submissionId))
+//         .returning();
 
-    // console.log("addSubmission", submission);
-    redirect("/user/submissions")
-}
-
-export async function editSubmission(data: ContestSumbmission, submissionId: string, emailId: string) {
-    const userId = await getUserIdByEmail(emailId) ?? "65";
-    // console.log("userId: ", userId, "data: ", data);
-
-
-    await db.update(contestSubmissions)
-        .set({
-            contestId: data.contestId,
-            userId: userId,
-            teamMembers: data.teamMembers,
-            sourceCodeLink: data.sourceCodeLink,
-            deploymentLink: data.deploymentLink,
-            description: data.description,
-            updatedAt: (sql`CURRENT_TIMESTAMP`)
-        })
-        .where(eq(contestSubmissions.submissionId, submissionId))
-        .returning();
-
-    // console.log("editSubmission", submission);
-    redirect("/user/submissions")
-}
+//     // console.log("editSubmission", submission);
+//     redirect("/user/submissions")
+// }
 
 // export async function getUserSubmission(emailId: string): Promise<UserSubmission[]> {
 

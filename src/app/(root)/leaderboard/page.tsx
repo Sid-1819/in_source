@@ -55,10 +55,11 @@ const getRankBadge = (rank: number) => {
 
 const LeaderboardList = async () => {
 
-  const season = await getSeasonNameById(1);
+  const seasonId = '0e8a0405-2e2b-4c82-9747-31fbf8f55c3e';
+  const season = await getSeasonNameById(seasonId); // TODO: get season name by start date and end date
   const seasonName = season[0]?.season_name;
 
-  const participants: Participant[] = await getLeaderBoardList(1);
+  const participants: Participant[] = await getLeaderBoardList(seasonId);
 
   return (
     <div className="max-w-4xl mx-auto p-4">

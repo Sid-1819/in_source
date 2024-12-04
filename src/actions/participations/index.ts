@@ -1,3 +1,5 @@
+"use server";
+
 import { sql } from "drizzle-orm/sql";
 import { db } from "~/server/db";
 import { participants } from "~/server/db/schema";
@@ -8,7 +10,7 @@ export async function getUserParticipations(email: string) {
     const participants = await db.execute(sql`
         WITH user_data AS (
         SELECT user_id
-        FROM "in-source_user"
+        FROM "user_tbl"
         WHERE email = ${email}
     ),
     participation_data AS (
@@ -18,8 +20,8 @@ export async function getUserParticipations(email: string) {
             participation_date,
             contest_id,
             user_id
-        FROM "in-source_participant"
-        WHERE user_id = (SELECT user_id FROM user_data)
+        FROM "participant_tbl" p
+        WHERE user_id = (SELECT user_id FROM user_data) AND p.participation_status = 'A'
     ),
     contest_data AS (
         SELECT
@@ -28,7 +30,7 @@ export async function getUserParticipations(email: string) {
             banner_url,
             start_date,
             end_date
-        FROM "in-source_contest"
+        FROM "contest_tbl"
         WHERE contest_id IN (SELECT contest_id FROM participation_data)
     )
     SELECT
@@ -53,7 +55,6 @@ export async function addParticipation(user: AddUserParticipation) {
         contestId: user.contest_id,
         userId: user.user_id,
         participationDate: user.participation_date,
-        participationStatus: 'REGISTERED',
     }).returning();
 
     // console.log("newParticipant", newParticipant);

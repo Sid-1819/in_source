@@ -1,17 +1,5 @@
 import React from "react";
-import StarterKit from "@tiptap/starter-kit";
-import HorizontalRule from "@tiptap/extension-horizontal-rule";
-import TiptapLink from "@tiptap/extension-link";
-import Placeholder from "@tiptap/extension-placeholder";
-import TiptapUnderline from "@tiptap/extension-underline";
-import TextStyle from "@tiptap/extension-text-style";
-import { Color } from "@tiptap/extension-color";
-import TaskItem from "@tiptap/extension-task-item";
-import TaskList from "@tiptap/extension-task-list";
-import { Markdown } from "tiptap-markdown";
-import Highlight from "@tiptap/extension-highlight";
-import { InputRule, JSONContent } from "@tiptap/core";
-import { Image as TiptapImage } from "@tiptap/extension-image"; // Alias the TipTap Image importimport { FileText, Info, Users, Trophy } from "lucide-react";
+import { JSONContent } from "@tiptap/core";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -28,6 +16,8 @@ import { handleAddParticipation, isUserJoined } from "~/lib/actions"
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { getContestById } from "~/actions/contest";
+import { addParticipation } from "~/actions/participations";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic"
 
@@ -36,8 +26,8 @@ interface TabContentProps {
 }
 
 interface AddParticipation {
-  contest_id: number;
-  user_id: number;
+  contest_id: string;
+  user_id: string;
   start_date: string;
   end_date: string;
   participation_date: string
@@ -134,130 +124,6 @@ const TabContent: React.FC<TabContentProps> = ({ output }) => {
   );
 };
 
-const UpdatedImage = TiptapImage.extend({
-  addAttributes() {
-    return {
-      ...this.parent?.(),
-      width: {
-        default: null,
-      },
-      height: {
-        default: null,
-      },
-    };
-  },
-});
-
-const defaultExtensions = [
-  StarterKit.configure({
-    bulletList: {
-      HTMLAttributes: {
-        class: "list-disc list-outside leading-3 -mt-2",
-      },
-    },
-    orderedList: {
-      HTMLAttributes: {
-        class: "list-decimal list-outside leading-3 -mt-2",
-      },
-    },
-    listItem: {
-      HTMLAttributes: {
-        class: "leading-normal -mb-2",
-      },
-    },
-    blockquote: {
-      HTMLAttributes: {
-        class: "border-l-4 border-stone-700",
-      },
-    },
-    codeBlock: {
-      HTMLAttributes: {
-        class:
-          "rounded-sm bg-stone-100 p-5 font-mono font-medium text-stone-800",
-      },
-    },
-    code: {
-      HTMLAttributes: {
-        class:
-          "rounded-md bg-stone-200 px-1.5 py-1 font-mono font-medium text-stone-900",
-        spellcheck: "false",
-      },
-    },
-    horizontalRule: false,
-    dropcursor: {
-      color: "#DBEAFE",
-      width: 4,
-    },
-    gapcursor: false,
-  }),
-  HorizontalRule.extend({
-    addInputRules() {
-      return [
-        new InputRule({
-          find: /^(?:---|—-|___\s|\*\*\*\s)$/,
-          handler: ({ state, range }) => {
-            const attributes = {};
-
-            const { tr } = state;
-            const start = range.from;
-            const end = range.to;
-
-            tr.insert(start - 1, this.type.create(attributes)).delete(
-              tr.mapping.map(start),
-              tr.mapping.map(end),
-            );
-          },
-        }),
-      ];
-    },
-  }).configure({
-    HTMLAttributes: {
-      class: "mt-4 mb-6 border-t border-stone-300",
-    },
-  }),
-  TiptapLink.configure({
-    HTMLAttributes: {
-      class:
-        "text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer",
-    },
-  }),
-  UpdatedImage.configure({
-    HTMLAttributes: {
-      class: "rounded-lg border border-stone-200",
-    },
-  }),
-  Placeholder.configure({
-    placeholder: ({ node }) => {
-      if (node.type.name === "heading") {
-        return `Heading ${node.attrs.level}`;
-      }
-      return "Press '/' for commands, or '++' for AI autocomplete...";
-    },
-    includeChildren: true,
-  }),
-  TiptapUnderline,
-  TextStyle,
-  Color,
-  Highlight.configure({
-    multicolor: true,
-  }),
-  TaskList.configure({
-    HTMLAttributes: {
-      class: "not-prose pl-2",
-    },
-  }),
-  TaskItem.configure({
-    HTMLAttributes: {
-      class: "flex items-start my-4",
-    },
-    nested: true,
-  }),
-  Markdown.configure({
-    html: false,
-    transformCopiedText: true,
-  }),
-];
-
 const HackathonTabs: React.FC<TabContentProps> = ({ output }) => {
 
   return (
@@ -324,15 +190,11 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
     return content;
   };
 
-  const contestId = (props.id);
+  const contestId = props.id;
   const contestById = await getContestById(contestId);
 
-  const tagArray = contestById[0]?.tags?.split(",").map((tag) => tag.trim());
-  const descriptionHTML = contestById[0]?.description ?? "";
-
-  // const parsedJson = json ? JSON.parse(json) as JSONContent : null
-  // const filteredJson = parsedJson ? filterOutImages(parsedJson) : null;
-  // const output = filteredJson ? generateHTML(filteredJson, defaultExtensions) : "";
+  const tagArray = contestById?.tags?.split(",").map((tag) => tag.trim());
+  const descriptionHTML = contestById?.description ?? "";
 
   const user = await currentUser();
   const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
@@ -340,17 +202,16 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
 
   const isAlreadyParticipated = await isUserJoined(userId, contestId)
 
-
   return (
     <>
       {/* Header Card */}
       <Card className="mx-auto my-8 w-full max-w-3xl">
         <CardHeader>
           <CardTitle className="mb-2 text-xl">
-            {contestById[0]?.title}
+            {contestById?.title}
           </CardTitle>
           <p className="text-base text-muted-foreground">
-            {contestById[0]?.subTitle}
+            {contestById?.subTitle}
           </p>
         </CardHeader>
         <CardContent>
@@ -395,7 +256,7 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
                   </form>
                 ) : (
                   <Link
-                    href="/user/create-submission"
+                    href={`/user/create-submission?contestId=${contestId}&userId=${userId}`}
                   >
                     <Button
                       variant="default"
@@ -417,8 +278,8 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
                 ))}
               </div>
               <Image
-                src={contestById[0]?.bannerUrl ?? ""}
-                alt={contestById[0]?.title ?? ""}
+                src={contestById?.bannerUrl ?? ""}
+                alt={contestById?.title ?? ""}
                 width={800}
                 height={200} />
             </div>

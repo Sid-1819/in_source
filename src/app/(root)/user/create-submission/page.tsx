@@ -18,14 +18,11 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Plus, Trash2 } from "lucide-react";
 import { submissionSchema } from "~/utils/validation";
-import { addSubmission } from "~/lib/actions";
-import { ContestSumbmission } from "~/types";
-import { useUser } from "@clerk/nextjs";
+import { ContestSumbmission } from "~/types/submission";
+import { addSubmission } from "~/actions/submissions";
 
-const SubmitForm = () => {
+const SubmitForm = (props: { searchParams: Promise<{ contestId: string, userId: string }> }) => {
     const [teamMembers, setTeamMembers] = useState<string[]>([""]);
-    const { user } = useUser();
-    const email = user?.primaryEmailAddress?.emailAddress ?? "john@example.com";
 
     const form = useForm<z.infer<typeof submissionSchema>>({
         resolver: zodResolver(submissionSchema),
@@ -48,17 +45,19 @@ const SubmitForm = () => {
     };
 
     async function onSubmit(values: z.infer<typeof submissionSchema>) {
+        const { userId, contestId } = await props.searchParams;
+
         const formattedValues: ContestSumbmission = {
             description: values.description ?? "",
             sourceCodeLink: values.sourceCodeLink,
             deploymentLink: values.deploymentLink ?? "",
             teamMembers: teamMembers ? JSON.stringify(teamMembers) : "",
-            contestId: 1, // need to figure out how to get contest id
-            userId: 65
+            contestId,
+            userId
         };
 
         console.log("formattedValues", formattedValues);
-        await addSubmission(formattedValues, email);
+        await addSubmission(formattedValues);
     }
 
     return (

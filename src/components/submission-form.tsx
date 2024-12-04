@@ -1,6 +1,6 @@
 // components/SubmissionForm.tsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { submissionSchema } from "~/utils/validation";
-import { ContestSumbmission } from "~/types";
+import { ContestSumbmission } from "~/types/submission";
 import TeamMemberSection from "./team-member-section";
 
 interface SubmissionFormProps {
@@ -44,8 +44,8 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({ initialData, onSubmit }
             sourceCodeLink: values.sourceCodeLink,
             deploymentLink: values.deploymentLink ?? "NULL",
             teamMembers: teamMembers ? JSON.stringify(teamMembers) : "NULL",
-            contestId: initialData?.contestId ?? 1,
-            userId: initialData?.userId ?? 65,
+            contestId: initialData?.contestId ?? "",
+            userId: initialData?.userId ?? "",
         };
 
         onSubmit(formattedValues);

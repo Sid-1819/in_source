@@ -2,12 +2,6 @@
 
 import React, { useState } from 'react';
 import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger
-} from '~/components/ui/tabs';
-import {
     Card,
     CardContent,
     CardHeader,
@@ -32,7 +26,7 @@ import {
 
 // Enhanced Contest Interface
 interface Contest {
-    id: number;
+    id: string;
     title: string;
     subtitle?: string;
     status: 'upcoming' | 'active' | 'ended' | 'archived';
@@ -49,7 +43,7 @@ interface Contest {
 
 // Enhanced Submission Interface
 interface Submission {
-    id: number;
+    id: string;
     contestId: number;
     contestTitle: string;
     submitterName: string;
@@ -61,7 +55,7 @@ interface Submission {
 // Mock data with enhanced details
 const mockContests: Contest[] = [
     {
-        id: 1,
+        id: "1",
         title: 'Summer Coding Challenge',
         subtitle: 'Innovate and Transform',
         status: 'upcoming',
@@ -76,7 +70,7 @@ const mockContests: Contest[] = [
         tags: ['Web Development', 'AI', 'Machine Learning']
     },
     {
-        id: 2,
+        id: '2',
         title: 'AI Innovation Contest',
         subtitle: 'Push the Boundaries of AI',
         status: 'active',
@@ -89,7 +83,7 @@ const mockContests: Contest[] = [
         tags: ['Machine Learning', 'Data Science']
     },
     {
-        id: 3,
+        id: '3',
         title: 'Design Hackathon 2023',
         subtitle: 'Creative Solutions Unleashed',
         status: 'ended',
@@ -105,7 +99,7 @@ const mockContests: Contest[] = [
 
 const mockSubmissions: Submission[] = [
     {
-        id: 1,
+        id: '1',
         contestId: 2,
         contestTitle: 'AI Innovation Contest',
         submitterName: 'John Doe',
@@ -113,7 +107,7 @@ const mockSubmissions: Submission[] = [
         status: 'pending'
     },
     {
-        id: 2,
+        id: '2',
         contestId: 2,
         contestTitle: 'AI Innovation Contest',
         submitterName: 'Jane Smith',
@@ -123,26 +117,26 @@ const mockSubmissions: Submission[] = [
 ];
 
 const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState<'contests' | 'submissions'>('contests');
+    // const [activeTab, setActiveTab] = useState<'contests' | 'submissions'>('contests');
     const [contests, setContests] = useState<Contest[]>(mockContests);
     const [submissions, setSubmissions] = useState<Submission[]>(mockSubmissions);
 
-    const getStatusBadgeVariant = (status: string) => {
-        const variants: Record<string, string> = {
-            'upcoming': 'secondary',
-            'active': 'success',
-            'ended': 'destructive',
-            'archived': 'outline',
-            'pending': 'secondary',
-            'accepted': 'success',
-            'rejected': 'destructive'
-        };
-        return variants[status] || 'default';
-    };
+    // const getStatusBadgeVariant = (status: string) => {
+    //     const variants: Record<string, string> = {
+    //         'upcoming': 'secondary',
+    //         'active': 'success',
+    //         'ended': 'destructive',
+    //         'archived': 'outline',
+    //         'pending': 'secondary',
+    //         'accepted': 'success',
+    //         'rejected': 'destructive'
+    //     };
+    //     return variants[status] ?? 'default';
+    // };
 
-    const handleDeleteContest = (contestId: number) => {
-        setContests(contests.filter(contest => contest.id !== contestId));
-    };
+    // const handleDeleteContest = (contestId: number) => {
+    //     setContests(contests.filter(contest => contest.id !== contestId));
+    // };
 
     const ContestsTab = () => (
         <div className="space-y-4">
@@ -158,9 +152,9 @@ const AdminDashboard = () => {
                     <CardHeader>
                         <CardTitle className="capitalize flex justify-between items-center">
                             {status} Contests
-                            <Badge variant={getStatusBadgeVariant(status)} className="capitalize">
-                                {contests.filter(c => c.status === status).length} Contests
-                            </Badge>
+                            {/* <Badge variant={getStatusBadgeVariant(status)} className="capitalize"> */}
+                            {contests.filter(c => c.status === status).length} Contests
+                            {/* </Badge> */}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -226,7 +220,7 @@ const AdminDashboard = () => {
                                                     <Button
                                                         variant="destructive"
                                                         size="sm"
-                                                        onClick={() => handleDeleteContest(contest.id)}
+                                                    // onClick={() => handleDeleteContest(contest.id)}
                                                     >
                                                         <Trash2 className="mr-2 h-4 w-4" /> Delete
                                                     </Button>
@@ -264,9 +258,9 @@ const AdminDashboard = () => {
                                     <TableCell>{submission.submitterName}</TableCell>
                                     <TableCell>{submission.submissionDate}</TableCell>
                                     <TableCell>
-                                        <Badge variant={getStatusBadgeVariant(submission.status)}>
-                                            {submission.status}
-                                        </Badge>
+                                        {/* <Badge variant={getStatusBadgeVariant(submission.status)}> */}
+                                        {submission.status}
+                                        {/* </Badge> */}
                                     </TableCell>
                                     <TableCell>
                                         <Button variant="outline" size="sm">
@@ -283,25 +277,26 @@ const AdminDashboard = () => {
     );
 
     return (
-        <div className="p-6 bg-background">
-            <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-            <Tabs
-                value={activeTab}
-                onValueChange={(value: 'contests' | 'submissions') => setActiveTab(value)}
-                className="w-full"
-            >
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="contests">Contests</TabsTrigger>
-                    <TabsTrigger value="submissions">Submissions</TabsTrigger>
-                </TabsList>
-                <TabsContent value="contests">
-                    <ContestsTab />
-                </TabsContent>
-                <TabsContent value="submissions">
-                    <SubmissionsTab />
-                </TabsContent>
-            </Tabs>
-        </div>
+        // <div className="p-6 bg-background">
+        //     <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+        //     <Tabs
+        //         value={activeTab}
+        //         // onValueChange={(value: 'contests' | 'submissions') => setActiveTab(value)}
+        //         className="w-full"
+        //     >
+        //         <TabsList className="grid w-full grid-cols-2">
+        //             <TabsTrigger value="contests">Contests</TabsTrigger>
+        //             <TabsTrigger value="submissions">Submissions</TabsTrigger>
+        //         </TabsList>
+        //         <TabsContent value="contests">
+        //             <ContestsTab />
+        //         </TabsContent>
+        //         <TabsContent value="submissions">
+        //             <SubmissionsTab />
+        //         </TabsContent>
+        //     </Tabs>
+        // </div>
+        <div>Dashboard</div>
     );
 };
 

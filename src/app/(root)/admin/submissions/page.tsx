@@ -13,13 +13,6 @@ const AllSubmissions = async () => {
 
     return (
         <div className="space-y-4">
-            {submissionsList.map((submission, idx) => (
-                <AllSubmissionCard
-                    key={idx + 1}
-                    allSubmissions={submission}
-                />
-            ))}
-
             subsasfas
         </div>
     );

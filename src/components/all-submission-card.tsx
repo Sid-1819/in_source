@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import {
     Calendar,
@@ -162,7 +164,7 @@ const ContestCard: React.FC<{ contest: Contest, onEdit: (id: string) => void, on
                         </span>
                     </div>
 
-                    {(contest.cash_awards || contest.points_awards || contest.swag_awards) && (
+                    {(contest.cash_awards ?? contest.points_awards ?? contest.swag_awards) && (
                         <div className="flex flex-wrap items-center gap-2">
                             {contest.cash_awards && (
                                 <div className="flex items-center gap-1">
@@ -237,7 +239,9 @@ const AdminContestDashboard: React.FC = () => {
                 </Button>
             </div>
 
-            <Tabs value={activeTab} onValueChange={(value: Contest['status']) => setActiveTab(value)}>
+            <Tabs value={activeTab}
+            // onValueChange={(value: Contest['status']) => setActiveTab(value)}
+            >
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="Live">Live Contests</TabsTrigger>
                     <TabsTrigger value="Upcoming">Upcoming Contests</TabsTrigger>

@@ -70,7 +70,7 @@ function insertIntoIndexedArray(prizesArray: Prizes[]): Award[][] {
 
 const PrizesPage = async () => {
 
-  const prizes = await getContestPizes(1);
+  const prizes = await getContestPizes('2c5689f0-4821-4fc6-a292-0be90d714b2f');
   const prizesArray = insertIntoIndexedArray(prizes);
 
   return (
