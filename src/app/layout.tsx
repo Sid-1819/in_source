@@ -142,7 +142,7 @@ const Header = () => {
             <div className="flex items-center space-x-2">
               {isAdmin ? (
                 <>
-                  <Link href="/admin/create-contest" className="block">
+                  <Link href="/admin/contests/create" className="block">
                     <Button variant="default" size="sm">
                       Create Contest
                     </Button>

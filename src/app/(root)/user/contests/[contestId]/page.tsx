@@ -2,13 +2,13 @@
 import React from "react";
 import ContestDetailsContent from "~/components/contest-details-context";
 
-async function Page({ params }: { params: Promise<{ id: string }> }) {
+async function Page({ params }: { params: Promise<{ contestId: string }> }) {
 
     // const id = (await params).id
-    const { id } = await params;
+    const { contestId } = await params;
     return (
         // make a async db call
-        <ContestDetailsContent id={id} />
+        <ContestDetailsContent id={contestId} />
     )
 };
 

@@ -1,17 +1,20 @@
+/**
+ * a page to display submission details to admin
+ */
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { FileText, Users, Clock, ExternalLink, Code } from "lucide-react";
+import { formatDate, FormatType, parseJsonArray } from '~/utils';
 import { getSubmissionById } from '~/actions/submissions';
 
-import { formatDate, FormatType, parseJsonArray } from '~/utils';
 
-
-const SubmissionDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
-    const { id } = await params;
-    const submission = await getSubmissionById(id);
+const SubmissionDetails = async ({ params }: { params: Promise<{ submissionId: string }> }) => {
+    const { submissionId } = await params;
+    const submission = await getSubmissionById(submissionId);
 
     // Parse team members (assuming comma-separated or JSON string)
     const teamMembers = parseJsonArray(submission.submission_team_members ?? "");
@@ -68,7 +71,7 @@ const SubmissionDetails = async ({ params }: { params: Promise<{ id: string }> }
                                 <span className="font-medium block">Contest Deadline</span>
                                 <span>{contestEndDate}</span>
                             </div>
-                            <Link href={`/user/submissions/edit/${submission.submission_id}`}>
+                            <Link href={`/submissions/edit/${submission.submission_id}`}>
                                 <Button variant="default">Edit Submission</Button>
                             </Link>
                         </div>

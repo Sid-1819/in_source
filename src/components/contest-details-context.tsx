@@ -3,21 +3,19 @@ import { JSONContent } from "@tiptap/core";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import WinnersList from "./winners/page";
-import InformationPage from "./information/page";
-import PrizesPage from "./prizes/page";
+import WinnersList from "../app/(root)/contest/[id]/winners/page";
+import InformationPage from "../app/(root)/contest/[id]/information/page";
+import PrizesPage from "../app/(root)/contest/[id]/prizes/page";
 import { getUserIdByEmail } from "~/server/queries";
-import ApplicantsList from "./participants/page";
+import ApplicantsList from "../app/(root)/contest/[id]/participants/page";
 import Image from 'next/image';
 import { FileText, Info, Trophy, Users } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
-import JoinButton from "./join-button";
+import JoinButton from "../app/(root)/contest/[id]/join-button";
 import { handleAddParticipation, isUserJoined } from "~/lib/actions"
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { getContestById } from "~/actions/contest";
-import { addParticipation } from "~/actions/participations";
-import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic"
 
@@ -256,7 +254,7 @@ export default async function ContestDetailsContent(props: Readonly<{ id: string
                   </form>
                 ) : (
                   <Link
-                    href={`/user/create-submission?contestId=${contestId}&userId=${userId}`}
+                    href={`/user/contests/${contestId}/submit?userId=${userId}`}
                   >
                     <Button
                       variant="default"

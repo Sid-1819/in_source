@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { FileText, Users, Clock, ExternalLink, Code } from "lucide-react";
-import { formatDate, FormatType, parseJsonArray } from '~/utils';
 import { getSubmissionById } from '~/actions/submissions';
+
+import { formatDate, FormatType, parseJsonArray } from '~/utils';
 
 
 const SubmissionDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -67,7 +68,7 @@ const SubmissionDetails = async ({ params }: { params: Promise<{ id: string }> }
                                 <span className="font-medium block">Contest Deadline</span>
                                 <span>{contestEndDate}</span>
                             </div>
-                            <Link href={`/submissions/edit/${submission.submission_id}`}>
+                            <Link href={`/user/submissions/${submission.submission_id}/edit`}>
                                 <Button variant="default">Edit Submission</Button>
                             </Link>
                         </div>

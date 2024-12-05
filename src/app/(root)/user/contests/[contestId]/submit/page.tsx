@@ -21,7 +21,8 @@ import { submissionSchema } from "~/utils/validation";
 import { ContestSumbmission } from "~/types/submission";
 import { addSubmission } from "~/actions/submissions";
 
-const SubmitForm = (props: { searchParams: Promise<{ contestId: string, userId: string }> }) => {
+const SubmitForm = (props: { params: Promise<{ contestId: string }>, searchParams: Promise<{ userId: string }> }) => {
+
     const [teamMembers, setTeamMembers] = useState<string[]>([""]);
 
     const form = useForm<z.infer<typeof submissionSchema>>({
@@ -45,14 +46,16 @@ const SubmitForm = (props: { searchParams: Promise<{ contestId: string, userId: 
     };
 
     async function onSubmit(values: z.infer<typeof submissionSchema>) {
-        const { userId, contestId } = await props.searchParams;
+        const { userId } = await props.searchParams;
+        const { contestId } = await props.params;
+        console.log("contestId: ", contestId);
 
         const formattedValues: ContestSumbmission = {
             description: values.description ?? "",
             sourceCodeLink: values.sourceCodeLink,
             deploymentLink: values.deploymentLink ?? "",
             teamMembers: teamMembers ? JSON.stringify(teamMembers) : "",
-            contestId,
+            contestId: contestId,
             userId
         };
 
