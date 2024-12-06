@@ -1,4 +1,5 @@
 import { Calendar, Pen, FileTextIcon } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
 
@@ -33,7 +34,7 @@ const ContestsCard: React.FC<{ contest: AdminContestTypes }> = ({ contest }) => 
     return (
         <div className="border rounded-lg p-4 mb-4 flex flex-col sm:flex-row items-center hover:shadow-md transition">
             <div className="w-36 h-24 mb-4 sm:mb-0 sm:mr-4 rounded-lg overflow-hidden">
-                <img
+                <Image
                     src={contest.banner_url || '/placeholder-contest.png'}
                     alt={contest.title}
                     className="w-full h-full object-cover"
@@ -78,7 +79,7 @@ const ContestsCard: React.FC<{ contest: AdminContestTypes }> = ({ contest }) => 
                     </button>
                 </Link>
                 <Link
-                    href={`/admin/contest-submissions?contestId=${contest.contest_id}`}
+                    href={`/admin/contests/${contest.contest_id}/submissions`}
                 >
                     <button className="border px-3 py-1 rounded text-sm flex items-center justify-center space-x-1 hover:bg-gray-50 w-full">
                         <FileTextIcon className='w-4 h-4' />

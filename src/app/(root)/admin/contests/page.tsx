@@ -8,7 +8,7 @@
 import { Menu, Plus, X } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { getAllContestDetailsOnAdminDashboard } from '~/actions/admin/dashboard';
-import { AllContestAdminDashboard } from '~/types/admin/dashboard/types';
+import type { AllContestAdminDashboard } from '~/types/admin/dashboard/types';
 import { Button } from '~/components/ui/button';
 import NoContestCard from './NoContestCard';
 import ContestsCard from './ContestCard';
@@ -69,7 +69,7 @@ const AllContestPageForAdmin: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const fetchContests = async () => {
+        void (async () => {
             try {
                 setIsLoading(true);
                 const contests = await getAllContestDetailsOnAdminDashboard();
@@ -83,9 +83,8 @@ const AllContestPageForAdmin: React.FC = () => {
             } finally {
                 setIsLoading(false);
             }
-        };
+        })();
 
-        fetchContests();
     }, []);
 
     // Filtered contests based on selected status

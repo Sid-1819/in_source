@@ -138,9 +138,7 @@ const ContestCard: React.FC<{ contest: UserParticipations }> = ({ contest }) => 
                             value={contest.participant_id}
                         />
 
-                        <UnjoinButton
-                            participantId={contest.participant_id}
-                        />
+                        <UnjoinButton />
                     </form>
 
                 )}

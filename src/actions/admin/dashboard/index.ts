@@ -2,7 +2,7 @@
 
 import { sql } from "drizzle-orm";
 import { db } from "~/server/db";
-import { AllContestAdminDashboard } from "~/types/admin/dashboard/types";
+import type { AllContestAdminDashboard } from "~/types/admin/dashboard/types";
 
 /**
  * fetchs list of all the contest and its details 

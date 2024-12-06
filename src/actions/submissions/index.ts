@@ -5,7 +5,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "~/server/db";
 import { contestSubmission } from "~/server/db/schema";
-import { AllSubmissions, ContestSumbmission, Submission, submissionStatus, UserSubmission } from "~/types/submission";
+import type { AllSubmissions, ContestSumbmission, Submission, UserSubmission } from "~/types/submission";
+import { submissionStatus } from "~/types/submission"
 
 export async function getAllSubmissions(): Promise<AllSubmissions[]> {
     const subs = await db.select()

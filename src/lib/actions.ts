@@ -1,12 +1,11 @@
 "use server"
 
 import { currentUser } from "@clerk/nextjs/server";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { ContestSumbmission, submissionStatus } from "~/types/submission";
 import { db } from "~/server/db";
-import { contests, contestSubmission, participants } from "~/server/db/schema"
+import { participants } from "~/server/db/schema"
 import { addParticipation } from "~/server/queries";
 import { createDbUser } from "~/actions/user";
 

@@ -2,7 +2,7 @@
 
 import { sql } from "drizzle-orm";
 import { db } from "~/server/db";
-import { Winner } from "~/types/winner";
+import type { Winner } from "~/types/winner";
 
 export async function getContestWinners(contestId: string) {
 

@@ -9,13 +9,11 @@ import {
   EditorCommandItem,
   EditorCommandList,
   EditorContent,
-  type EditorInstance,
   EditorRoot,
   type JSONContent
 } from 'novel'
 
 import { ImageResizer, handleCommandNavigation } from 'novel/extensions'
-import { handleImageDrop, handleImagePaste } from 'novel/plugins'
 
 import {
   slashCommand,

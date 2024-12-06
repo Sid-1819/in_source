@@ -3,7 +3,7 @@
 import { sql } from "drizzle-orm/sql";
 import { db } from "~/server/db";
 import { participants } from "~/server/db/schema";
-import { AddUserParticipation, UserParticipations } from "~/types/participations";
+import type { AddUserParticipation, UserParticipations } from "~/types/participations";
 
 export async function getUserParticipations(email: string) {
 

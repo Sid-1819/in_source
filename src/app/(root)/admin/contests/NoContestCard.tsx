@@ -1,5 +1,7 @@
 import { Trophy } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react'
+import { Button } from '~/components/ui/button';
 
 export default function NoContestCard() {
     return (
@@ -11,11 +13,13 @@ export default function NoContestCard() {
                 No Contests Found
             </h3>
             <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                You haven't created any contests yet. Start by creating a new contest!
+                You haven&apos;t created any contests yet. Start by creating a new contest!
             </p>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-                Create New Contest
-            </button>
+            <Link href={`/admin/contests/create`}>
+                <Button variant="default" className="text-white px-4 py-2 rounded transition">
+                    Create New Contest
+                </Button>
+            </Link>
         </div>
     )
 };

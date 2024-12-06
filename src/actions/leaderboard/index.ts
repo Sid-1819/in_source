@@ -2,7 +2,7 @@
 
 import { db } from "~/server/db";
 import { sql } from "drizzle-orm";
-import { LeaderboardUser } from "~/types/leaderboard";
+import type { LeaderboardUser } from "~/types/leaderboard";
 
 export async function getLeaderBoardList(season_id: string) {
 

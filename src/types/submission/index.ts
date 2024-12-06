@@ -5,7 +5,7 @@ export enum submissionStatus {
     "D" = "D"
 }
 
-export interface Submission {
+interface Submission {
     submission_id: string,
     contest_id: string,
     user_id: string,
@@ -20,7 +20,7 @@ export interface Submission {
     updated_at: string,
 }
 
-export interface AllSubmissions {
+interface AllSubmissions {
     contestId: string;
     description?: string;
     createdAt: Date,
@@ -33,7 +33,7 @@ export interface AllSubmissions {
     deploymentLink?: string;
 }
 
-export interface ContestSumbmission {
+interface ContestSumbmission {
     contestId: string,
     userId: string,
     sourceCodeLink: string,
@@ -42,7 +42,7 @@ export interface ContestSumbmission {
     deploymentLink?: string,
 }
 
-export interface UserSubmission {
+interface UserSubmission {
     contest_id: string;
     contest_title: string;
     contest_banner_url: string;
@@ -52,4 +52,21 @@ export interface UserSubmission {
     submission_team_members: string;
     created_at: string;
     updated_at: string;
+}
+
+interface Submissions {
+    submission_id: string,
+    description: string,
+    team_members: string,
+    source_code_link: string,
+    deployment_link: string,
+    created_at: Date,
+}
+
+export type {
+    Submission,
+    AllSubmissions,
+    ContestSumbmission,
+    UserSubmission,
+    Submissions,
 }

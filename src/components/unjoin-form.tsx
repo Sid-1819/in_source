@@ -14,7 +14,7 @@ const UnjoinForm: React.FC<UnjoinFormProps> = ({ participantId, onSubmit }) => {
             onSubmit={onSubmit ? (e) => { e.preventDefault(); onSubmit(); } : undefined}
         >
             <input type="hidden" name="participantId" value={participantId} />
-            <UnjoinButton participantId={participantId} />
+            <UnjoinButton />
         </form>
     );
 };

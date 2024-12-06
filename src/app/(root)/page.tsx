@@ -27,13 +27,6 @@ export type Contest = {
   end_date: string;
 };
 
-interface Prizes {
-  name: string;
-  experiencePoints: number;
-  cashPrize: number;
-  swags: string[];
-}
-
 interface ContestCardProps {
   contest: Contest;
 }

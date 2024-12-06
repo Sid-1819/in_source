@@ -1,4 +1,4 @@
-import { UserSubmission } from "~/types/submission";
+import type { UserSubmission } from "~/types/submission";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";

@@ -16,7 +16,7 @@ import {
 } from "~/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import type * as z from "zod";
 import Image from "next/image";
 import { UploadButton } from "~/utils/uploadthing";
 import { Badge } from "~/components/ui/badge";

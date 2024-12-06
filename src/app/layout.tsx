@@ -147,9 +147,9 @@ const Header = () => {
                       Create Contest
                     </Button>
                   </Link>
-                  <Link href="/admin/submissions" className="block">
+                  <Link href={`/admin/contests`} className="block">
                     <Button variant="default" size="sm">
-                      All Submissions
+                      Dashboard
                     </Button>
                   </Link>
                 </>

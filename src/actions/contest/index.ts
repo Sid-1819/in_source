@@ -2,7 +2,7 @@
 
 import { db } from "~/server/db";
 import { eq, sql } from "drizzle-orm";
-import { Contest, ContestParticipant, ContestPrizes } from "~/types/contest";
+import type { Contest, ContestParticipant, ContestPrizes } from "~/types/contest";
 import { contests } from "~/server/db/schema";
 
 export async function getContestOnHome(status: string): Promise<Contest[]> {

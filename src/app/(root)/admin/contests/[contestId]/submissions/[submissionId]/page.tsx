@@ -71,14 +71,17 @@ const SubmissionDetails = async ({ params }: { params: Promise<{ submissionId: s
                                 <span className="font-medium block">Contest Deadline</span>
                                 <span>{contestEndDate}</span>
                             </div>
-                            <Link href={`/submissions/edit/${submission.submission_id}`}>
-                                <Button variant="default">Edit Submission</Button>
+                            <Link
+                                href={`/`}
+                            //  {`/submissions/edit/${submission.submission_id}`}
+                            >
+                                <Button variant="default">Accept Submission</Button>
                             </Link>
                         </div>
                     </div>
 
                     {/* Contest Banner */}
-                    {submission.contest_banner_url && (
+                    {/* {submission.contest_banner_url && (
                         <div className="mt-8 border-t pt-4">
                             <Image
                                 src={submission.contest_banner_url}
@@ -88,7 +91,7 @@ const SubmissionDetails = async ({ params }: { params: Promise<{ submissionId: s
                                 className="rounded-lg w-full"
                             />
                         </div>
-                    )}
+                    )} */}
                 </CardContent>
             </Card>
 

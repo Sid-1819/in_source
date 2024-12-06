@@ -4,7 +4,6 @@ import {
   Heading1,
   Heading2,
   Heading3,
-  ImageIcon,
   List,
   ListOrdered,
   Text,
@@ -168,10 +167,8 @@ export const suggestionItems = createSuggestionItems([
             src: tweetLink
           })
           .run()
-      } else {
-        if (tweetLink !== null) {
-          alert('Please enter a correct Twitter Link')
-        }
+      } else if (tweetLink !== null) {
+        alert('Please enter a correct Twitter Link')
       }
     }
   }

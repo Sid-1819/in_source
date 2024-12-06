@@ -5,7 +5,7 @@ import {
 } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
-import { Trophy, Star, Gift } from "lucide-react";
+import { Star, Gift } from "lucide-react";
 import { modifyUsernames } from '~/utils';
 import { getContestWinners } from '~/actions/winners';
 
