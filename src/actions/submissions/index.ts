@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "~/server/db";
 import { contestSubmission } from "~/server/db/schema";
-import { getUserIdByEmail } from "~/server/queries";
 import { AllSubmissions, ContestSumbmission, Submission, submissionStatus, UserSubmission } from "~/types/submission";
 
 export async function getAllSubmissions(): Promise<AllSubmissions[]> {
@@ -14,7 +13,6 @@ export async function getAllSubmissions(): Promise<AllSubmissions[]> {
         .where(eq(contestSubmission.submissionStatus, submissionStatus.S))
         .orderBy(asc(contestSubmission.contestId));
 
-    // console.log("subs: ", subs);
     return subs as unknown as AllSubmissions[];
 }
 
@@ -39,7 +37,6 @@ export async function getSubmissionById(submissionId: string) {
             s.submission_id = ${submissionId};
     `);
 
-    // console.log("submissions: ", submission.rows);
     return submission.rows[0] as unknown as Submission;
 }
 
@@ -62,7 +59,6 @@ export async function getUserSubmission(emailId: string): Promise<UserSubmission
         WHERE 
             s.user_id = (SELECT u.user_id FROM "user_tbl" u WHERE u.email = ${emailId});
     `);
-    // console.log("getUserSubmission", submissions.rows);
     return submissions.rows as unknown as UserSubmission[];
 }
 
@@ -78,12 +74,10 @@ export async function addSubmission(data: ContestSumbmission) {
         description: data.description,
     }).returning();
 
-    // console.log("addSubmission", submission);
     redirect("/user/submissions")
 }
 
 export async function editSubmission(data: ContestSumbmission, submissionId: string) {
-    // const userId = await getUserIdByEmail(emailId);
 
     await db.update(contestSubmission)
         .set({
@@ -98,15 +92,12 @@ export async function editSubmission(data: ContestSumbmission, submissionId: str
         .where(eq(contestSubmission.submissionId, submissionId))
         .returning();
 
-    // console.log("editSubmission", submission);
     redirect("/user/submissions")
 }
 
 export async function removeSubmission(formData: FormData) {
     const submissionId = (formData.get('submissionId') as string);
-    // console.log("submissionId", submissionId, formData);
     await db.delete(contestSubmission).where(eq(contestSubmission.submissionId, submissionId));
     revalidatePath("/submissions")
-    // console.log("removedSub: ", removedSubmission);
 }
 

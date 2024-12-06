@@ -9,9 +9,9 @@ import { getSubmissionById } from '~/actions/submissions';
 import { formatDate, FormatType, parseJsonArray } from '~/utils';
 
 
-const SubmissionDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
-    const { id } = await params;
-    const submission = await getSubmissionById(id);
+const SubmissionDetails = async ({ params }: { params: Promise<{ submissionId: string }> }) => {
+    const { submissionId } = await params;
+    const submission = await getSubmissionById(submissionId);
 
     // Parse team members (assuming comma-separated or JSON string)
     const teamMembers = parseJsonArray(submission.submission_team_members ?? "");

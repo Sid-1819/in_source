@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import WinnersList from "../app/(root)/contest/[id]/winners/page";
 import InformationPage from "../app/(root)/contest/[id]/information/page";
 import PrizesPage from "../app/(root)/contest/[id]/prizes/page";
-import { getUserIdByEmail } from "~/server/queries";
+import { getUserIdByEmail } from "~/actions/user";
 import ApplicantsList from "../app/(root)/contest/[id]/participants/page";
 import Image from 'next/image';
 import { FileText, Info, Trophy, Users } from "lucide-react";
@@ -17,7 +17,6 @@ import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { getContestById } from "~/actions/contest";
 
-export const dynamic = "force-dynamic"
 
 interface TabContentProps {
   output: string;
