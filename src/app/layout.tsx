@@ -16,6 +16,7 @@ import {
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
 import { usePathname } from "next/navigation";
+import { Toaster } from "~/components/ui/toaster";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -195,6 +196,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
           <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
             {children}
           </main>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
